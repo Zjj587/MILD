@@ -1,4 +1,4 @@
-# MILD.github.io
+# https://zjj587.github.io/MILD/
 
 MILD: A Manipulation Interface Localization Dataset for UMI-Style Robot Teaching
 
