@@ -611,3 +611,474 @@ git status --short
 - Expected affected paths: `COMMAND_LOG_mild_site.md`.
 - Exit status: success.
 - Evidence: This section records commands 33 through 41.
+
+## 2026-07-06T Asia/Shanghai: Dataset Variants And Illustrative Task Images
+
+### Command 43
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+```
+
+- Reason: Required team-memory preflight for UMID/MILD website work after the repository was renamed.
+- Exit status: success.
+- Evidence: Printed TEAM_RULES, TEAM_BRIEF, CODE_DELIVERY_RULES gate, COMMAND_LOG_RULES gate, LIVE_STATUS, SHARED_FACTS, and nova/session context. Output was long and partly truncated in the terminal.
+
+### Command 44
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+find /media/zjj/Elements/CQU_ZJJ/MILD -maxdepth 3 -type f | sort | sed -n '1,240p'
+```
+
+- Reason: Inspect the renamed website repository contents.
+- Exit status: success.
+- Evidence: Found `.nojekyll`, `COMMAND_LOG_mild_site.md`, `README.md`, `index.html`, `static/css/site.css`, `static/images/hero-mild-concept.png`, and `static/js/site.js`.
+
+### Command 45
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+find /media/zjj/Elements/CQU_ZJJ/web_refer -maxdepth 2 -type d | sort | sed -n '1,160p'
+```
+
+- Reason: Inspect local website references now available under `web_refer`.
+- Exit status: success.
+- Evidence: Found DROID, Robotics Transformer-X, and UMI Gripper reference site directories.
+
+### Command 46
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+find /media/zjj/Elements/CQU_ZJJ/UMID/data/Ready/Grab_place -maxdepth 4 -type d | sort | sed -n '1,260p'
+```
+
+- Reason: Read the local Grab_place directory structure to model scene sequences and tag variants on the public website.
+- Exit status: success.
+- Evidence: Found `orin`, `aruco/1..4`, `apritag/36h11/1..4`, `apritag/circle21h7/1..4`, `apritag/custom48h12/1..4`, `apritag/standard41h12/1..4`, plus tag set asset folders.
+
+### Command 47
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+git status --short && git remote -v
+```
+
+- Reason: Confirm renamed repository remote and working tree status.
+- Exit status: success.
+- Evidence: Remote is `https://github.com/Zjj587/MILD.git`; no status output was printed before this log update.
+
+### Command 48
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+sed -n '1,260p' /home/zjj/.cache/agibot/live_shared_memory/CODE_DELIVERY_RULES.md
+```
+
+- Reason: Re-read code delivery rules for GitHub Pages changes.
+- Exit status: success.
+- Evidence: Confirmed requirements for no private absolute paths in delivered artifacts and final verification.
+
+### Command 49
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+sed -n '1,260p' /home/zjj/.cache/agibot/live_shared_memory/COMMAND_LOG_RULES.md
+```
+
+- Reason: Re-read command logging rules for the second-round website delivery.
+- Exit status: success.
+- Evidence: Confirmed command log requirements.
+
+### Command 50
+
+- Timestamp: 2026-07-06, before generated task-image assets
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+sed -n '1,260p' /home/zjj/.codex/skills/.system/imagegen/SKILL.md
+```
+
+- Reason: Read image generation skill instructions before creating project-bound task preview images.
+- Exit status: success.
+- Evidence: Confirmed built-in image generation mode and requirement to copy project-bound assets into the repository.
+
+### Command 51
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/home/zjj`
+- Command:
+
+```bash
+find /media/zjj/Elements/CQU_ZJJ/UMID/data/Ready/Grab_place -maxdepth 5 -type f | sort | sed -n '1,220p'
+```
+
+- Reason: Inspect tag asset files in the Grab_place directory without modifying dataset data.
+- Exit status: success.
+- Evidence: Found AprilTag and ArUco README, manifest, PDF, PGM, and PNG tag assets including IDs 0 through 3.
+
+### Command 52
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+sed -n '1,220p' COMMAND_LOG_mild_site.md
+```
+
+- Reason: Inspect existing command log before appending this second-round work.
+- Exit status: success.
+- Evidence: Existing command log records initial site build and verification.
+
+### Command 53
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+sed -n '1,220p' index.html
+```
+
+- Reason: Inspect current HTML before adding variants and preview images.
+- Exit status: success.
+- Evidence: Current site has hero, overview, benchmark, task cards, release, and citation sections.
+
+### Command 54
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+sed -n '1,220p' static/css/site.css
+```
+
+- Reason: Inspect current CSS before adding variants and preview-image styling.
+- Exit status: success.
+- Evidence: Current CSS defines the hero, task cards, filters, and responsive layout.
+
+### Command 55
+
+- Timestamp: 2026-07-06, before second-round website editing
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+sed -n '1,120p' static/js/site.js
+```
+
+- Reason: Inspect current JavaScript before deciding whether behavior changes are needed.
+- Exit status: success.
+- Evidence: Current JavaScript handles task filtering, search, visible count, and disabled links.
+
+### Tool Operation 56
+
+- Timestamp: 2026-07-06, before generated image creation
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Append commands 43 through 55 to the command log before continuing with generated assets and website edits.
+- Expected affected paths: `COMMAND_LOG_mild_site.md`.
+- Exit status: success.
+
+### Tool Operations 57-67
+
+- Timestamp: 2026-07-06, during illustrative task-image creation
+- Alias: nova
+- Tool: built-in `image_gen`
+- Reason: Create project-bound illustrative task preview images for the MILD task cards. These are concept images only and do not claim to be real dataset captures.
+- Exit status: success.
+- Prompt summaries:
+  - `task-01-overhead-wardrobe.png`: overhead wardrobe retrieval with UMI-style handheld gripper, no visible face.
+  - `task-02-cup-aux.png`: cup pick-and-place with nearby auxiliary objects.
+  - `task-03-cup-clean.png`: standard cup pick-and-place on a clean table.
+  - `task-04-transparent-cup.png`: transparent cup pick-and-place under weak visual structure.
+  - `task-05-same-color-lighting.png`: same-color cup/tablecloth with lighting-change setup.
+  - `task-06-pen.png`: small pen pick-and-place.
+  - `task-07-box-retrieve.png`: object retrieval from an open box with partial occlusion.
+  - `task-08-wardrobe-clothes.png`: wardrobe clothes retrieval with dim interior.
+  - `task-09-wipe.png` and `task-10-wipe-empty.png`: wiping task preview.
+  - `task-11-throw.png`: throwing task preview.
+  - `task-12-organize.png`, `task-13-rack.png`, and `task-14-box-organize.png`: long-horizon organization preview.
+
+### Commands 68-78
+
+- Timestamp: 2026-07-06, during illustrative task-image setup
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Reason: Copy generated images from the Codex image cache into the website repository.
+- Expected affected paths: `static/images/tasks/*.png`.
+- Exit status: success for each command.
+- Commands:
+
+```bash
+mkdir -p static/images/tasks && latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-01-overhead-wardrobe.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-02-cup-aux.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-03-cup-clean.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-04-transparent-cup.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-05-same-color-lighting.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-06-pen.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-07-box-retrieve.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-08-wardrobe-clothes.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-09-wipe.png; cp "$latest" static/images/tasks/task-10-wipe-empty.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-11-throw.png; printf '%s\n' "$latest"
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-12-organize.png; cp "$latest" static/images/tasks/task-13-rack.png; cp "$latest" static/images/tasks/task-14-box-organize.png; printf '%s\n' "$latest"
+```
+
+### Command 79
+
+- Timestamp: 2026-07-06, during image asset inspection
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+find static/images/tasks -maxdepth 1 -type f | sort
+```
+
+- Reason: Confirm that every task preview image exists in the website repository.
+- Exit status: success.
+- Evidence: Listed 14 task preview PNG files under `static/images/tasks/`.
+
+### Command 80
+
+- Timestamp: 2026-07-06, during image asset inspection
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+file static/images/tasks/*.png
+```
+
+- Reason: Confirm generated task preview assets are valid PNG images and inspect dimensions.
+- Exit status: success.
+- Evidence: All 14 files are PNG images, mostly 1672x941 or 1536x1024.
+
+### Command 81
+
+- Timestamp: 2026-07-06, during image asset inspection
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+git status --short
+```
+
+- Reason: Inspect working tree after adding image assets.
+- Exit status: success.
+- Evidence: `COMMAND_LOG_mild_site.md` modified and `static/images/tasks/` untracked before HTML/CSS integration.
+
+### Command 82
+
+- Timestamp: 2026-07-06, during image asset inspection
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+command -v montage || command -v magick || true
+```
+
+- Reason: Check whether ImageMagick montage is available for local image contact-sheet inspection.
+- Exit status: success.
+- Evidence: Found `/usr/bin/montage`.
+
+### Command 83
+
+- Timestamp: 2026-07-06, during image asset inspection
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+montage static/images/tasks/task-*.png -thumbnail 280x160^ -gravity center -extent 280x160 -tile 4x -geometry +8+8 /tmp/mild-task-contact-sheet.png
+```
+
+- Reason: Create a temporary contact sheet for visual inspection only.
+- Exit status: success.
+- Evidence: `/tmp/mild-task-contact-sheet.png` was created outside the delivered repository.
+
+### Tool Operation 84
+
+- Timestamp: 2026-07-06, during image asset inspection
+- Alias: nova
+- Tool: `view_image`
+- Target: `/tmp/mild-task-contact-sheet.png`
+- Reason: Inspect the generated task preview images as a group.
+- Exit status: success.
+- Evidence: First overhead wardrobe image contained a visible side face; replaced in the next operations.
+
+### Tool Operation 85
+
+- Timestamp: 2026-07-06, during image replacement
+- Alias: nova
+- Tool: built-in `image_gen`
+- Reason: Regenerate the overhead wardrobe task preview with no visible face.
+- Exit status: success.
+
+### Command 86
+
+- Timestamp: 2026-07-06, during image replacement
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+latest=$(find ${CODEX_HOME:-$HOME/.codex}/generated_images -type f -name '*.png' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-); cp "$latest" static/images/tasks/task-01-overhead-wardrobe.png; printf '%s\n' "$latest"
+```
+
+- Reason: Replace the first overhead wardrobe task preview with a no-face version.
+- Expected affected paths: `static/images/tasks/task-01-overhead-wardrobe.png`.
+- Exit status: success.
+
+### Command 87
+
+- Timestamp: 2026-07-06, after image replacement
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Command:
+
+```bash
+montage static/images/tasks/task-*.png -thumbnail 280x160^ -gravity center -extent 280x160 -tile 4x -geometry +8+8 /tmp/mild-task-contact-sheet.png
+```
+
+- Reason: Recreate the temporary contact sheet after replacing the overhead wardrobe preview.
+- Exit status: success.
+
+### Tool Operation 88
+
+- Timestamp: 2026-07-06, after image replacement
+- Alias: nova
+- Tool: `view_image`
+- Target: `/tmp/mild-task-contact-sheet.png`
+- Reason: Re-inspect the task preview contact sheet.
+- Exit status: success.
+- Evidence: The visible-face issue was removed; the generated previews are acceptable as temporary illustrative assets.
+
+### Tool Operation 89
+
+- Timestamp: 2026-07-06, during website integration
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Add a `Sequences & Variants` section to `index.html`, update navigation, replace task-card placeholders with illustrative preview labels, and describe original/TAG/material sequence bundles.
+- Expected affected paths: `index.html`.
+- Exit status: success.
+
+### Tool Operation 90
+
+- Timestamp: 2026-07-06, during website integration
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Add CSS for sequence variant panels, release structure block, task preview background images, and responsive layout.
+- Expected affected paths: `static/css/site.css`.
+- Exit status: success.
+
+### Tool Operation 91
+
+- Timestamp: 2026-07-06, during website integration
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Update README release notes to mention replacing illustrative images and adding sequence manifests.
+- Expected affected paths: `README.md`.
+- Exit status: success.
+
+### Commands 92-98
+
+- Timestamp: 2026-07-06, final verification
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Reason: Verify the second-round website delivery.
+- Exit status:
+  - `git diff --check`: success.
+  - `node --check static/js/site.js`: success.
+  - private path scan: no matches; `rg` returned 1 because no matches were found.
+  - static reference check: success; 17 refs checked and no missing files.
+  - `git status --short`: success.
+  - `git diff --stat`: success.
+  - targeted `rg` inspection: success.
+- Commands:
+
+```bash
+git diff --check
+node --check static/js/site.js
+rg -n "/home/|/media/|/mnt/|zjj|Elements|新加卷" . --glob '!.git/**' --glob '!COMMAND_LOG_mild_site.md'
+python3 -c "from pathlib import Path; import re; missing=[]; html=Path('index.html').read_text(); css=Path('static/css/site.css').read_text(); refs=re.findall(r'(?:src|href)=\"(static/[^\"]+)\"', html)+re.findall(r'content=\"(static/[^\"]+)\"', html); css_refs=[str((Path('static/css')/m).resolve().relative_to(Path.cwd())) for m in re.findall(r'url\(\"([^\"]+)\"\)', css)]; all_refs=sorted(set(refs+css_refs)); missing=[r for r in all_refs if not Path(r).exists()]; print('checked refs:', len(all_refs)); print('\n'.join(all_refs)); print('missing:', missing); raise SystemExit(1 if missing else 0)"
+git status --short
+git diff --stat
+rg -n "Sequences & Variants|variant-grid|Illustrative Preview|task-01-overhead|sequence manifest|april|aruco" index.html static/css/site.css README.md
+```
+
+- Evidence:
+  - No whitespace errors.
+  - No JavaScript syntax errors.
+  - No private absolute paths in delivered website files outside the command log.
+  - All HTML/CSS static references resolve, including 14 task preview images.
+  - Working tree has modified `COMMAND_LOG_mild_site.md`, `README.md`, `index.html`, `static/css/site.css`, and untracked `static/images/tasks/`.
+
+### Commands 99-102
+
+- Timestamp: 2026-07-06, final check after command-log update
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Reason: Ensure the command-log update did not introduce whitespace errors and confirm final task-image count.
+- Exit status:
+  - `git diff --check`: success.
+  - private path scan: no matches; `rg` returned 1 because no matches were found.
+  - `git status --short`: success.
+  - task image count: success, `14`.
+- Commands:
+
+```bash
+git diff --check
+rg -n "/home/|/media/|/mnt/|zjj|Elements|新加卷" . --glob '!.git/**' --glob '!COMMAND_LOG_mild_site.md'
+git status --short
+find static/images/tasks -maxdepth 1 -type f | sort | wc -l
+```
+
+### Tool Operation 103
+
+- Timestamp: 2026-07-06, final command-log update
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Append final checks 99 through 102 to this command log.
+- Expected affected paths: `COMMAND_LOG_mild_site.md`.
+- Exit status: success.

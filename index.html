@@ -32,6 +32,7 @@
       <nav class="site-nav" aria-label="Primary navigation">
         <a href="#overview">Overview</a>
         <a href="#benchmark">Benchmark</a>
+        <a href="#sequences">Sequences</a>
         <a href="#tasks">Tasks</a>
         <a href="#release">Release</a>
         <a href="#citation">Citation</a>
@@ -67,16 +68,16 @@
               <span class="metric-label">planned task groups</span>
             </div>
             <div class="metric">
-              <span class="metric-value">6</span>
-              <span class="metric-label">challenge factors</span>
+              <span class="metric-value">1-4</span>
+              <span class="metric-label">TAG layout counts</span>
             </div>
             <div class="metric">
-              <span class="metric-value">UMI</span>
-              <span class="metric-label">style teaching setting</span>
+              <span class="metric-value">2</span>
+              <span class="metric-label">fiducial marker families</span>
             </div>
             <div class="metric">
-              <span class="metric-value">VIL</span>
-              <span class="metric-label">visual-inertial localization focus</span>
+              <span class="metric-value">Many</span>
+              <span class="metric-label">appearance variants per scene</span>
             </div>
           </div>
 
@@ -94,8 +95,8 @@
               </p>
               <p>
                 The website is structured around the benchmark tasks first: every task group has a
-                photo slot, scene description, difficulty labels, TAG status, and a dataset link
-                location ready for release.
+                preview image, scene description, difficulty labels, sequence-variant summary, and a
+                dataset link location ready for release.
               </p>
             </div>
           </div>
@@ -119,12 +120,83 @@
             </article>
             <article class="feature">
               <h3>UMI-Oriented Metadata</h3>
-              <p>Task category, scene description, TAG availability, difficulty labels, preview photo, and dataset URL per task.</p>
+              <p>Task category, scene description, marker type, marker count, material variant, difficulty labels, and dataset URL per task.</p>
             </article>
             <article class="feature">
               <h3>Release-Ready Layout</h3>
-              <p>Each task group is intended to map to a stable download entry with sequence metadata and evaluation notes.</p>
+              <p>Each scene maps to multiple sequence bundles: original data, ArUco layouts, AprilTag layouts, and appearance variants.</p>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section variant-section" id="sequences">
+        <div class="section-inner">
+          <div class="split">
+            <div>
+              <p class="section-kicker">Sequences & Variants</p>
+              <h2>One task scene expands into many localization sequences.</h2>
+            </div>
+            <div class="body-copy">
+              <p>
+                For each operation scene, MILD separates the original capture from TAG-assisted
+                captures. TAG-assisted sequences vary both the marker type and the number of visible
+                tags, then combine with scene appearance factors such as tablecloth, object material,
+                lighting, clutter, and occlusion.
+              </p>
+              <p>
+                This organization keeps the benchmark useful for both pure visual-inertial
+                localization and marker-aided localization analysis without mixing the conditions.
+              </p>
+            </div>
+          </div>
+
+          <div class="variant-grid" aria-label="Sequence variant matrix">
+            <article class="variant-panel">
+              <span class="variant-index">A</span>
+              <h3>Original</h3>
+              <p>Baseline scene capture without intentionally added fiducial markers.</p>
+              <code>orin/</code>
+            </article>
+            <article class="variant-panel">
+              <span class="variant-index">B</span>
+              <h3>ArUco</h3>
+              <p>Marker-assisted sequences with one to four ArUco tags in the scene.</p>
+              <code>aruco/{1,2,3,4}/</code>
+            </article>
+            <article class="variant-panel">
+              <span class="variant-index">C</span>
+              <h3>AprilTag</h3>
+              <p>Marker-assisted sequences across 36h11, Standard41h12, Circle21h7, and Custom48h12 families.</p>
+              <code>apriltag/&lt;family&gt;/{1,2,3,4}/</code>
+            </article>
+            <article class="variant-panel">
+              <span class="variant-index">D</span>
+              <h3>Appearance</h3>
+              <p>Scene variants such as different tablecloths, target colors, transparent objects, lighting states, and clutter.</p>
+              <code>scene_variant/sequence_id</code>
+            </article>
+          </div>
+
+          <div class="structure-block">
+            <div>
+              <h3>Release Unit</h3>
+              <p>Each downloadable task entry should expose the scene, sequence family, marker setup, and material variant.</p>
+            </div>
+            <pre><code>dataset/
+  Grab_place/
+    orin/
+    aruco/
+      1/ 2/ 3/ 4/
+    apriltag/
+      36h11/1..4
+      standard41h12/1..4
+      circle21h7/1..4
+      custom48h12/1..4
+    variants/
+      tablecloth_01/
+      tablecloth_02/
+      lighting_change/</code></pre>
           </div>
         </div>
       </section>
@@ -155,8 +227,8 @@
 
           <div class="task-grid">
             <article class="task-card" data-category="body" data-search="overhead wave wardrobe clothes body motion occlusion high reach">
-              <div class="task-photo task-photo-a" role="img" aria-label="Photo slot for overhead wave and wardrobe retrieval task">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-a" role="img" aria-label="Illustrative preview for overhead wave and wardrobe retrieval task">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>01</span><strong>Body Motion</strong></div>
@@ -164,7 +236,7 @@
                 <p>Overhead waving and retrieving clothes from a high wardrobe area.</p>
                 <dl>
                   <dt>Scene</dt><dd>Upper-body motion near wardrobe storage.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, appearance variants.</dd>
                   <dt>Difficulty</dt><dd>Large arm motion, self-occlusion, high reach.</dd>
                 </dl>
                 <div class="tag-row"><span>Body</span><span>Occlusion</span><span>High reach</span></div>
@@ -173,8 +245,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="water cup clutter auxiliary object table slow standard grasp place">
-              <div class="task-photo task-photo-b" role="img" aria-label="Photo slot for normal cup with auxiliary objects">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-b" role="img" aria-label="Illustrative preview for normal cup with auxiliary objects">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>02</span><strong>Grasp + Place</strong></div>
@@ -182,7 +254,7 @@
                 <p>Pick and place a normal target water cup on a tabletop with nearby objects.</p>
                 <dl>
                   <dt>Scene</dt><dd>Normal target cup, table, auxiliary objects.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, tablecloth variants.</dd>
                   <dt>Difficulty</dt><dd>Slow and standard motion.</dd>
                 </dl>
                 <div class="tag-row"><span>Cup</span><span>Clutter</span><span>Standard</span></div>
@@ -191,8 +263,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="water cup table slow standard grasp place clean tabletop">
-              <div class="task-photo task-photo-c" role="img" aria-label="Photo slot for normal cup on table">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-c" role="img" aria-label="Illustrative preview for normal cup on table">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>03</span><strong>Grasp + Place</strong></div>
@@ -200,7 +272,7 @@
                 <p>Pick and place a normal target water cup on a tabletop without auxiliary clutter.</p>
                 <dl>
                   <dt>Scene</dt><dd>Normal target cup and table.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, tablecloth variants.</dd>
                   <dt>Difficulty</dt><dd>Slow and standard motion.</dd>
                 </dl>
                 <div class="tag-row"><span>Cup</span><span>Clean table</span><span>Standard</span></div>
@@ -209,8 +281,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="transparent cup table slow low texture grasp place">
-              <div class="task-photo task-photo-d" role="img" aria-label="Photo slot for transparent cup task">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-d" role="img" aria-label="Illustrative preview for transparent cup task">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>04</span><strong>Grasp + Place</strong></div>
@@ -218,7 +290,7 @@
                 <p>Pick and place a transparent target cup where visual structure is weak.</p>
                 <dl>
                   <dt>Scene</dt><dd>Transparent target cup and table.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, material variants.</dd>
                   <dt>Difficulty</dt><dd>Slow motion and low texture.</dd>
                 </dl>
                 <div class="tag-row"><span>Transparent</span><span>Low texture</span><span>Cup</span></div>
@@ -227,8 +299,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="same color cup table night light switch low texture grasp place">
-              <div class="task-photo task-photo-e" role="img" aria-label="Photo slot for same-color cup task">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-e" role="img" aria-label="Illustrative preview for same-color cup task">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>05</span><strong>Grasp + Place</strong></div>
@@ -236,7 +308,7 @@
                 <p>Pick and place a cup with weak object-background contrast, including night lighting variants.</p>
                 <dl>
                   <dt>Scene</dt><dd>Same-color cup and table; constant-light and light-switch variants.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, lighting variants.</dd>
                   <dt>Difficulty</dt><dd>Slow motion, low texture, lighting change.</dd>
                 </dl>
                 <div class="tag-row"><span>Same color</span><span>Low texture</span><span>Lighting</span></div>
@@ -245,8 +317,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="pen pick place slow standard table">
-              <div class="task-photo task-photo-f" role="img" aria-label="Photo slot for pen pick-and-place task">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-f" role="img" aria-label="Illustrative preview for pen pick-and-place task">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>06</span><strong>Grasp + Place</strong></div>
@@ -254,7 +326,7 @@
                 <p>Pick and place a small pen-like object on the tabletop.</p>
                 <dl>
                   <dt>Scene</dt><dd>Tabletop pen manipulation.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, surface variants.</dd>
                   <dt>Difficulty</dt><dd>Slow and standard motion.</dd>
                 </dl>
                 <div class="tag-row"><span>Small object</span><span>Table</span><span>Standard</span></div>
@@ -263,8 +335,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="box retrieve object partial occlusion lighting change slow">
-              <div class="task-photo task-photo-g" role="img" aria-label="Photo slot for object retrieval from box">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-g" role="img" aria-label="Illustrative preview for object retrieval from box">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>07</span><strong>Grasp + Place</strong></div>
@@ -272,7 +344,7 @@
                 <p>Reach into a box and take out an object under partial visual obstruction.</p>
                 <dl>
                   <dt>Scene</dt><dd>Object inside box or container.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, occlusion variants.</dd>
                   <dt>Difficulty</dt><dd>Slow motion, lighting change, partial occlusion.</dd>
                 </dl>
                 <div class="tag-row"><span>Box</span><span>Occlusion</span><span>Lighting</span></div>
@@ -281,8 +353,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="wardrobe clothes open cabinet dark interior no light partial occlusion">
-              <div class="task-photo task-photo-h" role="img" aria-label="Photo slot for wardrobe clothes retrieval">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-h" role="img" aria-label="Illustrative preview for wardrobe clothes retrieval">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>08</span><strong>Grasp + Place</strong></div>
@@ -290,7 +362,7 @@
                 <p>Open a wardrobe and retrieve clothing from a dark cabinet interior.</p>
                 <dl>
                   <dt>Scene</dt><dd>Wardrobe with no internal light.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, lighting variants.</dd>
                   <dt>Difficulty</dt><dd>Slow motion, lighting change, partial occlusion.</dd>
                 </dl>
                 <div class="tag-row"><span>Wardrobe</span><span>Dark interior</span><span>Occlusion</span></div>
@@ -299,8 +371,8 @@
             </article>
 
             <article class="task-card" data-category="wipe" data-search="wipe table auxiliary objects target table speed variation">
-              <div class="task-photo task-photo-i" role="img" aria-label="Photo slot for wiping table with auxiliary objects">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-i" role="img" aria-label="Illustrative preview for wiping table with auxiliary objects">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>09</span><strong>Wiping</strong></div>
@@ -308,7 +380,7 @@
                 <p>Wipe a target table surface while nearby objects create visual and motion variation.</p>
                 <dl>
                   <dt>Scene</dt><dd>Target table and auxiliary objects.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, speed variants.</dd>
                   <dt>Difficulty</dt><dd>Speed variation.</dd>
                 </dl>
                 <div class="tag-row"><span>Wiping</span><span>Aux objects</span><span>Speed</span></div>
@@ -317,8 +389,8 @@
             </article>
 
             <article class="task-card" data-category="wipe" data-search="wipe empty table low texture speed variation">
-              <div class="task-photo task-photo-j" role="img" aria-label="Photo slot for wiping empty table">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-j" role="img" aria-label="Illustrative preview for wiping empty table">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>10</span><strong>Wiping</strong></div>
@@ -326,7 +398,7 @@
                 <p>Wipe a visually simple table surface with limited landmarks.</p>
                 <dl>
                   <dt>Scene</dt><dd>Empty target table.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, low-texture variants.</dd>
                   <dt>Difficulty</dt><dd>Low texture and speed variation.</dd>
                 </dl>
                 <div class="tag-row"><span>Low texture</span><span>Wiping</span><span>Speed</span></div>
@@ -335,8 +407,8 @@
             </article>
 
             <article class="task-card" data-category="throw" data-search="throw ball high speed change category throwing long">
-              <div class="task-photo task-photo-k" role="img" aria-label="Photo slot for throwing task">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-k" role="img" aria-label="Illustrative preview for throwing task">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>11</span><strong>Throwing</strong></div>
@@ -344,7 +416,7 @@
                 <p>Throw a ball or classify and throw objects, creating high-speed motion segments.</p>
                 <dl>
                   <dt>Scene</dt><dd>Throwing target area with ball or category objects.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, speed variants.</dd>
                   <dt>Difficulty</dt><dd>High speed variation and long-horizon variant.</dd>
                 </dl>
                 <div class="tag-row"><span>Throw</span><span>High speed</span><span>Long</span></div>
@@ -353,8 +425,8 @@
             </article>
 
             <article class="task-card" data-category="organize" data-search="organize desktop long task table">
-              <div class="task-photo task-photo-l" role="img" aria-label="Photo slot for organizing desktop">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-l" role="img" aria-label="Illustrative preview for organizing desktop">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>12</span><strong>Long Task</strong></div>
@@ -362,7 +434,7 @@
                 <p>Complete a longer desktop organization sequence across multiple objects.</p>
                 <dl>
                   <dt>Scene</dt><dd>Desktop organization area.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, long-horizon variants.</dd>
                   <dt>Difficulty</dt><dd>Long-horizon execution.</dd>
                 </dl>
                 <div class="tag-row"><span>Long</span><span>Organization</span><span>Table</span></div>
@@ -371,8 +443,8 @@
             </article>
 
             <article class="task-card" data-category="organize" data-search="organize desktop rack under shelf full occlusion low texture long">
-              <div class="task-photo task-photo-m" role="img" aria-label="Photo slot for organizing desktop rack">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-m" role="img" aria-label="Illustrative preview for organizing desktop rack">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>13</span><strong>Long Task</strong></div>
@@ -380,7 +452,7 @@
                 <p>Place and retrieve objects around a rack, including objects fully hidden below it.</p>
                 <dl>
                   <dt>Scene</dt><dd>Object placement under a tabletop rack with full occlusion.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, rack occlusion variants.</dd>
                   <dt>Difficulty</dt><dd>Long, low texture, partial or full occlusion.</dd>
                 </dl>
                 <div class="tag-row"><span>Rack</span><span>Occlusion</span><span>Low texture</span></div>
@@ -389,8 +461,8 @@
             </article>
 
             <article class="task-card" data-category="organize" data-search="organize box objects long lighting change partial occlusion">
-              <div class="task-photo task-photo-n" role="img" aria-label="Photo slot for organizing objects in box">
-                <span>Task Photo</span>
+              <div class="task-photo task-photo-n" role="img" aria-label="Illustrative preview for organizing objects in box">
+                <span>Illustrative Preview</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>14</span><strong>Long Task</strong></div>
@@ -398,7 +470,7 @@
                 <p>Sort and organize objects inside a box over a longer interaction sequence.</p>
                 <dl>
                   <dt>Scene</dt><dd>Container or box with multiple objects.</dd>
-                  <dt>TAG</dt><dd>TBD</dd>
+                  <dt>Sequences</dt><dd>Original, ArUco 1-4, AprilTag family layouts, container variants.</dd>
                   <dt>Difficulty</dt><dd>Long, lighting change, partial occlusion.</dd>
                 </dl>
                 <div class="tag-row"><span>Box</span><span>Long</span><span>Lighting</span></div>
@@ -419,7 +491,8 @@
             <div class="release-content">
               <p>
                 The public release area is ready for stable dataset links. Replace each pending
-                link in the task cards after the data packages are uploaded.
+                link in the task cards after the data packages are uploaded, and expose the
+                sequence manifest for every scene bundle.
               </p>
               <pre><code>dataset/
   task_01_overhead_wave/
@@ -429,7 +502,11 @@
   task_02_cup_auxiliary/
     preview.jpg
     metadata.json
-    sequences/</code></pre>
+    sequences/
+      orin/
+      aruco_1tag/
+      apriltag_36h11_4tag/
+      tablecloth_variant_01/</code></pre>
             </div>
           </div>
         </div>
