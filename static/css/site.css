@@ -109,7 +109,7 @@ a {
 }
 
 .hero-bg {
-  background-image: url("../images/hero-mild-concept.png");
+  background-image: url("../images/captured/4apriltag.jpg");
   background-position: center;
   background-size: cover;
 }
@@ -318,7 +318,7 @@ h2 {
 .sensor-card {
   display: grid;
   gap: 16px;
-  min-height: 360px;
+  min-height: 460px;
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -355,6 +355,15 @@ h2 {
   margin: 0;
   font-size: 1.42rem;
   line-height: 1.18;
+}
+
+.sensor-photo {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
 }
 
 .sensor-card p {
@@ -572,7 +581,7 @@ h2 {
 
 .inventory-table {
   width: 100%;
-  min-width: 860px;
+  min-width: 880px;
   border-collapse: collapse;
 }
 
@@ -595,6 +604,16 @@ h2 {
 .inventory-table tbody th {
   width: 180px;
   font-weight: 850;
+}
+
+.inventory-table tbody th small,
+.inventory-table td small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 690;
+  line-height: 1.35;
 }
 
 .inventory-table tbody tr:last-child th,
@@ -630,6 +649,24 @@ h2 {
   color: #4d3b13;
   border: 1px solid #e7d4a8;
   background: #fbf0d3;
+}
+
+.status-good {
+  color: #0b4f4a;
+  border-color: #9dcac1;
+  background: #e3f3ef;
+}
+
+.status-warn {
+  color: #74301f;
+  border-color: #ebb29f;
+  background: #fff0ea;
+}
+
+.status-neutral {
+  color: #2d4c64;
+  border-color: #c7d9e7;
+  background: #e9f2f8;
 }
 
 .tasks-section {
@@ -752,72 +789,72 @@ h2 {
 
 .task-photo-a {
   background-color: #315f91;
-  background-image: url("../images/tasks/task-01-overhead-wardrobe.png");
+  background-image: url("../images/captured/Bookshelf01.jpg");
 }
 
 .task-photo-b {
   background-color: #0f766e;
-  background-image: url("../images/tasks/task-02-cup-aux.png");
+  background-image: url("../images/captured/Grab_Place01.jpg");
 }
 
 .task-photo-c {
   background-color: #596b3d;
-  background-image: url("../images/tasks/task-03-cup-clean.png");
+  background-image: url("../images/captured/Grab_Place02.jpg");
 }
 
 .task-photo-d {
   background-color: #45778d;
-  background-image: url("../images/tasks/task-04-transparent-cup.png");
+  background-image: url("../images/captured/Grab_Place03.jpg");
 }
 
 .task-photo-e {
   background-color: #6f5f43;
-  background-image: url("../images/tasks/task-05-same-color-lighting.png");
+  background-image: url("../images/captured/Grab_Place04.jpg");
 }
 
 .task-photo-f {
   background-color: #5c6670;
-  background-image: url("../images/tasks/task-06-pen.png");
+  background-image: url("../images/captured/Grab_Place06.jpg");
 }
 
 .task-photo-g {
   background-color: #8a623d;
-  background-image: url("../images/tasks/task-07-box-retrieve.png");
+  background-image: url("../images/captured/Box01.jpg");
 }
 
 .task-photo-h {
   background-color: #4c5865;
-  background-image: url("../images/tasks/task-08-wardrobe-clothes.png");
+  background-image: url("../images/captured/Bookshelf02.jpg");
 }
 
 .task-photo-i {
   background-color: #23756e;
-  background-image: url("../images/tasks/task-09-wipe.png");
+  background-image: url("../images/captured/Wiping01.jpg");
 }
 
 .task-photo-j {
   background-color: #65715a;
-  background-image: url("../images/tasks/task-10-wipe-empty.png");
+  background-image: url("../images/captured/Wiping02.jpg");
 }
 
 .task-photo-k {
   background-color: #c24132;
-  background-image: url("../images/tasks/task-11-throw.png");
+  background-image: url("../images/captured/4aruco_side02.jpg");
 }
 
 .task-photo-l {
   background-color: #315f91;
-  background-image: url("../images/tasks/task-12-organize.png");
+  background-image: url("../images/captured/tablecloth.jpg");
 }
 
 .task-photo-m {
   background-color: #6b5941;
-  background-image: url("../images/tasks/task-13-rack.png");
+  background-image: url("../images/captured/Bookshelf02_02.jpg");
 }
 
 .task-photo-n {
   background-color: #4f6f52;
-  background-image: url("../images/tasks/task-14-box-organize.png");
+  background-image: url("../images/captured/Box02.jpg");
 }
 
 .task-body {

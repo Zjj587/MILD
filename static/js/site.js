@@ -24,108 +24,123 @@ const taskSlugs = {
 const collectedScenes = [
   {
     name: "Analemma_2_t",
-    bundles: 6,
+    variantCount: 6,
     variants: "orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 5 pending",
+    x5Raw: 6,
+    insight9Usable: 3,
+    insight9Variants: "orin, tablecloth, ArUco 4",
   },
   {
     name: "Bookshelf01_2",
-    bundles: 5,
+    variantCount: 5,
     variants: "orin, ArUco 2/4, AprilTag Custom48h12 2/4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 4 pending",
+    x5Raw: 5,
+    insight9Usable: 2,
+    insight9Variants: "orin, ArUco 4",
   },
   {
     name: "Bookshelf02_2",
-    bundles: 6,
+    variantCount: 6,
     variants: "orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 5 pending",
+    x5Raw: 6,
+    insight9Usable: 2,
+    insight9Variants: "orin, ArUco 4",
   },
   {
     name: "Box01",
-    bundles: 3,
+    variantCount: 3,
     variants: "orin, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 2 pending",
+    x5Raw: 3,
+    insight9Usable: 1,
+    insight9Variants: "ArUco 4",
   },
   {
     name: "Box02",
-    bundles: 3,
+    variantCount: 3,
     variants: "orin, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 2 pending",
+    x5Raw: 3,
+    insight9Usable: 2,
+    insight9Variants: "orin, ArUco 4",
   },
   {
     name: "Circular_2_t",
-    bundles: 6,
+    variantCount: 6,
     variants: "orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 5 pending",
+    x5Raw: 6,
+    insight9Usable: 3,
+    insight9Variants: "orin, tablecloth, ArUco 4",
   },
   {
     name: "Grab_Place01_t",
-    bundles: 4,
+    variantCount: 4,
     variants: "orin, tablecloth, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 3 pending",
+    x5Raw: 4,
+    insight9Usable: 1,
+    insight9Variants: "orin",
   },
   {
     name: "Grab_Place02_t",
-    bundles: 4,
+    variantCount: 4,
     variants: "orin, tablecloth, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 3 pending",
+    x5Raw: 4,
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Grab_Place03_t",
-    bundles: 4,
+    variantCount: 4,
     variants: "orin, tablecloth, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 3 pending",
+    x5Raw: 4,
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Grab_Place04",
-    bundles: 3,
+    variantCount: 3,
     variants: "orin, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 2 pending",
+    x5Raw: 3,
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Grab_Place05",
-    bundles: 3,
+    variantCount: 3,
     variants: "orin, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 2 pending",
+    x5Raw: 3,
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Grab_Place06_t",
-    bundles: 4,
+    variantCount: 4,
     variants: "orin, tablecloth, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 3 pending",
+    x5Raw: 4,
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Wiping01",
-    bundles: 3,
+    variantCount: 3,
     variants: "orin, ArUco 4, AprilTag Custom48h12 4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 2 pending",
+    x5Raw: 3,
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Wiping02_1",
-    bundles: 7,
+    variantCount: 7,
     variants: "orin, ArUco 1/2/4, AprilTag Custom48h12 1/2/4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 6 pending",
+    x5Raw: 7,
+    insight9Usable: 2,
+    insight9Variants: "orin, ArUco 4",
   },
   {
     name: "Zigzag_2_t",
-    bundles: 6,
+    variantCount: 6,
     variants: "orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4",
-    sensors: ["X5", "Insight9", "PICO"],
-    status: "1 aligned bag, 5 pending",
+    x5Raw: 6,
+    insight9Usable: 5,
+    insight9Variants: "orin, tablecloth, ArUco 2/4, AprilTag 2",
   },
 ];
 
@@ -223,6 +238,13 @@ function createTaskDownloads(card) {
   return panel;
 }
 
+function createStatusBadge(text, tone = "neutral") {
+  const badge = document.createElement("span");
+  badge.className = `status-badge status-${tone}`;
+  badge.textContent = text;
+  return badge;
+}
+
 function renderCollectedInventory() {
   const tableBody = document.querySelector("#collectedInventory");
   const inventoryCount = document.querySelector("#inventoryCount");
@@ -236,35 +258,32 @@ function renderCollectedInventory() {
     const name = document.createElement("th");
     name.scope = "row";
     name.textContent = scene.name;
-
-    const bundles = document.createElement("td");
-    bundles.textContent = String(scene.bundles);
+    const sceneMeta = document.createElement("small");
+    sceneMeta.textContent = `${scene.variantCount} variants`;
+    name.appendChild(sceneMeta);
 
     const variants = document.createElement("td");
     variants.textContent = scene.variants;
 
-    const sensors = document.createElement("td");
-    const sensorWrap = document.createElement("div");
-    sensorWrap.className = "sensor-chip-row";
-    scene.sensors.forEach((sensor) => {
-      const chip = document.createElement("span");
-      chip.textContent = sensor;
-      sensorWrap.appendChild(chip);
-    });
-    sensors.appendChild(sensorWrap);
+    const x5Raw = document.createElement("td");
+    x5Raw.appendChild(createStatusBadge(`${scene.x5Raw}/${scene.variantCount} usable`, "good"));
 
-    const status = document.createElement("td");
-    const statusBadge = document.createElement("span");
-    statusBadge.className = "status-badge";
-    statusBadge.textContent = scene.status;
-    status.appendChild(statusBadge);
+    const insight = document.createElement("td");
+    const insightWrap = document.createElement("div");
+    insightWrap.className = "sensor-chip-row";
+    insightWrap.appendChild(createStatusBadge(`${scene.insight9Usable} usable`, scene.insight9Usable ? "good" : "warn"));
+    insight.appendChild(insightWrap);
 
-    row.append(name, bundles, variants, sensors, status);
+    const notes = document.createElement("td");
+    notes.textContent = scene.insight9Variants === "none" ? "X5 usable only" : scene.insight9Variants;
+
+    row.append(name, variants, x5Raw, insight, notes);
     tableBody.appendChild(row);
   });
 
   if (inventoryCount) {
-    inventoryCount.textContent = `${collectedScenes.length} scenes`;
+    const totalVariants = collectedScenes.reduce((sum, scene) => sum + scene.variantCount, 0);
+    inventoryCount.textContent = `${collectedScenes.length} scenes / ${totalVariants} variants`;
   }
 }
 

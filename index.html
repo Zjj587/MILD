@@ -19,8 +19,8 @@
       property="og:description"
       content="A benchmark for visual-inertial localization in Universal Manipulation Interface style manipulation tasks."
     >
-    <meta property="og:image" content="static/images/hero-mild-concept.png">
-    <link rel="preload" href="static/images/hero-mild-concept.png" as="image">
+    <meta property="og:image" content="static/images/captured/4apriltag.jpg">
+    <link rel="preload" href="static/images/captured/4apriltag.jpg" as="image">
     <link rel="stylesheet" href="static/css/site.css">
   </head>
   <body>
@@ -66,20 +66,20 @@
         <div class="section-inner">
           <div class="metric-strip" aria-label="Dataset summary">
             <div class="metric">
-              <span class="metric-value">15</span>
-              <span class="metric-label">v0 collected scenes</span>
+              <span class="metric-value">67</span>
+              <span class="metric-label">v0 scene variants</span>
             </div>
             <div class="metric">
               <span class="metric-value">67</span>
-              <span class="metric-label">X5 sequence bundles</span>
+              <span class="metric-label">X5 usable variants</span>
             </div>
             <div class="metric">
-              <span class="metric-value">15</span>
-              <span class="metric-label">aligned rosbag bundles</span>
+              <span class="metric-value">21</span>
+              <span class="metric-label">X5 + Insight9 usable</span>
             </div>
             <div class="metric">
-              <span class="metric-value">52</span>
-              <span class="metric-label">pending X5 conversions</span>
+              <span class="metric-value">21</span>
+              <span class="metric-label">Insight9 usable variants</span>
             </div>
           </div>
 
@@ -147,6 +147,7 @@
           <div class="sensor-grid" aria-label="Included camera sensors">
             <article class="sensor-card">
               <div class="sensor-topline"><span>X5</span><strong>Wide-FOV VIO stream</strong></div>
+              <img class="sensor-photo" src="static/images/captured/instan360x5_side02.jpg" alt="Insta360 X5 mounted for MILD collection">
               <h3>Insta360 X5</h3>
               <p>
                 Wearable or handheld camera stream for manipulation-centered visual-inertial
@@ -165,13 +166,14 @@
 
             <article class="sensor-card">
               <div class="sensor-topline"><span>I9</span><strong>Companion camera stream</strong></div>
+              <img class="sensor-photo" src="static/images/captured/insight9_front.jpg" alt="Insight9 camera used in the MILD sensor suite">
               <h3>Insight9</h3>
               <p>
                 Companion camera source for sensor comparison, synchronized capture, and calibration
                 release alongside the manipulation task data.
               </p>
               <dl>
-                <dt>Signals</dt><dd>Color, depth or infrared camera records, IMU, VIO, and device timestamps.</dd>
+                <dt>Signals</dt><dd>Left/right grayscale images, IMU, image timestamps, and optional RGB, depth, or VIO records.</dd>
                 <dt>Release</dt><dd>Camera intrinsics, static transforms, IMU parameters, and audited capture metadata.</dd>
               </dl>
               <div class="sensor-downloads" aria-label="Insight9 calibration downloads">
@@ -263,24 +265,24 @@
 
           <div class="snapshot-grid" aria-label="Collected v0 summary">
             <article class="snapshot-card">
-              <span>15</span>
-              <strong>scene folders</strong>
-              <p>Task-level folders selected for the v0 website snapshot.</p>
+              <span>67</span>
+              <strong>scene variants</strong>
+              <p>Collected v0 scene/condition folders shown in the release inventory.</p>
             </article>
             <article class="snapshot-card">
               <span>67</span>
-              <strong>X5 sequences</strong>
-              <p>Convertible Insta360 X5 camera-IMU sequence folders.</p>
+              <strong>X5 usable variants</strong>
+              <p>Insta360 X5 folders with video, IMU, timestamps, and robot trajectory files.</p>
             </article>
             <article class="snapshot-card">
-              <span>15</span>
-              <strong>aligned bags</strong>
-              <p>Sequence folders already carrying rosbag, summary, and aligned TUM outputs.</p>
+              <span>21</span>
+              <strong>X5 + Insight9 usable</strong>
+              <p>Variants where the X5 sequence and the Insight9 minimum sensor set are both usable.</p>
             </article>
             <article class="snapshot-card">
-              <span>8</span>
-              <strong>tablecloth scenes</strong>
-              <p>Appearance-variant scenes for low-texture tabletop stress testing.</p>
+              <span>21</span>
+              <strong>Insight9 usable</strong>
+              <p>Variants with usable stereo grayscale images, IMU, and time-sync index.</p>
             </article>
           </div>
 
@@ -289,9 +291,9 @@
               <div>
                 <h3>Collected Scene Inventory</h3>
                 <p>
-                  This table reflects the current v0 folder organization. Public download assets
-                  should be generated from these scene-level manifests after calibration and quality
-                  owner review.
+                  This table reflects the current v0 folder organization. Insight9 availability
+                  follows the project rule: left/right grayscale images, IMU, and time-sync index
+                  are required; RGB, depth, and VIO are non-core notes.
                 </p>
               </div>
               <span id="inventoryCount">15 scenes</span>
@@ -301,10 +303,10 @@
                 <thead>
                   <tr>
                     <th>Scene</th>
-                    <th>X5 Bundles</th>
                     <th>Variants</th>
-                    <th>Sensors</th>
-                    <th>Status</th>
+                    <th>X5 Usable</th>
+                    <th>Insight9 Usable</th>
+                    <th>Usable Insight9 Variants</th>
                   </tr>
                 </thead>
                 <tbody id="collectedInventory"></tbody>
@@ -340,8 +342,8 @@
 
           <div class="task-grid">
             <article class="task-card" data-category="body" data-search="overhead wave wardrobe clothes body motion occlusion high reach">
-              <div class="task-photo task-photo-a" role="img" aria-label="Illustrative preview for overhead wave and wardrobe retrieval task">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-a" role="img" aria-label="Captured preview for overhead wave and wardrobe retrieval task">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>01</span><strong>Body Motion</strong></div>
@@ -358,8 +360,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="water cup clutter auxiliary object table slow standard grasp place">
-              <div class="task-photo task-photo-b" role="img" aria-label="Illustrative preview for normal cup with auxiliary objects">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-b" role="img" aria-label="Captured preview for normal cup with auxiliary objects">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>02</span><strong>Grasp + Place</strong></div>
@@ -376,8 +378,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="water cup table slow standard grasp place clean tabletop">
-              <div class="task-photo task-photo-c" role="img" aria-label="Illustrative preview for normal cup on table">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-c" role="img" aria-label="Captured preview for normal cup on table">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>03</span><strong>Grasp + Place</strong></div>
@@ -394,8 +396,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="transparent cup table slow low texture grasp place">
-              <div class="task-photo task-photo-d" role="img" aria-label="Illustrative preview for transparent cup task">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-d" role="img" aria-label="Captured preview for transparent cup task">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>04</span><strong>Grasp + Place</strong></div>
@@ -412,8 +414,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="same color cup table night light switch low texture grasp place">
-              <div class="task-photo task-photo-e" role="img" aria-label="Illustrative preview for same-color cup task">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-e" role="img" aria-label="Captured preview for same-color cup task">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>05</span><strong>Grasp + Place</strong></div>
@@ -430,8 +432,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="pen pick place slow standard table">
-              <div class="task-photo task-photo-f" role="img" aria-label="Illustrative preview for pen pick-and-place task">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-f" role="img" aria-label="Captured preview for pen pick-and-place task">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>06</span><strong>Grasp + Place</strong></div>
@@ -448,8 +450,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="box retrieve object partial occlusion lighting change slow">
-              <div class="task-photo task-photo-g" role="img" aria-label="Illustrative preview for object retrieval from box">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-g" role="img" aria-label="Captured preview for object retrieval from box">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>07</span><strong>Grasp + Place</strong></div>
@@ -466,8 +468,8 @@
             </article>
 
             <article class="task-card" data-category="grasp-place" data-search="wardrobe clothes open cabinet dark interior no light partial occlusion">
-              <div class="task-photo task-photo-h" role="img" aria-label="Illustrative preview for wardrobe clothes retrieval">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-h" role="img" aria-label="Captured preview for wardrobe clothes retrieval">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>08</span><strong>Grasp + Place</strong></div>
@@ -484,8 +486,8 @@
             </article>
 
             <article class="task-card" data-category="wipe" data-search="wipe table auxiliary objects target table speed variation">
-              <div class="task-photo task-photo-i" role="img" aria-label="Illustrative preview for wiping table with auxiliary objects">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-i" role="img" aria-label="Captured preview for wiping table with auxiliary objects">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>09</span><strong>Wiping</strong></div>
@@ -502,8 +504,8 @@
             </article>
 
             <article class="task-card" data-category="wipe" data-search="wipe empty table low texture speed variation">
-              <div class="task-photo task-photo-j" role="img" aria-label="Illustrative preview for wiping empty table">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-j" role="img" aria-label="Captured preview for wiping empty table">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>10</span><strong>Wiping</strong></div>
@@ -520,8 +522,8 @@
             </article>
 
             <article class="task-card" data-category="throw" data-search="throw ball high speed change category throwing long">
-              <div class="task-photo task-photo-k" role="img" aria-label="Illustrative preview for throwing task">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-k" role="img" aria-label="Captured preview for throwing task">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>11</span><strong>Throwing</strong></div>
@@ -538,8 +540,8 @@
             </article>
 
             <article class="task-card" data-category="organize" data-search="organize desktop long task table">
-              <div class="task-photo task-photo-l" role="img" aria-label="Illustrative preview for organizing desktop">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-l" role="img" aria-label="Captured preview for organizing desktop">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>12</span><strong>Long Task</strong></div>
@@ -556,8 +558,8 @@
             </article>
 
             <article class="task-card" data-category="organize" data-search="organize desktop rack under shelf full occlusion low texture long">
-              <div class="task-photo task-photo-m" role="img" aria-label="Illustrative preview for organizing desktop rack">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-m" role="img" aria-label="Captured preview for organizing desktop rack">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>13</span><strong>Long Task</strong></div>
@@ -574,8 +576,8 @@
             </article>
 
             <article class="task-card" data-category="organize" data-search="organize box objects long lighting change partial occlusion">
-              <div class="task-photo task-photo-n" role="img" aria-label="Illustrative preview for organizing objects in box">
-                <span>Illustrative Preview</span>
+              <div class="task-photo task-photo-n" role="img" aria-label="Captured preview for organizing objects in box">
+                <span>v0 Photo</span>
               </div>
               <div class="task-body">
                 <div class="task-topline"><span>14</span><strong>Long Task</strong></div>
