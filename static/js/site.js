@@ -208,36 +208,6 @@ function createDownloadRow(label, links) {
   return row;
 }
 
-function createTaskDownloads(card) {
-  const taskNumber = card.querySelector(".task-topline span")?.textContent.trim();
-  const slug = taskSlugs[taskNumber];
-  if (!slug) return null;
-
-  const panel = document.createElement("div");
-  panel.className = "task-downloads";
-  panel.setAttribute("aria-label", "Task dataset downloads");
-
-  const heading = document.createElement("div");
-  heading.className = "download-heading";
-
-  const title = document.createElement("span");
-  title.textContent = "Data Links";
-
-  const release = document.createElement("small");
-  release.textContent = "release plan";
-
-  heading.append(title, release);
-  panel.appendChild(heading);
-  panel.appendChild(createDownloadRow("Scene", [
-    createDownloadPill("bundle", `${slug}_scene_bundle.zip`),
-  ]));
-  panel.appendChild(createDownloadRow("Metadata", [
-    createDownloadPill("manifest", `${slug}_manifest.json`),
-  ]));
-
-  return panel;
-}
-
 function createStatusBadge(text, tone = "neutral") {
   const badge = document.createElement("span");
   badge.className = `status-badge status-${tone}`;
@@ -279,6 +249,10 @@ function sceneKey(value) {
     .trim();
 }
 
+function sceneSlug(value) {
+  return sceneKey(value).replace(/\s+/g, "_");
+}
+
 function buildSceneEntries(task) {
   const insightScenes = new Set(expandVariantList(task.insight9Variants).map(sceneKey));
 
@@ -308,7 +282,6 @@ function createTaskDetailDialog() {
           </div>
           <button class="detail-close" type="button">Close</button>
         </div>
-        <div class="task-detail-stats"></div>
         <div class="task-detail-columns">
           <div>
             <h4>Scenes</h4>
@@ -321,6 +294,7 @@ function createTaskDetailDialog() {
               <p class="sensor-detail-meta"></p>
               <div class="sensor-list"></div>
               <p class="sensor-detail-note"></p>
+              <div class="scene-downloads" aria-label="Scene release downloads"></div>
             </div>
           </div>
         </div>
@@ -337,12 +311,12 @@ const taskDetailRefs = {
   kicker: taskDetailDialog.querySelector(".task-detail-kicker"),
   title: taskDetailDialog.querySelector(".task-detail-title"),
   summary: taskDetailDialog.querySelector(".task-detail-summary"),
-  stats: taskDetailDialog.querySelector(".task-detail-stats"),
   sceneList: taskDetailDialog.querySelector(".scene-list"),
   sensorTitle: taskDetailDialog.querySelector(".sensor-detail-title"),
   sensorMeta: taskDetailDialog.querySelector(".sensor-detail-meta"),
   sensorList: taskDetailDialog.querySelector(".sensor-list"),
   sensorNote: taskDetailDialog.querySelector(".sensor-detail-note"),
+  sceneDownloads: taskDetailDialog.querySelector(".scene-downloads"),
   close: taskDetailDialog.querySelector(".detail-close"),
 };
 
@@ -362,6 +336,7 @@ function renderSensorDetail(scene) {
   taskDetailRefs.sensorTitle.textContent = scene.name;
   taskDetailRefs.sensorMeta.textContent = `${scene.sensors.length} usable sensor stream${scene.sensors.length === 1 ? "" : "s"}`;
   taskDetailRefs.sensorList.replaceChildren();
+  taskDetailRefs.sceneDownloads.replaceChildren();
 
   scene.sensors.forEach((sensorName) => {
     const sensor = sensorCatalog[sensorName];
@@ -389,6 +364,26 @@ function renderSensorDetail(scene) {
   taskDetailRefs.sensorNote.textContent = scene.sensors.includes("Insight9")
     ? "This scene contains both the wide-view VIO stream and the stereo companion stream."
     : "Only the public usable Insta360 X5 stream is listed for this scene.";
+
+  if (scene.releaseSlug) {
+    const heading = document.createElement("div");
+    heading.className = "download-heading";
+
+    const title = document.createElement("span");
+    title.textContent = "Data links";
+
+    const release = document.createElement("small");
+    release.textContent = "release plan";
+
+    heading.append(title, release);
+    taskDetailRefs.sceneDownloads.appendChild(heading);
+    taskDetailRefs.sceneDownloads.appendChild(createDownloadRow("Scene", [
+      createDownloadPill("bundle", `${scene.releaseSlug}_bundle.zip`),
+    ]));
+    taskDetailRefs.sceneDownloads.appendChild(createDownloadRow("Metadata", [
+      createDownloadPill("manifest", `${scene.releaseSlug}_manifest.json`),
+    ]));
+  }
 }
 
 function renderSceneOptions(scenes) {
@@ -433,20 +428,17 @@ function openTaskDetail(card) {
   const taskCategory = card.querySelector(".task-topline strong")?.textContent.trim() || "";
   const taskSummary = card.querySelector(".task-body > p")?.textContent.trim() || "";
   const photo = card.querySelector(".task-photo");
-  const scenes = buildSceneEntries(task);
+  const taskSlug = taskSlugs[taskNumber];
+  const scenes = buildSceneEntries(task).map((scene) => ({
+    ...scene,
+    releaseSlug: taskSlug ? `${taskSlug}_${sceneSlug(scene.name)}` : "",
+  }));
 
   lastTaskTrigger = photo;
   copyTaskPhotoStyle(photo);
   taskDetailRefs.kicker.textContent = `${taskNumber} ${taskCategory}`.trim();
   taskDetailRefs.title.textContent = task.name;
   taskDetailRefs.summary.textContent = taskSummary;
-  taskDetailRefs.stats.replaceChildren(
-    createStatusBadge(`${scenes.length} scenes`, "neutral"),
-    createStatusBadge(`${task.insta360Usable} Insta360 X5`, "good"),
-    task.insight9Usable > 0
-      ? createStatusBadge(`${task.insight9Usable} Insight9`, "good")
-      : createStatusBadge("Insta360 X5 only", "neutral"),
-  );
   renderSceneOptions(scenes);
 
   if (typeof taskDetailDialog.showModal === "function") {
@@ -524,16 +516,6 @@ function renderCollectedInventory() {
     inventoryCount.textContent = `${collectedScenes.length} tasks / 6 scene settings / 2 sensors / ${sensorSequences} sensor sequences`;
   }
 }
-
-document.querySelectorAll(".dataset-link.is-disabled").forEach((link) => {
-  const card = link.closest(".task-card");
-  const downloads = card ? createTaskDownloads(card) : null;
-  if (downloads) {
-    link.replaceWith(downloads);
-  } else {
-    link.addEventListener("click", (event) => event.preventDefault());
-  }
-});
 
 renderCollectedInventory();
 updateTasks();

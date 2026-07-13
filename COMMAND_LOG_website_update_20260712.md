@@ -1409,3 +1409,112 @@ Safety boundary:
 - Website HTML/CSS/JS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 19. Simplify task cards and move details to scene view
+
+Timestamp: 2026-07-13T23:16:47+08:00
+
+Reason: user confirmed the task/scene/sensor interaction works and asked to
+make the task cards more concise. Details such as variants, usable sensor
+counts, dual-sensor tags, and data links should no longer appear in the task
+card; scene-specific details should be shown after selecting a scene.
+
+Edits:
+
+- `index.html`
+  - Updated stylesheet query string to
+    `static/css/site.css?v=20260713-compact-task-cards`.
+  - Removed task-card `<dl>` variant/sensor summaries, tag chips, and disabled
+    task-level dataset links from all 15 task cards.
+  - Preserved the sensor calibration cards, scene preview panels, inventory
+    table, and all 15 task card/image-button entries.
+- `static/js/site.js`
+  - Removed obsolete task-card download generation.
+  - Added scene-level release-plan links in the selected scene detail panel.
+  - Removed task-level summary badges from the task detail header so the detail
+    view focuses on scene selection and the selected scene's sensors.
+- `static/css/site.css`
+  - Reduced task card image height from `240px` to `220px`.
+  - Removed task-card detail/list/tag/download styles.
+  - Added `.scene-downloads` styling for scene-level data links.
+
+Correction note:
+
+- An initial broad regex removal overmatched from the sensor card into the task
+  section. I immediately restored `index.html` from the git index version and
+  redid the removal using a task-card-scoped rewrite. Final validation confirmed
+  the sensor cards, scene preview panels, inventory table, and 15 task cards are
+  intact.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+perl -0pi -e 's/\n\s*<dl>.*?<\/dl>\n\s*<div class="tag-row">.*?<\/div>\n\s*<a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending<\/a>//sg' index.html
+git diff -- index.html | sed -n '1,260p'
+git show :index.html > index.html && perl -0pi -e 's{(<article class="task-card"[\s\S]*?</article>)}{ my $b = $1; $b =~ s/\n\s*<dl>[\s\S]*?<\/dl>//g; $b =~ s/\n\s*<div class="tag-row">[\s\S]*?<\/div>//g; $b =~ s/\n\s*<a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending<\/a>//g; $b }ge' index.html
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+print('sensor_cards', len(soup.select('.sensor-card')))
+print('variant_panels', len(soup.select('.variant-panel')))
+print('inventory_table', len(soup.select('#collectedInventory')))
+print('task_cards', len(soup.select('.task-card')))
+print('task_photo_buttons', len(soup.select('button.task-photo')))
+print('task_card_dl', len(soup.select('.task-card dl')))
+print('task_tag_rows', len(soup.select('.task-card .tag-row')))
+print('task_dataset_links', len(soup.select('.task-card .dataset-link')))
+print('sensor_dl', len(soup.select('.sensor-card dl')))
+print('sensor_downloads', len(soup.select('.sensor-downloads')))
+print('search_label', soup.select_one('.task-search span').get_text(strip=True))
+print('stylesheet', soup.select_one('link[rel="stylesheet"]')['href'])
+PY
+rg -n "<dl>|tag-row|dataset-link|task-downloads|task-detail-stats|Data Links|Data links|release plan|scene-downloads|compact-task-cards" index.html static/js/site.js static/css/site.css
+node --check static/js/site.js
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+date --iso-8601=seconds
+git diff --stat
+git status --short
+git diff -- index.html static/js/site.js static/css/site.css | sed -n '1,260p'
+```
+
+Validation results:
+
+- Structure count: `sensor_cards 2`, `variant_panels 6`, `inventory_table 1`,
+  `task_cards 15`, `task_photo_buttons 15`.
+- Task-card detail removal: `task_card_dl 0`, `task_tag_rows 0`,
+  `task_dataset_links 0`.
+- Sensor area preserved: `sensor_dl 2`, `sensor_downloads 2`.
+- `node --check static/js/site.js`: success.
+- Static resource reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+
+Safety boundary:
+
+- Website HTML/CSS/JS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.

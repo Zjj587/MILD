@@ -705,8 +705,8 @@ h2 {
 
 .task-card {
   display: grid;
-  grid-template-rows: 240px 1fr;
-  min-height: 660px;
+  grid-template-rows: 220px 1fr;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -718,7 +718,7 @@ h2 {
   position: relative;
   display: block;
   width: 100%;
-  min-height: 240px;
+  min-height: 220px;
   padding: 0;
   color: var(--white);
   border: 0;
@@ -839,7 +839,6 @@ h2 {
 
 .task-body {
   display: grid;
-  grid-template-rows: auto auto auto 1fr auto auto;
   gap: 12px;
   padding: 18px;
 }
@@ -870,71 +869,19 @@ h2 {
 }
 
 .task-card h3 {
-  min-height: 58px;
+  min-height: 0;
   margin: 0;
   font-size: 1.24rem;
   line-height: 1.18;
 }
 
 .task-card p {
-  min-height: 74px;
+  min-height: 0;
   margin: 0;
   color: var(--muted);
 }
 
-.task-card dl {
-  display: grid;
-  grid-template-columns: 74px 1fr;
-  gap: 8px 12px;
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.task-card dt {
-  color: var(--ink);
-  font-weight: 820;
-}
-
-.task-card dd {
-  margin: 0;
-}
-
-.tag-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag-row span {
-  padding: 5px 8px;
-  color: #27423d;
-  background: #e0eee8;
-  border: 1px solid #c7ddd5;
-  border-radius: 8px;
-  font-size: 0.78rem;
-  font-weight: 760;
-}
-
-.dataset-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 9px 12px;
-  color: var(--white);
-  background: var(--teal);
-  border-radius: 8px;
-  font-weight: 820;
-}
-
-.dataset-link.is-disabled {
-  color: #6b7280;
-  background: #e8ebe7;
-  cursor: not-allowed;
-}
-
-.task-downloads {
+.scene-downloads {
   display: grid;
   gap: 10px;
   padding: 12px;
@@ -1068,7 +1015,6 @@ h2 {
   outline: 3px solid rgba(15, 118, 110, 0.14);
 }
 
-.task-detail-stats,
 .sensor-list {
   display: flex;
   flex-wrap: wrap;
