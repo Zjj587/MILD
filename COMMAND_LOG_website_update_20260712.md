@@ -523,6 +523,111 @@ Verification results:
 - Public files private absolute path scan: success, no output.
 - `git diff --check`: success.
 
+## 10. Align public photos with curated pic/task, pic/scenes, and pic/sensor folders
+
+Timestamp: 2026-07-13T16:47:27+08:00
+
+CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+
+Reason: user said the snapshot descriptions should be short and concrete, and
+the photos in the current task/scene/sensor presentation should follow the
+curated image folders under `UMID/data/v0/pic`: `task`, `scenes`, and `sensor`.
+This only generated compressed website image copies and edited static website
+references. No robot control, Docker replay, collection, rosbag conversion, or
+UMID pipeline write was run. The source `UMID/data/v0/pic` files were read only.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+find /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/pic -maxdepth 2 -type f -printf '%P\n' | sort
+identify /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/pic/*/* 2>/dev/null | sort
+sed -n '60,115p' index.html
+sed -n '140,190p' index.html
+sed -n '259,615p' index.html
+sed -n '300,380p' static/css/site.css
+sed -n '500,560p' static/css/site.css
+sed -n '740,875p' static/css/site.css
+sed -n '193,258p' index.html
+rg -n "variant-grid|variant-panel|variant-index|structure-block|snapshot-card|sensor-photo|task-photo" static/css/site.css
+sed -n '390,505p' static/css/site.css
+```
+
+Generated website image copies:
+
+```bash
+rm -rf static/images/pic && mkdir -p static/images/pic/scenes static/images/pic/sensor static/images/pic/task
+for src in /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/pic/scenes/*.jpeg; do name=$(basename "$src" .jpeg); convert "$src" -auto-orient -resize '1600x1200>' -quality 84 "static/images/pic/scenes/${name}.jpg"; done
+for src in /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/pic/sensor/*.jpeg; do name=$(basename "$src" .jpeg); convert "$src" -auto-orient -resize '1600x1200>' -quality 84 "static/images/pic/sensor/${name}.jpg"; done
+for src in /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/pic/task/*.jpeg; do name=$(basename "$src" .jpeg); convert "$src" -auto-orient -resize '1600x1200>' -quality 84 "static/images/pic/task/${name}.jpg"; done
+find static/images/pic -type f -printf '%P %k KB\n' | sort
+```
+
+Generated files:
+
+- `static/images/pic/scenes/`: `table.jpg`, `tablecloth.jpg`, `aruco2.jpg`,
+  `aruco4.jpg`, `apriltag2.jpg`, `apriltag4.jpg`.
+- `static/images/pic/sensor/`: `instan360x5.jpg`, `insight9.jpg`.
+- `static/images/pic/task/`: `Bookshelf01.jpg`, `Bookshelf02_02.jpg`,
+  `Box01.jpg`, `Box02.jpg`, `Grab_Place01.jpg` through `Grab_Place06.jpg`,
+  `Wiping01.jpg`, `Wiping02.jpg`.
+
+Edits:
+
+- `index.html`: shortened snapshot descriptions; changed sensor images to
+  `static/images/pic/sensor/*`; replaced the textual four-panel variant area
+  with a six-image scene-setting gallery from `static/images/pic/scenes/*`;
+  changed OG/preload image to `static/images/pic/scenes/apriltag4.jpg`.
+- `static/css/site.css`: updated hero background and task-card images to
+  `static/images/pic/...`; added `variant-photo` styling and changed the scene
+  setting gallery to a three-column image grid.
+- `README.md`: replaced `static/images/captured/` wording with
+  `static/images/pic/{task,scenes,sensor}`.
+
+Validation:
+
+```bash
+python3 - <<'PY'
+import re
+from pathlib import Path
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+refs=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js))"', text):
+        refs.append((str(f.relative_to(root)), m))
+        if not (root/m).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        path='static/images/'+m
+        refs.append((str(f.relative_to(root)), path))
+        if not (root/path).exists():
+            missing.append((str(f.relative_to(root)), path))
+print('refs', len(refs))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "static/images/captured|images/captured|hero-mild|static/images/tasks|max scene variants|up to 7|seven marker|X5\+I9|X5 \+ Insight9|Insight9 scenes" index.html static/css/site.css static/js/site.js README.md || true
+node --check static/js/site.js
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+git diff --stat
+git status --short
+date --iso-8601=seconds
+```
+
+Verification results:
+
+- Static resource reference check: `refs 28`, `missing_refs 0`.
+- Old `captured`, generated task image, old summary, and short dual-sensor text
+  scan over public files: success, no output.
+- `node --check static/js/site.js`: success.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+
 ## 9. Correct scene-count meaning from pic/scenes
 
 Timestamp: 2026-07-13T16:32:44+08:00

@@ -109,7 +109,7 @@ a {
 }
 
 .hero-bg {
-  background-image: url("../images/captured/4apriltag.jpg");
+  background-image: url("../images/pic/scenes/apriltag4.jpg");
   background-position: center;
   background-size: cover;
 }
@@ -437,52 +437,40 @@ h2 {
 
 .variant-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-top: clamp(34px, 5vw, 56px);
 }
 
 .variant-panel {
-  min-height: 230px;
+  display: grid;
+  gap: 12px;
+  min-height: 0;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--paper);
 }
 
-.variant-index {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  margin-bottom: 16px;
-  place-items: center;
-  color: var(--white);
-  background: var(--teal);
+.variant-photo {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  font-weight: 850;
+  background: #f7f8f9;
 }
 
 .variant-panel h3,
 .structure-block h3 {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 1.18rem;
 }
 
 .variant-panel p,
 .structure-block p {
-  margin: 0 0 16px;
+  margin: 0;
   color: var(--muted);
-}
-
-.variant-panel code {
-  display: inline-block;
-  max-width: 100%;
-  padding: 7px 9px;
-  overflow-x: auto;
-  color: #dff7f2;
-  background: #172026;
-  border-radius: 8px;
-  white-space: nowrap;
 }
 
 .structure-block {
@@ -794,77 +782,77 @@ h2 {
 
 .task-photo-a {
   background-color: #3c5164;
-  background-image: url("../images/captured/4apriltag.jpg");
+  background-image: url("../images/pic/scenes/apriltag4.jpg");
 }
 
 .task-photo-b {
   background-color: #4d5b5c;
-  background-image: url("../images/captured/Bookshelf01.jpg");
+  background-image: url("../images/pic/task/Bookshelf01.jpg");
 }
 
 .task-photo-c {
   background-color: #4f5f4b;
-  background-image: url("../images/captured/Bookshelf02.jpg");
+  background-image: url("../images/pic/task/Bookshelf02_02.jpg");
 }
 
 .task-photo-d {
   background-color: #45505a;
-  background-image: url("../images/captured/Box01.jpg");
+  background-image: url("../images/pic/task/Box01.jpg");
 }
 
 .task-photo-e {
   background-color: #5b4d43;
-  background-image: url("../images/captured/Box02.jpg");
+  background-image: url("../images/pic/task/Box02.jpg");
 }
 
 .task-photo-f {
   background-color: #48565d;
-  background-image: url("../images/captured/4aruco.jpg");
+  background-image: url("../images/pic/scenes/aruco4.jpg");
 }
 
 .task-photo-g {
   background-color: #6e644e;
-  background-image: url("../images/captured/Grab_Place01.jpg");
+  background-image: url("../images/pic/task/Grab_Place01.jpg");
 }
 
 .task-photo-h {
   background-color: #5c5e56;
-  background-image: url("../images/captured/Grab_Place02.jpg");
+  background-image: url("../images/pic/task/Grab_Place02.jpg");
 }
 
 .task-photo-i {
   background-color: #5a624f;
-  background-image: url("../images/captured/Grab_Place03.jpg");
+  background-image: url("../images/pic/task/Grab_Place03.jpg");
 }
 
 .task-photo-j {
   background-color: #675846;
-  background-image: url("../images/captured/Grab_Place04.jpg");
+  background-image: url("../images/pic/task/Grab_Place04.jpg");
 }
 
 .task-photo-k {
   background-color: #6b5748;
-  background-image: url("../images/captured/Grab_Place05.jpg");
+  background-image: url("../images/pic/task/Grab_Place05.jpg");
 }
 
 .task-photo-l {
   background-color: #5e5b50;
-  background-image: url("../images/captured/Grab_Place06.jpg");
+  background-image: url("../images/pic/task/Grab_Place06.jpg");
 }
 
 .task-photo-m {
   background-color: #586155;
-  background-image: url("../images/captured/Wiping01.jpg");
+  background-image: url("../images/pic/task/Wiping01.jpg");
 }
 
 .task-photo-n {
   background-color: #616055;
-  background-image: url("../images/captured/Wiping02.jpg");
+  background-image: url("../images/pic/task/Wiping02.jpg");
 }
 
 .task-photo-o {
   background-color: #465d67;
-  background-image: url("../images/captured/2apriltag_side.jpg");
+  background-image: url("../images/pic/scenes/tablecloth.jpg");
 }
 
 .task-body {

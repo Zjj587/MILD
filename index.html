@@ -19,8 +19,8 @@
       property="og:description"
       content="A benchmark for visual-inertial localization in Universal Manipulation Interface style manipulation tasks."
     >
-    <meta property="og:image" content="static/images/captured/4apriltag.jpg">
-    <link rel="preload" href="static/images/captured/4apriltag.jpg" as="image">
+    <meta property="og:image" content="static/images/pic/scenes/apriltag4.jpg">
+    <link rel="preload" href="static/images/pic/scenes/apriltag4.jpg" as="image">
     <link rel="stylesheet" href="static/css/site.css">
   </head>
   <body>
@@ -146,7 +146,7 @@
           <div class="sensor-grid" aria-label="Included camera sensors">
             <article class="sensor-card">
               <div class="sensor-topline"><span>Insta360 X5</span><strong>Wide-FOV VIO stream</strong></div>
-              <img class="sensor-photo" src="static/images/captured/instan360x5_side02.jpg" alt="Insta360 X5 mounted for MILD collection">
+              <img class="sensor-photo" src="static/images/pic/sensor/instan360x5.jpg" alt="Insta360 X5 mounted for MILD collection">
               <h3>Insta360 X5</h3>
               <p>
                 Wearable or handheld camera stream for manipulation-centered visual-inertial
@@ -165,7 +165,7 @@
 
             <article class="sensor-card">
               <div class="sensor-topline"><span>Insight9</span><strong>Companion camera stream</strong></div>
-              <img class="sensor-photo" src="static/images/captured/insight9_01.jpg" alt="Insight9 camera used in the MILD sensor suite">
+              <img class="sensor-photo" src="static/images/pic/sensor/insight9.jpg" alt="Insight9 camera used in the MILD sensor suite">
               <h3>Insight9</h3>
               <p>
                 Companion camera source for sensor comparison, synchronized capture, and calibration
@@ -210,30 +210,36 @@
             </div>
           </div>
 
-          <div class="variant-grid" aria-label="Sequence variant matrix">
+          <div class="variant-grid" aria-label="Scene setting previews">
             <article class="variant-panel">
-              <span class="variant-index">A</span>
-              <h3>Original</h3>
-              <p>Baseline scene capture without intentionally added fiducial markers.</p>
-              <code>orin/</code>
+              <img class="variant-photo" src="static/images/pic/scenes/table.jpg" alt="Plain table scene setting">
+              <h3>table</h3>
+              <p>Plain desktop surface.</p>
             </article>
             <article class="variant-panel">
-              <span class="variant-index">B</span>
-              <h3>ArUco</h3>
-              <p>Marker-assisted sequences with the four-tag layout as the v0 default, plus selected one- and two-tag studies.</p>
-              <code>aruco/{1,2,4}/</code>
+              <img class="variant-photo" src="static/images/pic/scenes/tablecloth.jpg" alt="Tablecloth scene setting">
+              <h3>tablecloth</h3>
+              <p>Textured tablecloth appearance.</p>
             </article>
             <article class="variant-panel">
-              <span class="variant-index">C</span>
-              <h3>AprilTag</h3>
-              <p>Marker-assisted sequences currently organized with the Custom48h12 family and selected tag counts.</p>
-              <code>apriltag/custom48h12/{1,2,4}/</code>
+              <img class="variant-photo" src="static/images/pic/scenes/aruco2.jpg" alt="Two ArUco marker scene setting">
+              <h3>aruco2</h3>
+              <p>Two ArUco markers.</p>
             </article>
             <article class="variant-panel">
-              <span class="variant-index">D</span>
-              <h3>Appearance</h3>
-              <p>Scene variants include tablecloth captures for selected desktop and motion-pattern scenes.</p>
-              <code>tablecloth/</code>
+              <img class="variant-photo" src="static/images/pic/scenes/aruco4.jpg" alt="Four ArUco marker scene setting">
+              <h3>aruco4</h3>
+              <p>Four ArUco markers.</p>
+            </article>
+            <article class="variant-panel">
+              <img class="variant-photo" src="static/images/pic/scenes/apriltag2.jpg" alt="Two AprilTag marker scene setting">
+              <h3>apriltag2</h3>
+              <p>Two AprilTag markers.</p>
+            </article>
+            <article class="variant-panel">
+              <img class="variant-photo" src="static/images/pic/scenes/apriltag4.jpg" alt="Four AprilTag marker scene setting">
+              <h3>apriltag4</h3>
+              <p>Four AprilTag markers.</p>
             </article>
           </div>
 
@@ -266,22 +272,22 @@
             <article class="snapshot-card">
               <span>15</span>
               <strong>collected tasks</strong>
-              <p>Actual v0 task folders shown in the task explorer and inventory.</p>
+              <p>Analemma, Circular, Zigzag; Bookshelf01/02; Box01/02; Grab_Place01-06; Wiping01/02.</p>
             </article>
             <article class="snapshot-card">
               <span>6</span>
               <strong>scene settings / task</strong>
-              <p>Each task can be organized across table, tablecloth, ArUco 2/4, and AprilTag 2/4 settings.</p>
+              <p>table, tablecloth, ArUco 2/4, AprilTag 2/4.</p>
             </article>
             <article class="snapshot-card">
               <span>2</span>
               <strong>sensors</strong>
-              <p>Insta360 X5 and Insight9 are listed as the two public sensor streams.</p>
+              <p>Insta360 X5 and Insight9.</p>
             </article>
             <article class="snapshot-card">
               <span>88</span>
               <strong>usable sensor sequences</strong>
-              <p>Task-scene captures expanded by sensor stream: 67 Insta360 X5 sequences plus 21 Insight9 sequences.</p>
+              <p>67 Insta360 X5 + 21 Insight9 valid sensor streams.</p>
             </article>
           </div>
 
