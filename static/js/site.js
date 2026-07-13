@@ -153,7 +153,11 @@ const collectedScenes = [
   },
 ];
 
-let activeFilter = "all";
+const activeFilters = {
+  category: "all",
+  scene: "all",
+  sensor: "all",
+};
 
 function normalize(value) {
   return value.trim().toLowerCase();
@@ -165,10 +169,14 @@ function updateTasks() {
 
   cards.forEach((card) => {
     const category = card.dataset.category || "";
-    const searchText = normalize(`${card.textContent} ${card.dataset.search || ""}`);
-    const categoryMatch = activeFilter === "all" || category === activeFilter;
+    const scenes = (card.dataset.scenes || "").split(/\s+/).filter(Boolean);
+    const sensors = (card.dataset.sensors || "").split(/\s+/).filter(Boolean);
+    const searchText = normalize(`${card.textContent} ${card.dataset.search || ""} ${card.dataset.scenes || ""} ${card.dataset.sensors || ""}`);
+    const categoryMatch = activeFilters.category === "all" || category === activeFilters.category;
+    const sceneMatch = activeFilters.scene === "all" || scenes.includes(activeFilters.scene);
+    const sensorMatch = activeFilters.sensor === "all" || sensors.includes(activeFilters.sensor);
     const searchMatch = !query || searchText.includes(query);
-    const visible = categoryMatch && searchMatch;
+    const visible = categoryMatch && sceneMatch && sensorMatch && searchMatch;
 
     card.classList.toggle("is-hidden", !visible);
     if (visible) visibleCount += 1;
@@ -181,8 +189,11 @@ function updateTasks() {
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    activeFilter = button.dataset.filter || "all";
-    filterButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+    const group = button.dataset.filterGroup || "category";
+    activeFilters[group] = button.dataset.filter || "all";
+    filterButtons
+      .filter((item) => (item.dataset.filterGroup || "category") === group)
+      .forEach((item) => item.classList.toggle("is-active", item === button));
     updateTasks();
   });
 });
@@ -338,6 +349,7 @@ function copyTaskPhotoStyle(source) {
   taskDetailRefs.photo.style.backgroundPosition = style.backgroundPosition;
   taskDetailRefs.photo.style.backgroundRepeat = style.backgroundRepeat;
   taskDetailRefs.photo.style.backgroundSize = style.backgroundSize;
+  taskDetailRefs.photo.style.transform = style.transform === "none" ? "" : style.transform;
 }
 
 function renderSensorDetail(scene) {

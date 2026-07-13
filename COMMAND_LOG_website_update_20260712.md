@@ -1410,6 +1410,150 @@ Safety boundary:
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
 
+## 22. Latest EOF pointer for task photo/filter update
+
+Timestamp: `2026-07-13T23:53:17+08:00`
+
+The detailed record for the latest task photo crop tuning, `Scenes` overlay
+removal, and Task / Scene / Sensor filter update is section 21:
+`Task photo crop tuning and multidimensional filters`. It was inserted earlier
+in this command log because the file contains repeated `Safety boundary`
+markers. The current checked files are:
+
+- `index.html`
+- `static/css/site.css`
+- `static/js/site.js`
+- `COMMAND_LOG_website_update_20260712.md`
+
+Final validation after the EOF pointer:
+
+- `git diff --check`: success.
+- `node --check static/js/site.js`: success.
+- Structure summary: `task_cards 15`, `filter_groups 3`,
+  `scene_overlay_text_refs 0`, `wiping_rotate_refs 1`.
+
+Safety boundary:
+
+- Website HTML/CSS/JS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
+
+## 21. Task photo crop tuning and multidimensional filters
+
+Timestamp: `2026-07-13T23:53:17+08:00`
+
+Purpose:
+
+- Tune task-card photo framing for Bookshelf 01/02, Box 01/02, Grab Place 06,
+  and Wiping 01.
+- Remove the visible `Scenes` overlay label from task-card photos.
+- Extend the task explorer filters from task category only to Task / Scene /
+  Sensor groups.
+
+Files changed:
+
+- `index.html`: updated the stylesheet cache-bust query to
+  `20260713-filtered-task-cards`; replaced the single filter row with three
+  filter groups; added `data-scenes` and `data-sensors` to all 15 task cards.
+- `static/css/site.css`: added grouped filter layout; removed the visible
+  task-photo `Scenes` overlay; set per-card crop positions for the requested
+  task photos; rotated Wiping 01 by 180 degrees.
+- `static/js/site.js`: replaced the single active filter with grouped
+  `activeFilters`; combined category, scene, sensor, and search matching; copied
+  photo `transform` into the detail modal so Wiping 01 remains rotated there.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+find . -maxdepth 3 -name hosting.json -path '*/.openai/*' -print
+rg -n "task-photo-|scene|filter-chip|data-filter|category|background-position|background-size|collectedScenes|buildSceneEntries|renderSceneOptions" index.html static/css/site.css static/js/site.js
+nl -ba index.html | sed -n '300,444p'
+nl -ba static/css/site.css | sed -n '640,850p;1000,1060p'
+nl -ba static/js/site.js | sed -n '1,210p;240,470p'
+find static/images/pic -maxdepth 3 -type f | sort
+node --check static/js/site.js
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+css=Path('static/css/site.css').read_text(encoding='utf-8')
+print('task_cards', len(soup.select('.task-card')))
+print('task_photo_buttons', len(soup.select('button.task-photo')))
+print('filter_groups', len(soup.select('.filter-group')))
+print('filter_chips', len(soup.select('.filter-chip')))
+print('task_filter_chips', len(soup.select('[data-filter-group="category"]')))
+print('scene_filter_chips', len(soup.select('[data-filter-group="scene"]')))
+print('sensor_filter_chips', len(soup.select('[data-filter-group="sensor"]')))
+print('cards_with_scenes', len(soup.select('.task-card[data-scenes]')))
+print('cards_with_sensors', len(soup.select('.task-card[data-sensors]')))
+print('scene_overlay_text_refs', css.count('content: "Scenes"'))
+print('wiping_rotate_refs', css.count('rotate(180deg)'))
+print('stylesheet', soup.select_one('link[rel="stylesheet"]')['href'])
+PY
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+cards=soup.select('.task-card')
+for key in ['insight9','tablecloth','aruco1','apriltag1']:
+    if key == 'insight9':
+        count=sum(key in c.get('data-sensors','').split() for c in cards)
+    else:
+        count=sum(key in c.get('data-scenes','').split() for c in cards)
+    print(key, count)
+PY
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+google-chrome --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,9000 --screenshot=/tmp/mild_long_tasks.png file:///media/zjj/Elements/CQU_ZJJ/MILD/index.html
+git diff --stat
+git status --short
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- Structure count: `task_cards 15`, `task_photo_buttons 15`,
+  `filter_groups 3`, `filter_chips 18`, `cards_with_scenes 15`,
+  `cards_with_sensors 15`.
+- Overlay removal: `scene_overlay_text_refs 0`.
+- Wiping flip: `wiping_rotate_refs 1`.
+- Filter data sanity: `insight9 9`, `tablecloth 8`, `aruco1 1`,
+  `apriltag1 1`.
+- Static resource reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+- Chrome headless screenshot rendered successfully at `/tmp/mild_long_tasks.png`
+  and visually showed the Task / Scene / Sensor filter groups and no photo
+  `Scenes` overlay.
+
+Safety boundary:
+
+- Website HTML/CSS/JS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
+
 ## 20. Remove task-card number/category toplines
 
 Timestamp: `2026-07-13T23:31:30+08:00`
@@ -1609,3 +1753,18 @@ Safety boundary:
 - Website HTML/CSS/JS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 23. EOF pointer for latest website task-card update
+
+Timestamp: `2026-07-13T23:53:17+08:00`
+
+Latest website display update summary: task-card photo crop tuning, Wiping 01
+180-degree rotation, visible `Scenes` photo overlay removal, and Task / Scene /
+Sensor grouped filters. Detailed command record is section 21 in this log.
+
+Final validation after this pointer: `git diff --check` success,
+`node --check static/js/site.js` success, `task_cards 15`, `filter_groups 3`,
+`scene_overlay_text_refs 0`, `wiping_rotate_refs 1`.
+
+Safety boundary: website HTML/CSS/JS display-only adjustment; no Docker replay,
+robot control, collection, rosbag conversion, or UMID pipeline writes.

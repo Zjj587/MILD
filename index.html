@@ -21,7 +21,7 @@
     >
     <meta property="og:image" content="static/images/pic/scenes/apriltag4.jpg">
     <link rel="preload" href="static/images/pic/scenes/apriltag4.jpg" as="image">
-    <link rel="stylesheet" href="static/css/site.css?v=20260713-minimal-task-cards">
+    <link rel="stylesheet" href="static/css/site.css?v=20260713-filtered-task-cards">
   </head>
   <body>
     <header class="site-header">
@@ -310,19 +310,46 @@
             </label>
           </div>
 
-          <div class="filter-row" aria-label="Task category filters">
-            <button class="filter-chip is-active" type="button" data-filter="all">All</button>
-            <button class="filter-chip" type="button" data-filter="motion">Motion Pattern</button>
-            <button class="filter-chip" type="button" data-filter="bookshelf">Bookshelf</button>
-            <button class="filter-chip" type="button" data-filter="box">Box</button>
-            <button class="filter-chip" type="button" data-filter="grasp-place">Pick-and-Place</button>
-            <button class="filter-chip" type="button" data-filter="wipe">Wiping</button>
+          <div class="filter-panel" aria-label="Task filters">
+            <div class="filter-group">
+              <span>Task</span>
+              <div class="filter-row">
+                <button class="filter-chip is-active" type="button" data-filter-group="category" data-filter="all">All</button>
+                <button class="filter-chip" type="button" data-filter-group="category" data-filter="motion">Motion Pattern</button>
+                <button class="filter-chip" type="button" data-filter-group="category" data-filter="bookshelf">Bookshelf</button>
+                <button class="filter-chip" type="button" data-filter-group="category" data-filter="box">Box</button>
+                <button class="filter-chip" type="button" data-filter-group="category" data-filter="grasp-place">Pick-and-Place</button>
+                <button class="filter-chip" type="button" data-filter-group="category" data-filter="wipe">Wiping</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span>Scene</span>
+              <div class="filter-row">
+                <button class="filter-chip is-active" type="button" data-filter-group="scene" data-filter="all">All</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="table">Table</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="tablecloth">Tablecloth</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="aruco1">ArUco 1</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="aruco2">ArUco 2</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="aruco4">ArUco 4</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="apriltag1">AprilTag 1</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="apriltag2">AprilTag 2</button>
+                <button class="filter-chip" type="button" data-filter-group="scene" data-filter="apriltag4">AprilTag 4</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span>Sensor</span>
+              <div class="filter-row">
+                <button class="filter-chip is-active" type="button" data-filter-group="sensor" data-filter="all">All</button>
+                <button class="filter-chip" type="button" data-filter-group="sensor" data-filter="insta360-x5">Insta360 X5</button>
+                <button class="filter-chip" type="button" data-filter-group="sensor" data-filter="insight9">Insight9</button>
+              </div>
+            </div>
           </div>
 
           <p class="task-count" id="taskCount">Showing 15 benchmark tasks</p>
 
           <div class="task-grid">
-            <article class="task-card" data-category="motion" data-search="Analemma Analemma_2_t analemma motion pattern aruco apriltag tablecloth insta360 insight9 trajectory shape">
+            <article class="task-card" data-category="motion" data-scenes="table tablecloth aruco2 aruco4 apriltag2 apriltag4" data-sensors="insta360-x5 insight9" data-search="Analemma Analemma_2_t analemma motion pattern aruco apriltag tablecloth insta360 insight9 trajectory shape">
               <button class="task-photo task-photo-a" type="button" aria-label="Open Analemma scenes"></button>
               <div class="task-body">
                 <h3>Analemma</h3>
@@ -330,7 +357,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="bookshelf" data-search="Bookshelf 01 Bookshelf01_2 bookshelf cabinet occlusion aruco apriltag insta360 insight9">
+            <article class="task-card" data-category="bookshelf" data-scenes="table aruco2 aruco4 apriltag2 apriltag4" data-sensors="insta360-x5 insight9" data-search="Bookshelf 01 Bookshelf01_2 bookshelf cabinet occlusion aruco apriltag insta360 insight9">
               <button class="task-photo task-photo-b" type="button" aria-label="Open Bookshelf 01 scenes"></button>
               <div class="task-body">
                 <h3>Bookshelf 01</h3>
@@ -338,7 +365,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="bookshelf" data-search="Bookshelf 02 Bookshelf02_2 bookshelf tablecloth aruco apriltag insta360 insight9">
+            <article class="task-card" data-category="bookshelf" data-scenes="table tablecloth aruco2 aruco4 apriltag2 apriltag4" data-sensors="insta360-x5 insight9" data-search="Bookshelf 02 Bookshelf02_2 bookshelf tablecloth aruco apriltag insta360 insight9">
               <button class="task-photo task-photo-c" type="button" aria-label="Open Bookshelf 02 scenes"></button>
               <div class="task-body">
                 <h3>Bookshelf 02</h3>
@@ -346,7 +373,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="box" data-search="Box 01 Box01 box container aruco apriltag insta360 insight9">
+            <article class="task-card" data-category="box" data-scenes="table aruco4 apriltag4" data-sensors="insta360-x5 insight9" data-search="Box 01 Box01 box container aruco apriltag insta360 insight9">
               <button class="task-photo task-photo-d" type="button" aria-label="Open Box 01 scenes"></button>
               <div class="task-body">
                 <h3>Box 01</h3>
@@ -354,7 +381,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="box" data-search="Box 02 Box02 box container aruco apriltag insta360 insight9">
+            <article class="task-card" data-category="box" data-scenes="table aruco4 apriltag4" data-sensors="insta360-x5 insight9" data-search="Box 02 Box02 box container aruco apriltag insta360 insight9">
               <button class="task-photo task-photo-e" type="button" aria-label="Open Box 02 scenes"></button>
               <div class="task-body">
                 <h3>Box 02</h3>
@@ -362,7 +389,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="motion" data-search="Circular Circular_2_t circular motion pattern aruco apriltag insta360 insight9 trajectory shape">
+            <article class="task-card" data-category="motion" data-scenes="table tablecloth aruco2 aruco4 apriltag2 apriltag4" data-sensors="insta360-x5 insight9" data-search="Circular Circular_2_t circular motion pattern aruco apriltag insta360 insight9 trajectory shape">
               <button class="task-photo task-photo-f" type="button" aria-label="Open Circular scenes"></button>
               <div class="task-body">
                 <h3>Circular</h3>
@@ -370,7 +397,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab Place 01 Grab_Place01_t grab place cup tablecloth aruco apriltag insta360 insight9">
+            <article class="task-card" data-category="grasp-place" data-scenes="table tablecloth aruco4 apriltag4" data-sensors="insta360-x5 insight9" data-search="Grab Place 01 Grab_Place01_t grab place cup tablecloth aruco apriltag insta360 insight9">
               <button class="task-photo task-photo-g" type="button" aria-label="Open Grab Place 01 scenes"></button>
               <div class="task-body">
                 <h3>Grab Place 01</h3>
@@ -378,7 +405,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab Place 02 Grab_Place02_t grab place tablecloth aruco apriltag insta360">
+            <article class="task-card" data-category="grasp-place" data-scenes="table tablecloth aruco4 apriltag4" data-sensors="insta360-x5" data-search="Grab Place 02 Grab_Place02_t grab place tablecloth aruco apriltag insta360">
               <button class="task-photo task-photo-h" type="button" aria-label="Open Grab Place 02 scenes"></button>
               <div class="task-body">
                 <h3>Grab Place 02</h3>
@@ -386,7 +413,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab Place 03 Grab_Place03_t grab place tablecloth aruco apriltag insta360">
+            <article class="task-card" data-category="grasp-place" data-scenes="table tablecloth aruco4 apriltag4" data-sensors="insta360-x5" data-search="Grab Place 03 Grab_Place03_t grab place tablecloth aruco apriltag insta360">
               <button class="task-photo task-photo-i" type="button" aria-label="Open Grab Place 03 scenes"></button>
               <div class="task-body">
                 <h3>Grab Place 03</h3>
@@ -394,7 +421,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab Place 04 Grab_Place04 grab place aruco apriltag insta360">
+            <article class="task-card" data-category="grasp-place" data-scenes="table aruco4 apriltag4" data-sensors="insta360-x5" data-search="Grab Place 04 Grab_Place04 grab place aruco apriltag insta360">
               <button class="task-photo task-photo-j" type="button" aria-label="Open Grab Place 04 scenes"></button>
               <div class="task-body">
                 <h3>Grab Place 04</h3>
@@ -402,7 +429,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab Place 05 Grab_Place05 grab place aruco apriltag insta360">
+            <article class="task-card" data-category="grasp-place" data-scenes="table aruco4 apriltag4" data-sensors="insta360-x5" data-search="Grab Place 05 Grab_Place05 grab place aruco apriltag insta360">
               <button class="task-photo task-photo-k" type="button" aria-label="Open Grab Place 05 scenes"></button>
               <div class="task-body">
                 <h3>Grab Place 05</h3>
@@ -410,7 +437,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab Place 06 Grab_Place06_t grab place tablecloth aruco apriltag insta360">
+            <article class="task-card" data-category="grasp-place" data-scenes="table tablecloth aruco4 apriltag4" data-sensors="insta360-x5" data-search="Grab Place 06 Grab_Place06_t grab place tablecloth aruco apriltag insta360">
               <button class="task-photo task-photo-l" type="button" aria-label="Open Grab Place 06 scenes"></button>
               <div class="task-body">
                 <h3>Grab Place 06</h3>
@@ -418,7 +445,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="wipe" data-search="Wiping 01 Wiping01 wiping table aruco apriltag insta360">
+            <article class="task-card" data-category="wipe" data-scenes="table aruco4 apriltag4" data-sensors="insta360-x5" data-search="Wiping 01 Wiping01 wiping table aruco apriltag insta360">
               <button class="task-photo task-photo-m" type="button" aria-label="Open Wiping 01 scenes"></button>
               <div class="task-body">
                 <h3>Wiping 01</h3>
@@ -426,7 +453,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="wipe" data-search="Wiping 02 Wiping02_1 wiping aruco apriltag one two four insta360 insight9">
+            <article class="task-card" data-category="wipe" data-scenes="table aruco1 aruco2 aruco4 apriltag1 apriltag2 apriltag4" data-sensors="insta360-x5 insight9" data-search="Wiping 02 Wiping02_1 wiping aruco apriltag one two four insta360 insight9">
               <button class="task-photo task-photo-n" type="button" aria-label="Open Wiping 02 scenes"></button>
               <div class="task-body">
                 <h3>Wiping 02</h3>
@@ -434,7 +461,7 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="motion" data-search="Zigzag Zigzag_2_t zigzag motion aruco apriltag tablecloth insta360 insight9 trajectory shape">
+            <article class="task-card" data-category="motion" data-scenes="table tablecloth aruco2 aruco4 apriltag2 apriltag4" data-sensors="insta360-x5 insight9" data-search="Zigzag Zigzag_2_t zigzag motion aruco apriltag tablecloth insta360 insight9 trajectory shape">
               <button class="task-photo task-photo-o" type="button" aria-label="Open Zigzag scenes"></button>
               <div class="task-body">
                 <h3>Zigzag</h3>

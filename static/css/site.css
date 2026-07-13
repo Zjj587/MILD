@@ -662,11 +662,28 @@ h2 {
   outline: 3px solid rgba(15, 118, 110, 0.16);
 }
 
+.filter-panel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.filter-group {
+  display: grid;
+  gap: 6px;
+}
+
+.filter-group > span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
 .filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
 }
 
 .filter-chip {
@@ -737,21 +754,6 @@ h2 {
   display: none;
 }
 
-.task-photo::after {
-  content: "Scenes";
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  min-height: 30px;
-  padding: 6px 9px;
-  color: var(--white);
-  background: rgba(24, 33, 43, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.36);
-  border-radius: 8px;
-  font-size: 0.78rem;
-  font-weight: 820;
-}
-
 .task-photo:hover,
 .task-photo:focus-visible {
   filter: saturate(1.08) contrast(1.04);
@@ -768,21 +770,25 @@ h2 {
 .task-photo-b {
   background-color: #4d5b5c;
   background-image: url("../images/pic/task/Bookshelf01.jpg");
+  background-position: 50% 66%;
 }
 
 .task-photo-c {
   background-color: #4f5f4b;
   background-image: url("../images/pic/task/Bookshelf02_02.jpg");
+  background-position: 50% 64%;
 }
 
 .task-photo-d {
   background-color: #45505a;
   background-image: url("../images/pic/task/Box01.jpg");
+  background-position: 38% 64%;
 }
 
 .task-photo-e {
   background-color: #5b4d43;
   background-image: url("../images/pic/task/Box02.jpg");
+  background-position: 50% 34%;
 }
 
 .task-photo-f {
@@ -819,11 +825,13 @@ h2 {
 .task-photo-l {
   background-color: #5e5b50;
   background-image: url("../images/pic/task/Grab_Place06.jpg");
+  background-position: 50% 34%;
 }
 
 .task-photo-m {
   background-color: #586155;
   background-image: url("../images/pic/task/Wiping01.jpg");
+  transform: rotate(180deg);
 }
 
 .task-photo-n {
