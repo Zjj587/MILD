@@ -1907,3 +1907,205 @@ Safety boundary:
 - Website HTML/CSS/JS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 25. Restore cover-style media previews for sensor and scene sections
+
+Timestamp: `2026-07-14T00:37:43+08:00`
+
+Purpose:
+
+- Restore the image presentation in `Wide-view motion with stereo depth support`
+  and `One task scene expands into many localization sequences` so those images
+  fill their preview windows instead of using contain-style scaled-down display.
+- Keep task explorer crop tuning unchanged.
+
+Files changed:
+
+- `index.html`: CSS cache-bust query updated to `20260714-media-cover`.
+- `static/css/site.css`: `.sensor-photo` restored to cover-style display using
+  `aspect-ratio: 16 / 9` and `object-fit: cover`; `.variant-photo` changed to
+  `object-fit: cover`.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+git status --short
+git log --oneline -5
+for rev in HEAD HEAD~1 HEAD~2 HEAD~3 HEAD~4 HEAD~5; do
+  git show "$rev:static/css/site.css" | rg -n -A10 -B3 "\\.sensor-photo|\\.variant-photo"
+done
+for rev in c63200c ce16944 444e7f2 bdcfeb3; do
+  git show "$rev:static/css/site.css" | rg -n -A16 -B4 "variant|sequence|\\.variant|\\.structure|\\.sensor-photo"
+done
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+print('sensor_photos', len(soup.select('.sensor-photo')))
+print('variant_photos', len(soup.select('.variant-photo')))
+print('task_cards', len(soup.select('.task-card')))
+print('stylesheet', soup.select_one('link[rel="stylesheet"]')['href'])
+PY
+rg -n -A9 -B2 "\\.sensor-photo|\\.variant-photo|\\.task-photo-b|\\.task-photo-l" static/css/site.css
+node --check static/js/site.js
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+git diff --check
+google-chrome --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,5600 --screenshot=/tmp/mild_media_cover.png file:///media/zjj/Elements/CQU_ZJJ/MILD/index.html
+git diff --stat
+git status --short
+```
+
+Validation results:
+
+- Historic check found old sensor preview style at commit `c63200c`: `aspect-ratio:
+  16 / 9` and `object-fit: cover`.
+- Current DOM: `sensor_photos 2`, `variant_photos 6`, `task_cards 15`.
+- CSS check: `.sensor-photo` and `.variant-photo` use `object-fit: cover`;
+  task explorer crop classes remain separate.
+- `node --check static/js/site.js`: success.
+- Static resource reference check: `missing_refs 0`.
+- `git diff --check`: success.
+- Chrome headless screenshot rendered successfully at `/tmp/mild_media_cover.png`
+  and showed the sensor and scene preview images filling their frames.
+
+Safety boundary:
+
+- Website HTML/CSS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
+
+## 26. Restore All filters for Scene and Sensor groups
+
+Timestamp: `2026-07-14T00:44:27+08:00`
+
+Purpose:
+
+- Restore visible `All` chips for the Scene and Sensor filter groups.
+- Make Task / Scene / Sensor act as three composable single-select filters.
+- Support combinations such as `Task=Box`, `Scene=All`, `Sensor=Insight9`,
+  meaning all Box scenes that have usable Insight9 data.
+
+Files changed:
+
+- `index.html`: added `All` chips back to Scene and Sensor groups; updated JS
+  cache-bust query to `static/js/site.js?v=20260714-filter-all`.
+- `static/js/site.js`: removed optional-group toggle-clear behavior; each filter
+  group now always has one active chip and writes its selected value directly
+  to `activeFilters`.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+rg -n "data-filter-group=\"scene\"|data-filter-group=\"sensor\"|site.js\\?v=|activeFilters|shouldClear|filterButtons" index.html static/js/site.js
+node --check static/js/site.js
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+print('task_cards', len(soup.select('.task-card')))
+print('category_chips', len(soup.select('[data-filter-group="category"]')))
+print('scene_chips', len(soup.select('[data-filter-group="scene"]')))
+print('sensor_chips', len(soup.select('[data-filter-group="sensor"]')))
+print('scene_all_chips', len(soup.select('[data-filter-group="scene"][data-filter="all"]')))
+print('sensor_all_chips', len(soup.select('[data-filter-group="sensor"][data-filter="all"]')))
+print('scene_active', [b.get_text(strip=True) for b in soup.select('[data-filter-group="scene"].is-active')])
+print('sensor_active', [b.get_text(strip=True) for b in soup.select('[data-filter-group="sensor"].is-active')])
+print('script_src', soup.select_one('script[src^="static/js/site.js"]')['src'])
+PY
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+cards=soup.select('.task-card')
+def names(category='all', scene='all', sensor='all'):
+    out=[]
+    for card in cards:
+        cat=card.get('data-category','')
+        scenes=card.get('data-scenes','').split()
+        sensors=card.get('data-sensors','').split()
+        ok=(category == 'all' or cat == category) and (scene == 'all' or scene in scenes) and (sensor == 'all' or sensor in sensors)
+        if ok:
+            out.append(card.select_one('h3').get_text(strip=True))
+    return out
+checks=[
+    ('box_all_insight9', dict(category='box', scene='all', sensor='insight9')),
+    ('box_aruco4_insight9', dict(category='box', scene='aruco4', sensor='insight9')),
+    ('box_table_insta360', dict(category='box', scene='table', sensor='insta360-x5')),
+    ('all_aruco2_all', dict(category='all', scene='aruco2', sensor='all')),
+    ('grasp_all_insight9', dict(category='grasp-place', scene='all', sensor='insight9')),
+]
+for label, kwargs in checks:
+    result=names(**kwargs)
+    print(label, len(result), ', '.join(result))
+PY
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+google-chrome --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,9000 --screenshot=/tmp/mild_filter_all.png file:///media/zjj/Elements/CQU_ZJJ/MILD/index.html
+git diff --stat
+git status --short
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- DOM/filter structure: `task_cards 15`, `category_chips 6`,
+  `scene_chips 9`, `sensor_chips 3`, `scene_all_chips 1`,
+  `sensor_all_chips 1`.
+- Default active chips: Scene `All`, Sensor `All`.
+- Script cache-bust present: `static/js/site.js?v=20260714-filter-all`.
+- Combination check: `box_all_insight9 2 Box 01, Box 02`.
+- Other spot checks: `box_aruco4_insight9 2`, `box_table_insta360 2`,
+  `all_aruco2_all 6`, `grasp_all_insight9 1`.
+- Static resource reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+- Chrome headless screenshot rendered successfully at `/tmp/mild_filter_all.png`.
+
+Safety boundary:
+
+- Website HTML/JS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.

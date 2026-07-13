@@ -21,7 +21,7 @@
     >
     <meta property="og:image" content="static/images/pic/scenes/apriltag4.jpg">
     <link rel="preload" href="static/images/pic/scenes/apriltag4.jpg" as="image">
-    <link rel="stylesheet" href="static/css/site.css?v=20260714-filter-fix">
+    <link rel="stylesheet" href="static/css/site.css?v=20260714-media-cover">
   </head>
   <body>
     <header class="site-header">
@@ -325,6 +325,7 @@
             <div class="filter-group">
               <span>Scene</span>
               <div class="filter-row">
+                <button class="filter-chip is-active" type="button" data-filter-group="scene" data-filter="all">All</button>
                 <button class="filter-chip" type="button" data-filter-group="scene" data-filter="table">Table</button>
                 <button class="filter-chip" type="button" data-filter-group="scene" data-filter="tablecloth">Tablecloth</button>
                 <button class="filter-chip" type="button" data-filter-group="scene" data-filter="aruco1">ArUco 1</button>
@@ -338,6 +339,7 @@
             <div class="filter-group">
               <span>Sensor</span>
               <div class="filter-row">
+                <button class="filter-chip is-active" type="button" data-filter-group="sensor" data-filter="all">All</button>
                 <button class="filter-chip" type="button" data-filter-group="sensor" data-filter="insta360-x5">Insta360 X5</button>
                 <button class="filter-chip" type="button" data-filter-group="sensor" data-filter="insight9">Insight9</button>
               </div>
@@ -529,6 +531,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="static/js/site.js?v=20260714-filter-fix"></script>
+    <script src="static/js/site.js?v=20260714-filter-all"></script>
   </body>
 </html>

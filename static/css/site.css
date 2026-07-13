@@ -361,13 +361,11 @@ h2 {
 
 .sensor-photo {
   width: 100%;
-  height: clamp(180px, 22vw, 260px);
-  box-sizing: border-box;
-  padding: 10px;
-  object-fit: contain;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #f7f8f9;
+  background: var(--soft);
 }
 
 .sensor-card p {
@@ -455,10 +453,10 @@ h2 {
 .variant-photo {
   width: 100%;
   height: 180px;
-  object-fit: contain;
+  object-fit: cover;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #f7f8f9;
+  background: var(--soft);
 }
 
 .variant-panel h3,
