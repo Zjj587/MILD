@@ -159,8 +159,32 @@ const activeFilters = {
   sensor: "all",
 };
 
+const sensorFilterTokens = {
+  "Insta360 X5": "insta360-x5",
+  Insight9: "insight9",
+};
+
 function normalize(value) {
   return value.trim().toLowerCase();
+}
+
+function sceneFilterToken(value) {
+  return sceneKey(value).replace(/\s+/g, "");
+}
+
+function getTaskForCard(card) {
+  const taskName = card.querySelector("h3")?.textContent.trim();
+  return collectedScenes.find((item) => item.name === taskName);
+}
+
+function taskMatchesSceneSensor(task, sceneFilter, sensorFilter) {
+  if (!task) return false;
+
+  return buildSceneEntries(task).some((scene) => {
+    const sceneMatches = sceneFilter === "all" || sceneFilterToken(scene.name) === sceneFilter;
+    const sensorMatches = sensorFilter === "all" || scene.sensors.some((sensorName) => sensorFilterTokens[sensorName] === sensorFilter);
+    return sceneMatches && sensorMatches;
+  });
 }
 
 function updateTasks() {
@@ -169,14 +193,12 @@ function updateTasks() {
 
   cards.forEach((card) => {
     const category = card.dataset.category || "";
-    const scenes = (card.dataset.scenes || "").split(/\s+/).filter(Boolean);
-    const sensors = (card.dataset.sensors || "").split(/\s+/).filter(Boolean);
+    const task = getTaskForCard(card);
     const searchText = normalize(`${card.textContent} ${card.dataset.search || ""} ${card.dataset.scenes || ""} ${card.dataset.sensors || ""}`);
     const categoryMatch = activeFilters.category === "all" || category === activeFilters.category;
-    const sceneMatch = activeFilters.scene === "all" || scenes.includes(activeFilters.scene);
-    const sensorMatch = activeFilters.sensor === "all" || sensors.includes(activeFilters.sensor);
+    const sceneSensorMatch = taskMatchesSceneSensor(task, activeFilters.scene, activeFilters.sensor);
     const searchMatch = !query || searchText.includes(query);
-    const visible = categoryMatch && sceneMatch && sensorMatch && searchMatch;
+    const visible = categoryMatch && sceneSensorMatch && searchMatch;
 
     card.classList.toggle("is-hidden", !visible);
     if (visible) visibleCount += 1;

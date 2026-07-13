@@ -2109,3 +2109,83 @@ Safety boundary:
 - Website HTML/JS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 27. Use scene-sensor paired filtering
+
+Timestamp: 2026-07-14T00:58:37+08:00
+
+Purpose:
+
+- Fix task explorer filtering where Scene and Sensor were matched independently
+  at task level.
+- Ensure a task is visible only when the selected scene has the selected sensor
+  in the same concrete variant.
+- User-reported failing case: Task `All`, Scene `AprilTag 1`, Sensor `Insight9`
+  incorrectly showed `Wiping 02`.
+
+Files changed:
+
+- `static/js/site.js`
+  - Added sensor-token mapping.
+  - Added scene-token normalization for scene entries.
+  - Added `taskMatchesSceneSensor()`, which evaluates actual scene entries
+    built from `collectedScenes`.
+  - Updated `updateTasks()` to use scene-sensor paired matching.
+- `index.html`
+  - Updated JS cache-bust query to `v=20260714-paired-filters`.
+
+Commands run:
+
+```bash
+cd /media/zjj/Elements/CQU_ZJJ/MILD
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+pwd && git status --short
+rg -n "taskMatchesSceneSensor|sensorFilterTokens|20260714-paired-filters|data-scene-filter=\"apriltag1\"|data-sensor-filter=\"insight9\"" index.html static/js/site.js
+tail -80 COMMAND_LOG_website_update_20260712.md
+nl -ba static/js/site.js | sed -n '150,210p'
+nl -ba index.html | sed -n '318,346p;528,538p'
+date -Iseconds
+node --check static/js/site.js
+git diff --check
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --stat && git status --short
+```
+
+Validation checks:
+
+- Functional paired-filter simulation was run against the real
+  `collectedScenes` data from `static/js/site.js` and the real task cards from
+  `index.html`.
+- `Task=All`, `Scene=AprilTag 1`, `Sensor=Insight9`: expected `0` tasks.
+- `Task=Wiping`, `Scene=AprilTag 1`, `Sensor=Insight9`: expected `0` tasks.
+- `Task=Wiping`, `Scene=Table`, `Sensor=Insight9`: expected `1` task
+  (`Wiping 02`).
+- `Task=Wiping`, `Scene=ArUco 4`, `Sensor=Insight9`: expected `1` task
+  (`Wiping 02`).
+- `Task=Box`, `Scene=All`, `Sensor=Insight9`: expected `2` tasks
+  (`Box 01`, `Box 02`).
+
+Observed results:
+
+```text
+all_apriltag1_insight9 0 -
+wipe_apriltag1_insight9 0 -
+wipe_table_insight9 1 Wiping 02
+wipe_aruco4_insight9 1 Wiping 02
+box_all_insight9 2 Box 01, Box 02
+```
+
+Other validation results:
+
+- `node --check static/js/site.js`: success.
+- `git diff --check`: success.
+- Static asset reference check: `missing_refs 0`.
+- Private absolute path scan in public files: success, no output.
+- Current changed files: `COMMAND_LOG_website_update_20260712.md`,
+  `index.html`, `static/js/site.js`.
+
+Safety boundary:
+
+- Website HTML/JS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
