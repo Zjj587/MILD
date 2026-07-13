@@ -781,8 +781,8 @@ h2 {
 }
 
 .task-photo-a {
-  background-color: #3c5164;
-  background-image: url("../images/pic/scenes/apriltag4.jpg");
+  background-color: #f6f8fb;
+  background-image: url("../images/pic/trajectories/Analemma_2_t_trajectory_shape.png");
 }
 
 .task-photo-b {
@@ -806,8 +806,8 @@ h2 {
 }
 
 .task-photo-f {
-  background-color: #48565d;
-  background-image: url("../images/pic/scenes/aruco4.jpg");
+  background-color: #fff7ed;
+  background-image: url("../images/pic/trajectories/Circular_2_t_trajectory_shape.png");
 }
 
 .task-photo-g {
@@ -851,8 +851,8 @@ h2 {
 }
 
 .task-photo-o {
-  background-color: #465d67;
-  background-image: url("../images/pic/scenes/tablecloth.jpg");
+  background-color: #f1f8f3;
+  background-image: url("../images/pic/trajectories/Zigzag_2_t_trajectory_shape.png");
 }
 
 .task-body {

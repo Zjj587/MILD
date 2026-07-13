@@ -13,7 +13,8 @@ This repository hosts the static GitHub Pages website for the MILD benchmark.
 - The task explorer mirrors the current 15 collected v0 task folders.
 - Curated website previews are stored under `static/images/pic/` with
   `task/`, `scenes/`, and `sensor/` subfolders derived from the approved v0
-  `pic` assets.
+  `pic` assets. Axis-free motion-pattern trajectory shapes are stored under
+  `static/images/pic/trajectories/` and generated from Teleoperation TUM files.
 - Large raw data, rosbag files, frame dumps, and calibration artifacts are not
   stored in this website repository. They should be published as GitHub Release
   assets or external dataset downloads with a manifest.
@@ -31,6 +32,8 @@ python3 -m http.server 8000
 
 - Refresh `static/images/pic/` only when newer approved v0 preview photos are
   available.
+- Regenerate `static/images/pic/trajectories/` if the Analemma, Circular, or
+  Zigzag Teleoperation TUM files change.
 - Upload the planned calibration release assets for Insta360 X5 and Insight9,
   including intrinsics, extrinsics, and manifest files.
 - Add public sequence manifests for each collected scene folder, including

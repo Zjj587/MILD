@@ -706,3 +706,91 @@ Verification results:
 - Static resource reference check: `missing_refs 0`.
 - Public files private absolute path scan: success, no output.
 - `git diff --check`: success.
+
+## 10. Replace Motion Task Photos With Axis-Free TUM Shapes
+
+Timestamp: 2026-07-13T17:12:53+08:00
+
+CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+
+Reason: user clarified that Analemma, Circular, and Zigzag task cards should
+show only the trajectory shape for website presentation, without coordinate
+axes.
+
+Inputs:
+
+```text
+/media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Analemma_2_t/Teleoperation/left1_20260707_055152.tum
+/media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Circular_2_t/Teleoperation/left1_20260707_050606.tum
+/media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Zigzag_2_t/Teleoperation/left1_20260707_083025.tum
+```
+
+Generated website image assets:
+
+```text
+static/images/pic/trajectories/Analemma_2_t_trajectory_shape.png
+static/images/pic/trajectories/Circular_2_t_trajectory_shape.png
+static/images/pic/trajectories/Zigzag_2_t_trajectory_shape.png
+static/images/pic/trajectories/motion_pattern_trajectory_shapes.png
+```
+
+Website edits:
+
+- `index.html`: changed the Analemma, Circular, and Zigzag task-card preview
+  labels from `v0 Photo` to `Trajectory` and updated aria labels/search text.
+- `static/css/site.css`: changed `.task-photo-a`, `.task-photo-f`, and
+  `.task-photo-o` to use the generated axis-free trajectory PNGs.
+- `README.md`: documented the `static/images/pic/trajectories/` asset source.
+
+Safety boundary:
+
+- Offline website/static asset update only.
+- Did not run Docker replay.
+- Did not run robot control.
+- Did not collect data.
+- Did not convert rosbag.
+- Did not modify replay or data conversion pipeline scripts.
+
+Validation:
+
+```bash
+python3 - <<'PY'
+import re
+from pathlib import Path
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js))"', text):
+        if not (root/m).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        if not (root/'static/images'/m).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+node --check static/js/site.js
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+python3 - <<'PY'
+from pathlib import Path
+from PIL import Image
+for p in sorted(Path('static/images/pic/trajectories').glob('*.png')):
+    im=Image.open(p)
+    alpha = im.getchannel('A').getextrema() if im.mode == 'RGBA' else None
+    print(p.name, im.size, im.mode, 'alpha', alpha)
+PY
+```
+
+Validation results:
+
+- Static resource reference check: `missing_refs 0`.
+- `node --check static/js/site.js`: success.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success in the MILD repository.
+- Generated trajectory images are RGBA PNGs with alpha `(0, 255)`.
+- UMID root is not a git repository, so git diff validation was not available
+  there; script validation used `py_compile`.
