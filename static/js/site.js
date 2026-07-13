@@ -22,6 +22,14 @@ const taskSlugs = {
   "15": "zigzag_2_t",
 };
 
+const categoryLabels = {
+  motion: "Motion Pattern",
+  bookshelf: "Bookshelf",
+  box: "Box",
+  "grasp-place": "Pick-and-Place",
+  wipe: "Wiping",
+};
+
 const collectedScenes = [
   {
     name: "Analemma",
@@ -419,13 +427,18 @@ function renderSceneOptions(scenes) {
   });
 }
 
+function getTaskNumber(card) {
+  const index = cards.indexOf(card);
+  return index >= 0 ? String(index + 1).padStart(2, "0") : "";
+}
+
 function openTaskDetail(card) {
   const taskName = card.querySelector("h3")?.textContent.trim();
   const task = collectedScenes.find((item) => item.name === taskName);
   if (!task) return;
 
-  const taskNumber = card.querySelector(".task-topline span")?.textContent.trim() || "";
-  const taskCategory = card.querySelector(".task-topline strong")?.textContent.trim() || "";
+  const taskNumber = getTaskNumber(card);
+  const taskCategory = categoryLabels[card.dataset.category] || "";
   const taskSummary = card.querySelector(".task-body > p")?.textContent.trim() || "";
   const photo = card.querySelector(".task-photo");
   const taskSlug = taskSlugs[taskNumber];
@@ -436,7 +449,7 @@ function openTaskDetail(card) {
 
   lastTaskTrigger = photo;
   copyTaskPhotoStyle(photo);
-  taskDetailRefs.kicker.textContent = `${taskNumber} ${taskCategory}`.trim();
+  taskDetailRefs.kicker.textContent = taskCategory || "Task scenes";
   taskDetailRefs.title.textContent = task.name;
   taskDetailRefs.summary.textContent = taskSummary;
   renderSceneOptions(scenes);

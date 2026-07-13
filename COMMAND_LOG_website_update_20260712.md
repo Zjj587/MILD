@@ -1410,6 +1410,97 @@ Safety boundary:
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
 
+## 20. Remove task-card number/category toplines
+
+Timestamp: `2026-07-13T23:31:30+08:00`
+
+Purpose:
+
+- Simplify the task explorer cards by removing the repeated visible topline
+  such as `01 Motion Pattern` from each task card.
+- Keep task-detail interaction and release slug generation working after the
+  DOM element is removed.
+
+Files changed:
+
+- `index.html`: removed all task-card `.task-topline` rows and updated the CSS
+  cache-bust query to `20260713-minimal-task-cards`.
+- `static/js/site.js`: added `categoryLabels` and `getTaskNumber(card)` so the
+  modal can derive category and release slug without reading `.task-topline`;
+  the modal kicker now shows category only, not the task number.
+- `static/css/site.css`: removed unused `.task-topline` styles and tightened
+  `.task-body` spacing.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+rg -n "task-topline|function openTaskDetail|const taskSlugs|task-card|site.css\\?v=" index.html static/js/site.js static/css/site.css
+nl -ba index.html | sed -n '316,462p'
+nl -ba static/js/site.js | sed -n '1,40p;410,455p'
+nl -ba static/css/site.css | sed -n '830,890p;1240,1270p'
+node --check static/js/site.js
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'), 'html.parser')
+print('task_cards', len(soup.select('.task-card')))
+print('task_photo_buttons', len(soup.select('button.task-photo')))
+print('task_toplines', len(soup.select('.task-card .task-topline')))
+print('task_card_dl', len(soup.select('.task-card dl')))
+print('task_tag_rows', len(soup.select('.task-card .tag-row')))
+print('task_dataset_links', len(soup.select('.task-card .dataset-link')))
+print('sensor_cards', len(soup.select('.sensor-card')))
+print('variant_panels', len(soup.select('.variant-panel')))
+print('inventory_table', len(soup.select('#collectedInventory')))
+print('stylesheet', soup.select_one('link[rel="stylesheet"]')['href'])
+PY
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+rg -n "task-topline|taskNumber|categoryLabels|getTaskNumber|minimal-task-cards|taskDetailRefs\\.kicker" index.html static/js/site.js static/css/site.css
+git diff --stat
+git status --short
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- Structure count: `task_cards 15`, `task_photo_buttons 15`,
+  `task_toplines 0`, `sensor_cards 2`, `variant_panels 6`,
+  `inventory_table 1`.
+- Task cards remain minimal: `task_card_dl 0`, `task_tag_rows 0`,
+  `task_dataset_links 0`.
+- Static resource reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+
+Safety boundary:
+
+- Website HTML/CSS/JS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
+
 ## 19. Simplify task cards and move details to scene view
 
 Timestamp: 2026-07-13T23:16:47+08:00
