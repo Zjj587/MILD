@@ -829,3 +829,191 @@ Safety boundary:
 - Website static HTML edit only.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 12. Public-Facing Task Names And Clean Image Cards
+
+Timestamp: 2026-07-13T18:01:20+08:00
+
+CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+
+Reason: user requested that the public task section no longer expose temporary
+collection wording such as `v0 Task Explorer`, `Current collected task scenes.`,
+folder-style task names, and image labels such as `Trajectory` / `v0 Photo`.
+User also requested task-card images to fit the display window better, including
+using more appropriate portrait/landscape presentation.
+
+Edits:
+
+- `index.html`
+  - Renamed navigation and section labels from `v0 Snapshot` / `v0 Task Explorer`
+    to `Dataset Snapshot` / `Task Explorer`.
+  - Renamed task section heading to `Benchmark task scenarios.`
+  - Replaced visible folder-style task names with release-facing names:
+    `Figure-Eight Motion`, `Circular Motion`, `Zigzag Motion`,
+    `Bookshelf Retrieval I/II`, `Box Retrieval I/II`,
+    `Desktop Pick-and-Place I-VI`, and `Table Wiping I/II`.
+  - Removed every `Trajectory` and `v0 Photo` label from task-card images.
+  - Changed visible `orin` variant wording to `original`.
+  - Kept original folder ids only in search metadata and static asset filenames.
+- `static/js/site.js`
+  - Updated inventory table display names to the same release-facing names.
+  - Updated visible variant wording from `orin` to `original`.
+  - Updated filtered task count text to `benchmark task(s)`.
+- `static/css/site.css`
+  - Enlarged task-card image area from 190 px to 240 px.
+  - Changed task photos to `background-size: cover` so photos fill the card
+    window.
+  - Kept motion trajectory images as `background-size: contain` so trajectory
+    shapes are not cropped.
+  - Removed the dark overlay and badge styling from task-card images.
+- `README.md`
+  - Updated website content notes to describe release-facing task names and
+    dataset snapshot wording.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+sed -n '1,240p' /home/zjj/.cache/agibot/live_shared_memory/CODE_DELIVERY_RULES.md
+sed -n '1,240p' /home/zjj/.cache/agibot/live_shared_memory/COMMAND_LOG_RULES.md
+rg -n "\\bv0\\b|v0 Task|Current collected|v0 Photo|Trajectory|\\borin\\b|Grab-place|grab-and-place|Grab \\+ Place|Analemma_2_t|Circular_2_t|Zigzag_2_t|Bookshelf01_2|Bookshelf02_2|Grab_Place|Wiping02_1" index.html static/js/site.js README.md static/css/site.css
+node --check static/js/site.js
+python3 -m http.server 8028
+google-chrome --headless --disable-gpu --no-sandbox --hide-scrollbars --window-size=1440,9000 --run-all-compositor-stages-before-draw --virtual-time-budget=3000 --screenshot=/tmp/mild_public_cards_final.png http://127.0.0.1:8028/
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+git diff --stat
+git status --short
+```
+
+Validation results:
+
+- Public visible text scan: no remaining `v0 Task`, `Current collected`,
+  `v0 Photo`, `Trajectory`, visible `orin`, `Grab-place`, `grab-and-place`, or
+  `Grab + Place` matches. Remaining folder ids are limited to search metadata,
+  static asset filenames, release URL tag `v0.1`, or internal slug mapping.
+- `node --check static/js/site.js`: success.
+- Static resource reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+- Local Chrome screenshot `/tmp/mild_public_cards_final.png` was visually
+  inspected; task cards use release names and image cards no longer show labels.
+- Temporary local server on port 8028 was stopped with `Ctrl-C`.
+
+Safety boundary:
+
+- Website static HTML/CSS/JS/README update only.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
+
+## 13. Simplify Task Roots And Rename Orin To Table
+
+Timestamp: 2026-07-13T18:09:07+08:00
+
+CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+
+Reason: user clarified that `orin` corresponds to the plain `table` scene image,
+so public-facing variant wording should use `table`. User also clarified that
+task names can remain close to the source folder root, e.g. `Circular_2_t`
+should display simply as `Circular`.
+
+Edits:
+
+- `index.html`
+  - Changed visible task names from descriptive labels to cleaned task roots:
+    `Analemma`, `Circular`, `Zigzag`, `Bookshelf 01/02`, `Box 01/02`,
+    `Grab Place 01-06`, and `Wiping 01/02`.
+  - Changed visible variant and Insight9 wording from `original` to `table`.
+  - Kept original folder ids such as `Circular_2_t` and `Grab_Place01_t` only
+    in search metadata for discoverability.
+- `static/js/site.js`
+  - Updated inventory table names and variant text to the same `table` and
+    cleaned-root naming scheme.
+- `README.md`
+  - Updated release-preparation wording from `original data` to `table data`.
+
+Commands and checks:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+perl -0pi -e 's/Figure-Eight Motion/Analemma/g; s/Circular Motion/Circular/g; s/Zigzag Motion/Zigzag/g; s/Bookshelf Retrieval I/Bookshelf 01/g; s/Bookshelf Retrieval II/Bookshelf 02/g; s/Box Retrieval I/Box 01/g; s/Box Retrieval II/Box 02/g; s/Desktop Pick-and-Place I/Desktop Pick-and-Place __TMP1__/g; s/Desktop Pick-and-Place II/Desktop Pick-and-Place __TMP2__/g; s/Desktop Pick-and-Place III/Desktop Pick-and-Place __TMP3__/g; s/Desktop Pick-and-Place IV/Desktop Pick-and-Place __TMP4__/g; s/Desktop Pick-and-Place V/Desktop Pick-and-Place __TMP5__/g; s/Desktop Pick-and-Place VI/Desktop Pick-and-Place __TMP6__/g; s/Desktop Pick-and-Place __TMP1__/Grab Place 01/g; s/Desktop Pick-and-Place __TMP2__/Grab Place 02/g; s/Desktop Pick-and-Place __TMP3__/Grab Place 03/g; s/Desktop Pick-and-Place __TMP4__/Grab Place 04/g; s/Desktop Pick-and-Place __TMP5__/Grab Place 05/g; s/Desktop Pick-and-Place __TMP6__/Grab Place 06/g; s/Table Wiping I/Table Wiping __TMP1__/g; s/Table Wiping II/Table Wiping __TMP2__/g; s/Table Wiping __TMP1__/Wiping 01/g; s/Table Wiping __TMP2__/Wiping 02/g; s/\boriginal\b/table/g' index.html static/js/site.js README.md
+perl -0pi -e 's/Bookshelf 01I/Bookshelf 02/g; s/Box 01I/Box 02/g; s/Grab Place 01II/Grab Place 03/g; s/Grab Place 01I/Grab Place 02/g; s/Grab Place 01V/Grab Place 04/g; s/Grab Place 05I/Grab Place 06/g; s/Wiping 01I/Wiping 02/g' index.html static/js/site.js
+python3 - <<'PY'
+from pathlib import Path
+from bs4 import BeautifulSoup
+soup=BeautifulSoup(Path('index.html').read_text(encoding='utf-8'),'html.parser')
+print('task titles:')
+for h3 in soup.select('#tasks .task-card h3'):
+    print('-', h3.get_text(strip=True))
+print('photo labels', len(soup.select('.task-photo span')))
+PY
+rg -n "Figure-Eight|Circular Motion|Zigzag Motion|Bookshelf Retrieval|Box Retrieval|Desktop Pick-and-Place|Table Wiping|\boriginal\b|original/|01I|01II|01V|05I|__TMP" index.html static/js/site.js README.md static/css/site.css || true
+node --check static/js/site.js
+python3 - <<'PY'
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+root=Path('/media/zjj/Elements/CQU_ZJJ/MILD')
+files=[root/'index.html', root/'static/css/site.css']
+missing=[]
+for f in files:
+    text=f.read_text(encoding='utf-8')
+    for m in re.findall(r'(?:src|href|content)="(static/[^"]+\.(?:jpg|jpeg|png|webp|css|js)(?:\?[^"]*)?)"', text):
+        rel=urlsplit(m).path
+        if not (root/rel).exists():
+            missing.append((str(f.relative_to(root)), m))
+    for m in re.findall(r'url\("?\.\.\/images\/([^\)"\']+)"?\)', text):
+        rel=urlsplit(m).path
+        if not (root/'static/images'/rel).exists():
+            missing.append((str(f.relative_to(root)), 'static/images/'+m))
+print('missing_refs', len(missing))
+for item in missing:
+    print(item[0], item[1])
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+git diff --stat
+git status --short
+```
+
+Validation results:
+
+- Final task titles:
+  `Analemma`, `Bookshelf 01`, `Bookshelf 02`, `Box 01`, `Box 02`, `Circular`,
+  `Grab Place 01` through `Grab Place 06`, `Wiping 01`, `Wiping 02`, `Zigzag`.
+- `photo labels 0`.
+- No remaining `Figure-Eight`, `Circular Motion`, `Zigzag Motion`,
+  `Bookshelf Retrieval`, `Box Retrieval`, `Desktop Pick-and-Place`,
+  `Table Wiping`, visible `original`, temporary `__TMP`, or malformed
+  roman-number fragments such as `01I`.
+- `node --check static/js/site.js`: success.
+- Static resource reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+
+Safety boundary:
+
+- Website static text/metadata update only.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.

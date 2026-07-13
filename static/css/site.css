@@ -741,8 +741,8 @@ h2 {
 
 .task-card {
   display: grid;
-  grid-template-rows: 190px 1fr;
-  min-height: 610px;
+  grid-template-rows: 240px 1fr;
+  min-height: 660px;
   overflow: hidden;
 }
 
@@ -752,37 +752,23 @@ h2 {
 
 .task-photo {
   position: relative;
-  display: grid;
-  place-items: end start;
-  min-height: 190px;
-  padding: 14px;
+  min-height: 240px;
   color: var(--white);
   background-color: #26313b;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   isolation: isolate;
 }
 
 .task-photo::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  content: "";
-  background: linear-gradient(180deg, rgba(24, 33, 43, 0.02) 0%, rgba(24, 33, 43, 0.56) 100%);
-}
-
-.task-photo span {
-  padding: 5px 8px;
-  background: rgba(24, 33, 43, 0.58);
-  border-radius: 8px;
-  font-size: 0.78rem;
-  font-weight: 800;
+  display: none;
 }
 
 .task-photo-a {
   background-color: #f6f8fb;
   background-image: url("../images/pic/trajectories/Analemma_2_t_trajectory_shape.png");
+  background-size: contain;
 }
 
 .task-photo-b {
@@ -808,6 +794,7 @@ h2 {
 .task-photo-f {
   background-color: #fff7ed;
   background-image: url("../images/pic/trajectories/Circular_2_t_trajectory_shape.png");
+  background-size: contain;
 }
 
 .task-photo-g {
@@ -853,6 +840,7 @@ h2 {
 .task-photo-o {
   background-color: #f1f8f3;
   background-image: url("../images/pic/trajectories/Zigzag_2_t_trajectory_shape.png");
+  background-size: contain;
 }
 
 .task-body {

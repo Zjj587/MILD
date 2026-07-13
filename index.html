@@ -21,7 +21,7 @@
     >
     <meta property="og:image" content="static/images/pic/scenes/apriltag4.jpg">
     <link rel="preload" href="static/images/pic/scenes/apriltag4.jpg" as="image">
-    <link rel="stylesheet" href="static/css/site.css?v=20260713-trajectory-shapes">
+    <link rel="stylesheet" href="static/css/site.css?v=20260713-public-task-cards">
   </head>
   <body>
     <header class="site-header">
@@ -34,7 +34,7 @@
         <a href="#benchmark">Benchmark</a>
         <a href="#sensors">Sensors</a>
         <a href="#sequences">Sequences</a>
-        <a href="#collected">v0 Snapshot</a>
+        <a href="#collected">Dataset Snapshot</a>
         <a href="#tasks">Tasks</a>
         <a href="#release">Release</a>
         <a href="#citation">Citation</a>
@@ -67,7 +67,7 @@
           <div class="metric-strip" aria-label="Dataset summary">
             <div class="metric">
               <span class="metric-value">15</span>
-              <span class="metric-label">v0 collected tasks</span>
+              <span class="metric-label">benchmark tasks</span>
             </div>
             <div class="metric">
               <span class="metric-value">6</span>
@@ -96,14 +96,14 @@
                 contact-rich manipulation, and difficult visual texture.
               </p>
               <p>
-                The website is structured around the current v0 tasks first: every task has a
-                captured preview image, scene-variant summary, sensor availability, and a dataset
+                The website is structured around release-facing task families first: every task has
+                a captured preview image, scene-variant summary, sensor availability, and a dataset
                 link location ready for release.
               </p>
               <p>
-                The current v0 snapshot contains collected manipulation, wiping, bookshelf, box,
-                and motion-pattern scenes. The task explorer now mirrors those actual collected
-                folders instead of the earlier planned taxonomy.
+                The current snapshot contains manipulation, wiping, bookshelf, box, and
+                motion-pattern scenes. The task explorer presents them as benchmark scenarios
+                instead of temporary collection folder names.
               </p>
             </div>
           </div>
@@ -119,7 +119,7 @@
           <div class="feature-grid">
             <article class="feature">
               <h3>Manipulation Motion</h3>
-              <p>Grab-place, wiping, bookshelf, box, and repeatable motion-pattern scenes collected in the current v0 folder.</p>
+              <p>Pick-and-place, wiping, bookshelf, box, and repeatable motion-pattern scenes organized as benchmark scenarios.</p>
             </article>
             <article class="feature">
               <h3>Localization Stress</h3>
@@ -131,7 +131,7 @@
             </article>
             <article class="feature">
               <h3>Release-Ready Layout</h3>
-              <p>Each collected scene maps to original, ArUco, AprilTag, and appearance-variant folders that can become public release bundles.</p>
+              <p>Each collected scene maps to table, ArUco, AprilTag, and appearance-variant folders that can become public release bundles.</p>
             </article>
           </div>
         </div>
@@ -198,8 +198,8 @@
             </div>
             <div class="body-copy">
               <p>
-                For each operation scene, MILD separates the original capture from tag-assisted
-                captures. The current v0 folder uses original, ArUco, AprilTag Custom48h12, and
+                For each operation scene, MILD separates the table capture from tag-assisted
+                captures. The collection uses table, ArUco, AprilTag Custom48h12, and
                 appearance-variant folders, with four-tag layouts as the primary marker condition
                 and selected one- or two-tag subsets for sensitivity studies.
               </p>
@@ -249,8 +249,8 @@
               <p>Each downloadable task entry should expose the scene, sequence family, marker setup, and material variant.</p>
             </div>
             <pre><code>dataset/
-  Grab_Place01_t/
-    orin/
+  desktop_pick_place/
+    table/
     aruco/
       4/
     apriltag/
@@ -264,15 +264,15 @@
       <section class="section collected-section" id="collected">
         <div class="section-inner">
           <div class="section-heading">
-            <p class="section-kicker">v0 Collected Snapshot</p>
-            <h2>Current local inventory distilled into release-facing structure.</h2>
+            <p class="section-kicker">Dataset Snapshot</p>
+            <h2>Collected scenarios distilled into release-facing structure.</h2>
           </div>
 
-          <div class="snapshot-grid" aria-label="Collected v0 summary">
+          <div class="snapshot-grid" aria-label="Collected dataset summary">
             <article class="snapshot-card">
               <span>15</span>
-              <strong>collected tasks</strong>
-              <p>Analemma, Circular, Zigzag; Bookshelf01/02; Box01/02; Grab_Place01-06; Wiping01/02.</p>
+              <strong>benchmark tasks</strong>
+              <p>Motion patterns, bookshelf retrieval, box retrieval, desktop pick-and-place, and table wiping.</p>
             </article>
             <article class="snapshot-card">
               <span>6</span>
@@ -296,7 +296,7 @@
               <div>
                 <h3>Collected Task Inventory</h3>
                 <p>
-                  This table reflects the current v0 task organization. Insight9 availability
+                  This table reflects the current benchmark task organization. Insight9 availability
                   follows the project rule: left/right grayscale images, IMU, and time-sync index
                   are required. Only usable Insight9 variants are listed.
                 </p>
@@ -325,12 +325,12 @@
         <div class="section-inner">
           <div class="tasks-toolbar">
             <div>
-              <p class="section-kicker">v0 Task Explorer</p>
-              <h2>Current collected task scenes.</h2>
+              <p class="section-kicker">Task Explorer</p>
+              <h2>Benchmark task scenarios.</h2>
             </div>
             <label class="task-search">
               <span>Search scenes</span>
-              <input id="taskSearch" type="search" placeholder="Grab_Place, Box, Insight9..." autocomplete="off">
+              <input id="taskSearch" type="search" placeholder="Pick-and-place, Box, Insight9..." autocomplete="off">
             </label>
           </div>
 
@@ -339,77 +339,69 @@
             <button class="filter-chip" type="button" data-filter="motion">Motion Pattern</button>
             <button class="filter-chip" type="button" data-filter="bookshelf">Bookshelf</button>
             <button class="filter-chip" type="button" data-filter="box">Box</button>
-            <button class="filter-chip" type="button" data-filter="grasp-place">Grab + Place</button>
+            <button class="filter-chip" type="button" data-filter="grasp-place">Pick-and-Place</button>
             <button class="filter-chip" type="button" data-filter="wipe">Wiping</button>
           </div>
 
-          <p class="task-count" id="taskCount">Showing 15 collected tasks</p>
+          <p class="task-count" id="taskCount">Showing 15 benchmark tasks</p>
 
           <div class="task-grid">
-            <article class="task-card" data-category="motion" data-search="Analemma_2_t analemma motion pattern aruco apriltag tablecloth insta360 insight9 trajectory shape">
-              <div class="task-photo task-photo-a" role="img" aria-label="Axis-free TUM trajectory shape for Analemma_2_t">
-                <span>Trajectory</span>
-              </div>
+            <article class="task-card" data-category="motion" data-search="Analemma Analemma_2_t analemma motion pattern aruco apriltag tablecloth insta360 insight9 trajectory shape">
+              <div class="task-photo task-photo-a" role="img" aria-label="Axis-free trajectory shape for Analemma"></div>
               <div class="task-body">
                 <div class="task-topline"><span>01</span><strong>Motion Pattern</strong></div>
-                <h3>Analemma_2_t</h3>
+                <h3>Analemma</h3>
                 <p>Figure-eight style handheld motion for repeatable localization stress testing.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
                   <dt>Insta360 X5</dt><dd>6 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, tablecloth, ArUco 4.</dd>
+                  <dt>Insight9</dt><dd>table, tablecloth, ArUco 4.</dd>
                 </dl>
                 <div class="tag-row"><span>Motion</span><span>6 Insta360 X5</span><span>3 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="bookshelf" data-search="Bookshelf01_2 bookshelf cabinet occlusion aruco apriltag insta360 insight9">
-              <div class="task-photo task-photo-b" role="img" aria-label="Captured v0 preview for Bookshelf01_2">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="bookshelf" data-search="Bookshelf 01 Bookshelf01_2 bookshelf cabinet occlusion aruco apriltag insta360 insight9">
+              <div class="task-photo task-photo-b" role="img" aria-label="Task preview for Bookshelf 01"></div>
               <div class="task-body">
                 <div class="task-topline"><span>02</span><strong>Bookshelf</strong></div>
-                <h3>Bookshelf01_2</h3>
+                <h3>Bookshelf 01</h3>
                 <p>Bookshelf manipulation scene with partial occlusion and close-range viewpoint changes.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
                   <dt>Insta360 X5</dt><dd>5 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, ArUco 4.</dd>
+                  <dt>Insight9</dt><dd>table, ArUco 4.</dd>
                 </dl>
                 <div class="tag-row"><span>Bookshelf</span><span>5 Insta360 X5</span><span>2 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="bookshelf" data-search="Bookshelf02_2 bookshelf tablecloth aruco apriltag insta360 insight9">
-              <div class="task-photo task-photo-c" role="img" aria-label="Captured v0 preview for Bookshelf02_2">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="bookshelf" data-search="Bookshelf 02 Bookshelf02_2 bookshelf tablecloth aruco apriltag insta360 insight9">
+              <div class="task-photo task-photo-c" role="img" aria-label="Task preview for Bookshelf 02"></div>
               <div class="task-body">
                 <div class="task-topline"><span>03</span><strong>Bookshelf</strong></div>
-                <h3>Bookshelf02_2</h3>
+                <h3>Bookshelf 02</h3>
                 <p>Second bookshelf scene with longer interaction and material variation.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
                   <dt>Insta360 X5</dt><dd>6 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, ArUco 4.</dd>
+                  <dt>Insight9</dt><dd>table, ArUco 4.</dd>
                 </dl>
                 <div class="tag-row"><span>Bookshelf</span><span>6 Insta360 X5</span><span>2 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="box" data-search="Box01 box container aruco apriltag insta360 insight9">
-              <div class="task-photo task-photo-d" role="img" aria-label="Captured v0 preview for Box01">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="box" data-search="Box 01 Box01 box container aruco apriltag insta360 insight9">
+              <div class="task-photo task-photo-d" role="img" aria-label="Task preview for Box 01"></div>
               <div class="task-body">
                 <div class="task-topline"><span>04</span><strong>Box</strong></div>
-                <h3>Box01</h3>
+                <h3>Box 01</h3>
                 <p>Box scene with container boundaries and object retrieval-style occlusion.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>3 usable variants.</dd>
                   <dt>Insight9</dt><dd>ArUco 4.</dd>
                 </dl>
@@ -418,70 +410,62 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="box" data-search="Box02 box container aruco apriltag insta360 insight9">
-              <div class="task-photo task-photo-e" role="img" aria-label="Captured v0 preview for Box02">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="box" data-search="Box 02 Box02 box container aruco apriltag insta360 insight9">
+              <div class="task-photo task-photo-e" role="img" aria-label="Task preview for Box 02"></div>
               <div class="task-body">
                 <div class="task-topline"><span>05</span><strong>Box</strong></div>
-                <h3>Box02</h3>
+                <h3>Box 02</h3>
                 <p>Second box scene with compact workspace and close-range camera motion.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>3 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, ArUco 4.</dd>
+                  <dt>Insight9</dt><dd>table, ArUco 4.</dd>
                 </dl>
                 <div class="tag-row"><span>Box</span><span>3 Insta360 X5</span><span>2 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="motion" data-search="Circular_2_t circular motion pattern aruco apriltag insta360 insight9 trajectory shape">
-              <div class="task-photo task-photo-f" role="img" aria-label="Axis-free TUM trajectory shape for Circular_2_t">
-                <span>Trajectory</span>
-              </div>
+            <article class="task-card" data-category="motion" data-search="Circular Circular_2_t circular motion pattern aruco apriltag insta360 insight9 trajectory shape">
+              <div class="task-photo task-photo-f" role="img" aria-label="Axis-free trajectory shape for Circular"></div>
               <div class="task-body">
                 <div class="task-topline"><span>06</span><strong>Motion Pattern</strong></div>
-                <h3>Circular_2_t</h3>
+                <h3>Circular</h3>
                 <p>Circular handheld motion pattern for controlled trajectory-shape comparison.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
                   <dt>Insta360 X5</dt><dd>6 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, tablecloth, ArUco 4.</dd>
+                  <dt>Insight9</dt><dd>table, tablecloth, ArUco 4.</dd>
                 </dl>
                 <div class="tag-row"><span>Motion</span><span>6 Insta360 X5</span><span>3 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab_Place01_t grab place cup tablecloth aruco apriltag insta360 insight9">
-              <div class="task-photo task-photo-g" role="img" aria-label="Captured v0 preview for Grab_Place01_t">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="grasp-place" data-search="Grab Place 01 Grab_Place01_t grab place cup tablecloth aruco apriltag insta360 insight9">
+              <div class="task-photo task-photo-g" role="img" aria-label="Task preview for Grab Place 01"></div>
               <div class="task-body">
-                <div class="task-topline"><span>07</span><strong>Grab + Place</strong></div>
-                <h3>Grab_Place01_t</h3>
-                <p>Desktop grab-and-place sequence with tablecloth and marker variants.</p>
+                <div class="task-topline"><span>07</span><strong>Pick-and-Place</strong></div>
+                <h3>Grab Place 01</h3>
+                <p>Desktop pick-and-place sequence with tablecloth and marker variants.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>4 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin.</dd>
+                  <dt>Insight9</dt><dd>table.</dd>
                 </dl>
                 <div class="tag-row"><span>Desktop</span><span>4 Insta360 X5</span><span>1 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab_Place02_t grab place tablecloth aruco apriltag insta360">
-              <div class="task-photo task-photo-h" role="img" aria-label="Captured v0 preview for Grab_Place02_t">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="grasp-place" data-search="Grab Place 02 Grab_Place02_t grab place tablecloth aruco apriltag insta360">
+              <div class="task-photo task-photo-h" role="img" aria-label="Task preview for Grab Place 02"></div>
               <div class="task-body">
-                <div class="task-topline"><span>08</span><strong>Grab + Place</strong></div>
-                <h3>Grab_Place02_t</h3>
-                <p>Desktop grab-and-place scene focused on Insta360 X5 visual-inertial data quality.</p>
+                <div class="task-topline"><span>08</span><strong>Pick-and-Place</strong></div>
+                <h3>Grab Place 02</h3>
+                <p>Desktop pick-and-place scene focused on Insta360 X5 visual-inertial data quality.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>4 usable variants.</dd>
                 </dl>
                 <div class="tag-row"><span>Desktop</span><span>4 Insta360 X5</span></div>
@@ -489,16 +473,14 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab_Place03_t grab place tablecloth aruco apriltag insta360">
-              <div class="task-photo task-photo-i" role="img" aria-label="Captured v0 preview for Grab_Place03_t">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="grasp-place" data-search="Grab Place 03 Grab_Place03_t grab place tablecloth aruco apriltag insta360">
+              <div class="task-photo task-photo-i" role="img" aria-label="Task preview for Grab Place 03"></div>
               <div class="task-body">
-                <div class="task-topline"><span>09</span><strong>Grab + Place</strong></div>
-                <h3>Grab_Place03_t</h3>
-                <p>Additional desktop grab-and-place sequence under the v0 marker layout.</p>
+                <div class="task-topline"><span>09</span><strong>Pick-and-Place</strong></div>
+                <h3>Grab Place 03</h3>
+                <p>Additional desktop pick-and-place sequence under the marker-layout benchmark setup.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>4 usable variants.</dd>
                 </dl>
                 <div class="tag-row"><span>Desktop</span><span>4 Insta360 X5</span></div>
@@ -506,16 +488,14 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab_Place04 grab place aruco apriltag insta360">
-              <div class="task-photo task-photo-j" role="img" aria-label="Captured v0 preview for Grab_Place04">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="grasp-place" data-search="Grab Place 04 Grab_Place04 grab place aruco apriltag insta360">
+              <div class="task-photo task-photo-j" role="img" aria-label="Task preview for Grab Place 04"></div>
               <div class="task-body">
-                <div class="task-topline"><span>10</span><strong>Grab + Place</strong></div>
-                <h3>Grab_Place04</h3>
-                <p>Grab-and-place scene with original, ArUco, and AprilTag four-marker variants.</p>
+                <div class="task-topline"><span>10</span><strong>Pick-and-Place</strong></div>
+                <h3>Grab Place 04</h3>
+                <p>Pick-and-place scene with table, ArUco, and AprilTag four-marker variants.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>3 usable variants.</dd>
                 </dl>
                 <div class="tag-row"><span>Desktop</span><span>3 Insta360 X5</span></div>
@@ -523,16 +503,14 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab_Place05 grab place aruco apriltag insta360">
-              <div class="task-photo task-photo-k" role="img" aria-label="Captured v0 preview for Grab_Place05">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="grasp-place" data-search="Grab Place 05 Grab_Place05 grab place aruco apriltag insta360">
+              <div class="task-photo task-photo-k" role="img" aria-label="Task preview for Grab Place 05"></div>
               <div class="task-body">
-                <div class="task-topline"><span>11</span><strong>Grab + Place</strong></div>
-                <h3>Grab_Place05</h3>
-                <p>Longer desktop grab-and-place sequence with four-tag marker condition.</p>
+                <div class="task-topline"><span>11</span><strong>Pick-and-Place</strong></div>
+                <h3>Grab Place 05</h3>
+                <p>Longer desktop pick-and-place sequence with four-tag marker condition.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>3 usable variants.</dd>
                 </dl>
                 <div class="tag-row"><span>Desktop</span><span>3 Insta360 X5</span></div>
@@ -540,16 +518,14 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="grasp-place" data-search="Grab_Place06_t grab place tablecloth aruco apriltag insta360">
-              <div class="task-photo task-photo-l" role="img" aria-label="Captured v0 preview for Grab_Place06_t">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="grasp-place" data-search="Grab Place 06 Grab_Place06_t grab place tablecloth aruco apriltag insta360">
+              <div class="task-photo task-photo-l" role="img" aria-label="Task preview for Grab Place 06"></div>
               <div class="task-body">
-                <div class="task-topline"><span>12</span><strong>Grab + Place</strong></div>
-                <h3>Grab_Place06_t</h3>
-                <p>Desktop grab-and-place scene with tablecloth appearance variant.</p>
+                <div class="task-topline"><span>12</span><strong>Pick-and-Place</strong></div>
+                <h3>Grab Place 06</h3>
+                <p>Desktop pick-and-place scene with tablecloth appearance variant.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>4 usable variants.</dd>
                 </dl>
                 <div class="tag-row"><span>Desktop</span><span>4 Insta360 X5</span></div>
@@ -557,16 +533,14 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="wipe" data-search="Wiping01 wiping table aruco apriltag insta360">
-              <div class="task-photo task-photo-m" role="img" aria-label="Captured v0 preview for Wiping01">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="wipe" data-search="Wiping 01 Wiping01 wiping table aruco apriltag insta360">
+              <div class="task-photo task-photo-m" role="img" aria-label="Task preview for Wiping 01"></div>
               <div class="task-body">
                 <div class="task-topline"><span>13</span><strong>Wiping</strong></div>
-                <h3>Wiping01</h3>
-                <p>Table-wiping scene with original and four-marker variants.</p>
+                <h3>Wiping 01</h3>
+                <p>Table-wiping scene with table and four-marker variants.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 4, AprilTag Custom48h12 4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 4, AprilTag Custom48h12 4.</dd>
                   <dt>Insta360 X5</dt><dd>3 usable variants.</dd>
                 </dl>
                 <div class="tag-row"><span>Wiping</span><span>3 Insta360 X5</span></div>
@@ -574,36 +548,32 @@
               </div>
             </article>
 
-            <article class="task-card" data-category="wipe" data-search="Wiping02_1 wiping aruco apriltag one two four insta360 insight9">
-              <div class="task-photo task-photo-n" role="img" aria-label="Captured v0 preview for Wiping02_1">
-                <span>v0 Photo</span>
-              </div>
+            <article class="task-card" data-category="wipe" data-search="Wiping 02 Wiping02_1 wiping aruco apriltag one two four insta360 insight9">
+              <div class="task-photo task-photo-n" role="img" aria-label="Task preview for Wiping 02"></div>
               <div class="task-body">
                 <div class="task-topline"><span>14</span><strong>Wiping</strong></div>
-                <h3>Wiping02_1</h3>
+                <h3>Wiping 02</h3>
                 <p>Wiping sequence with one-, two-, and four-tag sensitivity variants.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, ArUco 1/2/4, AprilTag Custom48h12 1/2/4.</dd>
+                  <dt>Variants</dt><dd>table, ArUco 1/2/4, AprilTag Custom48h12 1/2/4.</dd>
                   <dt>Insta360 X5</dt><dd>7 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, ArUco 4.</dd>
+                  <dt>Insight9</dt><dd>table, ArUco 4.</dd>
                 </dl>
                 <div class="tag-row"><span>Wiping</span><span>7 Insta360 X5</span><span>2 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
               </div>
             </article>
 
-            <article class="task-card" data-category="motion" data-search="Zigzag_2_t zigzag motion aruco apriltag tablecloth insta360 insight9 trajectory shape">
-              <div class="task-photo task-photo-o" role="img" aria-label="Axis-free TUM trajectory shape for Zigzag_2_t">
-                <span>Trajectory</span>
-              </div>
+            <article class="task-card" data-category="motion" data-search="Zigzag Zigzag_2_t zigzag motion aruco apriltag tablecloth insta360 insight9 trajectory shape">
+              <div class="task-photo task-photo-o" role="img" aria-label="Axis-free trajectory shape for Zigzag"></div>
               <div class="task-body">
                 <div class="task-topline"><span>15</span><strong>Motion Pattern</strong></div>
-                <h3>Zigzag_2_t</h3>
+                <h3>Zigzag</h3>
                 <p>Zigzag handheld motion pattern with broad marker and appearance coverage.</p>
                 <dl>
-                  <dt>Variants</dt><dd>orin, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
+                  <dt>Variants</dt><dd>table, tablecloth, ArUco 2/4, AprilTag Custom48h12 2/4.</dd>
                   <dt>Insta360 X5</dt><dd>6 usable variants.</dd>
-                  <dt>Insight9</dt><dd>orin, tablecloth, ArUco 2/4, AprilTag 2.</dd>
+                  <dt>Insight9</dt><dd>table, tablecloth, ArUco 2/4, AprilTag 2.</dd>
                 </dl>
                 <div class="tag-row"><span>Motion</span><span>6 Insta360 X5</span><span>5 dual-sensor</span></div>
                 <a class="dataset-link is-disabled" href="#" aria-disabled="true">Dataset pending</a>
@@ -622,9 +592,9 @@
             </div>
             <div class="release-content">
               <p>
-                The public release area is ready for stable dataset links. The current v0 inventory
-                is organized by actual scene folder and sequence variant, and the task explorer uses
-                the same 15 collected scenes shown in the local data inventory.
+                The public release area is ready for stable dataset links. The benchmark inventory
+                is organized by task scenario, marker setup, material variant, and sensor stream, and
+                the task explorer uses the same 15 release-facing scenarios shown in the inventory.
               </p>
               <pre><code>dataset/
   calibration/
@@ -632,14 +602,14 @@
     calibration_insta360_x5_extrinsics.zip
     calibration_insight9_intrinsics.zip
     calibration_insight9_extrinsics.zip
-  scenes/
-    Grab_Place01_t/
+  scenarios/
+    desktop_pick_place/
       metadata.json
-      orin/
+      table/
       aruco/4/
       apriltag/custom48h12/4/
       tablecloth/
-    Wiping02_1/
+    table_wiping/
       preview.jpg
       metadata.json
       sequence_manifest.json</code></pre>

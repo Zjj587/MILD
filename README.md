@@ -7,12 +7,13 @@ This repository hosts the static GitHub Pages website for the MILD benchmark.
 ## Current website content
 
 - Static HTML/CSS/JS only; no build step is required.
-- The overview and `v0 Snapshot` section summarize the current pre-release
-  collected data inventory: 15 task folders, 6 organized scene settings per task,
+- The overview and dataset snapshot section summarize the current pre-release
+  collected data inventory: 15 benchmark tasks, 6 organized scene settings per task,
   2 sensors, and 88 usable sensor sequences.
-- The task explorer mirrors the current 15 collected v0 task folders.
+- The task explorer uses release-facing task names while preserving the folder
+  mapping in internal slugs/search metadata.
 - Curated website previews are stored under `static/images/pic/` with
-  `task/`, `scenes/`, and `sensor/` subfolders derived from the approved v0
+  `task/`, `scenes/`, and `sensor/` subfolders derived from the approved dataset
   `pic` assets. Axis-free motion-pattern trajectory shapes are stored under
   `static/images/pic/trajectories/` and generated from Teleoperation TUM files.
 - Large raw data, rosbag files, frame dumps, and calibration artifacts are not
@@ -30,14 +31,14 @@ python3 -m http.server 8000
 
 ## Content to replace before release
 
-- Refresh `static/images/pic/` only when newer approved v0 preview photos are
+- Refresh `static/images/pic/` only when newer approved preview photos are
   available.
 - Regenerate `static/images/pic/trajectories/` if the Analemma, Circular, or
   Zigzag Teleoperation TUM files change.
 - Upload the planned calibration release assets for Insta360 X5 and Insight9,
   including intrinsics, extrinsics, and manifest files.
 - Add public sequence manifests for each collected scene folder, including
-  original data, ArUco layouts, AprilTag Custom48h12 layouts, marker count,
+  table data, ArUco layouts, AprilTag Custom48h12 layouts, marker count,
   appearance variant, sensor availability, and sequence identifiers.
-- Keep scene-level release assets aligned with the finalized v0 manifest.
+- Keep scene-level release assets aligned with the finalized dataset manifest.
 - Update citation metadata after the paper and release URL are finalized.
