@@ -3690,3 +3690,97 @@ Safety boundary:
 - No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
   control, collection, rosbag conversion, UMID data writes, or pipeline edits
   were run.
+
+## 46. Compact hero-to-overview and section vertical rhythm
+
+Date: 2026-07-14T19:53:55+08:00
+
+Operator/session:
+
+- Team member: `nova`
+- Rule 16 visual permission: `NO_VIEW_IMAGE`
+- Context: User reported that the spacing between `Localization where
+  manipulation breaks the easy assumptions.` and `Task axes, scene axes, and
+  release organization.` felt too large, and that the whole page should be more
+  compact.
+
+Scope:
+
+- `static/css/site.css`
+- `COMMAND_LOG_website_update_20260712.md`
+
+Edits:
+
+- Reduced hero height from `min(720px, 82vh)` to `min(660px, 76vh)`.
+- Reduced hero content top/bottom padding, hero copy top margin, and hero action
+  top margin.
+- Reduced global `.section` vertical padding from
+  `clamp(62px, 8vw, 104px)` to `clamp(42px, 5.5vw, 68px)`.
+- Reduced `.metric-strip` bottom margin and `.metric` card min-height/padding.
+- Reduced `.split` gap, `.section-heading` gap/margin, feature card
+  min-height/padding, and `.body-copy` font size.
+- Reset `.body-copy p` margins to `0 0 12px` to remove browser default top
+  margins between overview paragraphs.
+- Reduced responsive hero heights to `74vh` at `max-width: 980px` and `72vh`
+  at `max-width: 640px`.
+
+Commands run:
+
+```bash
+git status --short
+nl -ba index.html | sed -n '35,135p'
+nl -ba static/css/site.css | sed -n '1,280p'
+rg -n "hero|compact-band|overview|section|section-inner|metric-strip|split|body-copy|feature-grid|tasks-section|padding|margin" static/css/site.css | head -180
+node - <<'NODE'
+# Chrome CDP baseline DOM bbox measurements before compacting.
+NODE
+node --check static/js/site.js
+git diff --check
+node - <<'NODE'
+# Static asset reference check.
+NODE
+rg -n "margin: 0 0 8px|padding: clamp\\(42px|margin-bottom: clamp\\(28px|min-height: 96px|margin: 0 0 12px|min-height: 74vh|min-height: 72vh" static/css/site.css
+node - <<'NODE'
+# Chrome CDP post-change DOM bbox validation and screenshot file generation.
+# /tmp/mild_compact_desktop.png
+# /tmp/mild_compact_mobile.png
+NODE
+date --iso-8601=seconds
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- Static asset reference check: `checkedRefs: 27`, `missing: []`.
+- `git diff --check`: success before command-log append.
+- Chrome CDP screenshot files:
+  - Desktop: `/tmp/mild_compact_desktop.png`, `1440x900`, `914078` bytes.
+  - Mobile: `/tmp/mild_compact_mobile.png`, `390x900`, `231146` bytes.
+- Desktop DOM results:
+  - no horizontal overflow: `true`;
+  - hero height: `720px` before, `660px` after;
+  - overview section height: `734.296875px` before, `576.40625px` after;
+  - benchmark section height: `559.015625px` before, `465.015625px` after;
+  - distance from overview copy bottom to benchmark h2 top after compaction:
+    `171.34375px`;
+  - hero title, eyebrow, nav, metric strip, overview h2, benchmark h2, and
+    overview copy all remained within viewport X bounds.
+- Mobile DOM results:
+  - no horizontal overflow: `true`;
+  - hero height: `738px` before, `648px` after;
+  - overview section height: `1323.15625px` before, `1133.703125px` after;
+  - benchmark section height: `1040.5625px` before, `910.5px` after;
+  - distance from overview copy bottom to benchmark h2 top after compaction:
+    `119.34375px`;
+  - hero title, eyebrow, nav, metric strip, overview h2, benchmark h2, and
+    overview copy all remained within viewport X bounds.
+
+Safety boundary:
+
+- No `view_image` calls.
+- Screenshots were generated only as files under `/tmp`; they were not opened
+  or loaded into chat context.
+- No files were deleted.
+- No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
+  control, collection, rosbag conversion, UMID data writes, or pipeline edits
+  were run.
