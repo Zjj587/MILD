@@ -3589,3 +3589,104 @@ Safety boundary:
 - No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
   control, collection, rosbag conversion, UMID data writes, or pipeline edits
   were run.
+
+## 45. Restore original Circular trajectory preview after SVG mismatch
+
+Date: 2026-07-14T19:43:52+08:00
+
+Operator/session:
+
+- Team member: `nova`
+- Rule 16 visual permission: `NO_VIEW_IMAGE`
+- Context: User correctly pointed out that the section 44 SVG replacement showed
+  a synthetic plain circle, not the original Circular trajectory image.
+
+Scope:
+
+- `index.html`
+- `static/css/site.css`
+- `COMMAND_LOG_website_update_20260712.md`
+
+Edits:
+
+- Restored `.task-photo-f` to the original source image:
+  `../images/pic/trajectories/Circular_2_t_trajectory_shape.png`.
+- Set `.task-photo-f` `background-size: contain` so the original trajectory PNG
+  is fitted into the task-card photo area without cropping.
+- Updated cache bust tokens in `index.html` to
+  `v=20260714-circular-original`.
+- Left `static/images/pic/trajectories/Circular_2_t_trajectory_preview.svg`
+  unreferenced; it was not deleted because the current recovery boundary says
+  not to delete files.
+
+Validation commands:
+
+```bash
+git status --short
+nl -ba static/css/site.css | sed -n '742,754p'
+nl -ba index.html | sed -n '20,26p;442,447p'
+python3 - <<'PY'
+# PIL source PNG dimensions and alpha/nonwhite bbox.
+PY
+node --check static/js/site.js
+node - <<'NODE'
+# Static assertions for original PNG reference, no SVG CSS reference,
+# contain sizing, and cache bust.
+NODE
+node - <<'NODE'
+# Static asset reference check for HTML/CSS/JS references.
+NODE
+git diff --check
+node - <<'NODE'
+# Chrome CDP focused Circular screenshots and DOM/CSS/bbox validation:
+# /tmp/mild_circular_original_desktop.png
+# /tmp/mild_circular_original_mobile.png
+NODE
+python3 - <<'PY'
+# Geometry check using source PNG dimensions and CSS contain rules.
+PY
+```
+
+Validation results:
+
+- Source Circular PNG:
+  - size `1116x756`;
+  - alpha bbox `(210, 78, 906, 678)`;
+  - nonwhite bbox `(210, 83, 906, 673)`;
+  - nonwhite source margins `(210, 83, 210, 83)`.
+- `node --check static/js/site.js`: success.
+- Static assertions:
+  - `v=20260714-circular-original` appears in both CSS and JS cache-bust URLs;
+  - CSS uses `Circular_2_t_trajectory_shape.png`;
+  - CSS no longer references `Circular_2_t_trajectory_preview.svg`;
+  - `.task-photo-f` uses `background-size: contain`;
+  - badge remains `"View task"`.
+- Static asset reference check: `checkedRefs: 27`, `missing: []`.
+- `git diff --check`: success before command-log append.
+- Chrome CDP:
+  - Desktop screenshot file `/tmp/mild_circular_original_desktop.png`,
+    `1440x900`, `366115` bytes.
+  - Mobile screenshot file `/tmp/mild_circular_original_mobile.png`,
+    `390x900`, `106498` bytes.
+  - Desktop `.task-photo-f`: background image points to
+    `Circular_2_t_trajectory_shape.png`, computed `background-size: contain`,
+    within viewport X/Y, no horizontal overflow.
+  - Mobile `.task-photo-f`: background image points to
+    `Circular_2_t_trajectory_shape.png`, computed `background-size: contain`,
+    within viewport X/Y, no horizontal overflow.
+- CSS `contain` geometry from source PNG dimensions:
+  - Desktop rendered image box `[27.29, 0.0, 352.05, 220.0]` in a
+    `379.34375x220` task-photo; rendered nonwhite margins
+    `[88.4, 24.15, 88.4, 24.15]`.
+  - Mobile rendered image box `[13.62, 0.0, 338.38, 220.0]` in a `352x220`
+    task-photo; rendered nonwhite margins `[74.73, 24.15, 74.73, 24.15]`.
+
+Safety boundary:
+
+- No `view_image` calls.
+- Screenshots were generated only as files under `/tmp`; they were not opened
+  or loaded into chat context.
+- No files were deleted.
+- No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
+  control, collection, rosbag conversion, UMID data writes, or pipeline edits
+  were run.

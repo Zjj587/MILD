@@ -747,8 +747,8 @@ h2 {
 
 .task-photo-f {
   background-color: #fff7ed;
-  background-image: url("../images/pic/trajectories/Circular_2_t_trajectory_preview.svg");
-  background-size: 88% auto;
+  background-image: url("../images/pic/trajectories/Circular_2_t_trajectory_shape.png");
+  background-size: contain;
   background-position: center;
 }
 
