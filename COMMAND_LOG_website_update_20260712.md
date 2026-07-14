@@ -2773,3 +2773,58 @@ Safety boundary:
 - Website image/HTML/CSS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 36. Retune Box 02 rotation and Circular trajectory scale
+
+Timestamp: 2026-07-14T14:33:31+08:00
+
+Purpose:
+
+- In `Benchmark task scenarios`, rotate the Box 02 task preview by 180 degrees.
+- Reduce the Circular trajectory-card background scale so the orange circular
+  path no longer appears cut at the left/right edges.
+
+Files changed:
+
+- `index.html`
+- `static/css/site.css`
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+node --check static/js/site.js
+python3 - <<'PY'
+# DOM/CSS check: cache-bust strings, Circular background scale,
+# Box 02 180-degree transform, Grab Place 02 90-degree transform.
+PY
+rg -n "task-photo-tune|task-photo-e::after|task-photo-f|task-photo-h::after|task-photo-l::after|background-size: 82% auto|rotate\\(180deg\\) scale\\(1.1\\)|rotate\\(90deg\\) scale\\(1.1\\)" index.html static/css/site.css
+python3 - <<'PY'
+# Static asset reference check resolving HTML, CSS, and JS image references.
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=1440,7600 --screenshot=/tmp/mild_task_photo_tune.png file:///media/zjj/Elements/CQU_ZJJ/MILD/index.html
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- DOM/CSS check:
+  - CSS and JS cache query strings are `v=20260714-task-photo-tune`.
+  - `.task-photo-f` uses `background-size: 82% auto`.
+  - `.task-photo-e::after` is grouped with `.task-photo-l::after` at
+    `rotate(180deg) scale(1.1)`.
+  - `.task-photo-h::after` remains `rotate(90deg) scale(1.1)`.
+- Static asset reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+- Headless Chrome screenshot rendered successfully at
+  `/tmp/mild_task_photo_tune.png`; visual check shows Box 02 rotated 180 degrees
+  and Circular with left/right padding.
+
+Safety boundary:
+
+- Website HTML/CSS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.

@@ -718,7 +718,8 @@ h2 {
 .task-photo-f {
   background-color: #fff7ed;
   background-image: url("../images/pic/trajectories/Circular_2_t_trajectory_shape.png");
-  background-size: contain;
+  background-size: 82% auto;
+  background-position: center;
 }
 
 .task-photo-g {
@@ -768,11 +769,11 @@ h2 {
   z-index: 0;
 }
 
-.task-photo-e::after,
 .task-photo-h::after {
   transform: rotate(90deg) scale(1.1);
 }
 
+.task-photo-e::after,
 .task-photo-l::after {
   transform: rotate(180deg) scale(1.1);
 }
