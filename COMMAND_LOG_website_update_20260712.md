@@ -1234,6 +1234,216 @@ Safety boundary:
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
 
+## 37. Nova Rule 16 rollover and low-payload recovery setup
+
+Timestamp: 2026-07-14T17:42:26+08:00 to 2026-07-14T17:54:00+08:00
+
+Purpose:
+
+- Continue as the same team alias `nova` in a fresh session generation after
+  the old nova generation was retired as read-only evidence for a Rule 16
+  visual-payload incident.
+- Establish `NO_VIEW_IMAGE` recovery boundaries before continuing MILD website
+  mobile/hero/title/nav validation.
+- Choose this file as the durable command log for the continuing website
+  update workflow.
+
+Files changed:
+
+- `COMMAND_LOG_website_update_20260712.md`
+
+Commands run:
+
+```bash
+pwd && find /home/zjj/.codex/sessions -type f -name '*.jsonl' -printf '%T@ %p\n' | sort -nr | head -20
+rg -n "Rule 16|019f3242|rollover_member_alias" /home/zjj/.codex/sessions/2026/07/14/rollout-2026-07-14T17-41-50-019f6001-0f5a-79e2-8b9e-b0b8f1e55283.jsonl
+/home/zjj/.cache/agibot/live_shared_memory/rollover_member_alias.py nova /home/zjj/.codex/sessions/2026/07/14/rollout-2026-07-14T17-41-50-019f6001-0f5a-79e2-8b9e-b0b8f1e55283.jsonl
+/home/zjj/.cache/agibot/live_shared_memory/refresh_shared_memory.sh
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+wc -l /home/zjj/.cache/agibot/live_shared_memory/TEAM_RULES.md /home/zjj/.cache/agibot/live_shared_memory/TEAM_BRIEF.md /home/zjj/.cache/agibot/live_shared_memory/MEMBER_LIFECYCLE.md /home/zjj/.cache/agibot/live_shared_memory/CODE_DELIVERY_RULES.md /home/zjj/.cache/agibot/live_shared_memory/COMMAND_LOG_RULES.md /home/zjj/.cache/agibot/live_shared_memory/KNOWN_PATHS.md /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md /home/zjj/.cache/agibot/live_shared_memory/sessions/nova.md /home/zjj/.cache/agibot/live_shared_memory/member_generations/nova.md /home/zjj/.cache/agibot/live_shared_memory/inbox/20260714-current-nova-rule16-visual-payload-incident.md /home/zjj/.cache/agibot/live_shared_memory/inbox/20260714-current-teamwide-rule16-enforcement.md /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_mild_site.md /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_website_update_20260712.md
+sed -n '1,220p' /home/zjj/.cache/agibot/live_shared_memory/TEAM_RULES.md
+sed -n '221,520p' /home/zjj/.cache/agibot/live_shared_memory/TEAM_RULES.md
+sed -n '521,780p' /home/zjj/.cache/agibot/live_shared_memory/TEAM_RULES.md
+sed -n '1,260p' /home/zjj/.cache/agibot/live_shared_memory/TEAM_BRIEF.md
+sed -n '1,140p' /home/zjj/.cache/agibot/live_shared_memory/MEMBER_LIFECYCLE.md
+sed -n '1,260p' /home/zjj/.cache/agibot/live_shared_memory/CODE_DELIVERY_RULES.md
+sed -n '1,150p' /home/zjj/.cache/agibot/live_shared_memory/COMMAND_LOG_RULES.md
+sed -n '1,80p' /home/zjj/.cache/agibot/live_shared_memory/KNOWN_PATHS.md
+sed -n '1,110p' /home/zjj/.cache/agibot/live_shared_memory/sessions/nova.md
+sed -n '1,80p' /home/zjj/.cache/agibot/live_shared_memory/member_generations/nova.md
+test -f /home/zjj/.cache/agibot/live_shared_memory/member_state/nova.md && sed -n '1,220p' /home/zjj/.cache/agibot/live_shared_memory/member_state/nova.md || printf 'member_state/nova.md not present\n'
+sed -n '1,90p' /home/zjj/.cache/agibot/live_shared_memory/inbox/20260714-current-nova-rule16-visual-payload-incident.md
+sed -n '1,80p' /home/zjj/.cache/agibot/live_shared_memory/inbox/20260714-current-teamwide-rule16-enforcement.md
+rg -n "nova|MILD|UMID|website|Rule 16|view_image|scrollWidth|mobile|hero|title|nav|eyebrow|index.html|site.css|screenshot|overflow|390" /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md
+sed -n '1,120p' /home/zjj/.cache/agibot/live_shared_memory/LIVE_STATUS.md
+sed -n '1218,1252p' /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md
+sed -n '2720,2758p' /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md
+sed -n '2960,3068p' /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md
+tail -220 /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_mild_site.md
+tail -260 /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_website_update_20260712.md
+rg -n "2026-07-14|Rule 16|view_image|mobile|hero|title|eyebrow|nav|overflow|scrollWidth|390|index.html|site.css|node --check|git diff --check|screenshot" /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_mild_site.md /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_website_update_20260712.md
+git status --short
+tail -40 /media/zjj/Elements/CQU_ZJJ/MILD/COMMAND_LOG_website_update_20260712.md
+```
+
+Validation results:
+
+- New active nova JSONL confirmed at
+  `/home/zjj/.codex/sessions/2026/07/14/rollout-2026-07-14T17-41-50-019f6001-0f5a-79e2-8b9e-b0b8f1e55283.jsonl`.
+- `rollover_member_alias.py` succeeded: old nova generation
+  `019f3242-9913-77d3-a7b2-904d6963fe75` was replaced by new generation
+  `019f6001-0f5a-79e2-8b9e-b0b8f1e55283`.
+- `refresh_shared_memory.sh` succeeded and `team_deep_preflight.sh nova`
+  completed; visual payload audit for this new generation reported `risk=ok`,
+  `view_image=0`, `image_payloads=0`.
+- `member_state/nova.md` is not present, so rollover inheritance is based on
+  `sessions/nova.md`, `member_generations/nova.md`, Rule 16 inbox notes,
+  `SHARED_FACTS.md`, and the two MILD command logs.
+- Initial `git status --short` for this recovery generation showed only:
+  `M index.html` and `M static/css/site.css`.
+- No `view_image` call was made in this new generation.
+
+Safety boundary:
+
+- Read-only shared-memory and local website inspection plus this command-log
+  append.
+- Did not run `git pull`, `git push`, `git reset`, `git fetch`, Docker replay,
+  robot control, collection, rosbag conversion, UMID data writes, or
+  full-screenshot/image loading into chat context.
+
+## 38. Low-payload mobile hero/nav/title validation after Rule 16 rollover
+
+Timestamp: 2026-07-14T17:55:00+08:00 to 2026-07-14T18:08:00+08:00
+
+Purpose:
+
+- Continue the stuck MILD website mobile/hero/title/nav validation without
+  `view_image`.
+- Verify JavaScript syntax, HTML/CSS structure, static asset references,
+  whitespace, private path hygiene, desktop/mobile screenshot generation, and
+  browser-measured horizontal overflow / bounding boxes.
+
+Files changed:
+
+- `COMMAND_LOG_website_update_20260712.md`
+
+Commands run:
+
+```bash
+node --version
+google-chrome --version
+node -e "console.log('fetch', typeof fetch); console.log('WebSocket', typeof WebSocket)"
+node --check static/js/site.js
+python3 - <<'PY'
+# DOM/CSS assertion, first attempt; failed because it assumed `.hero-eyebrow`
+# instead of the actual `.eyebrow` class.
+PY
+python3 - <<'PY'
+# Static asset reference check resolving HTML, CSS, and JS image references.
+PY
+git diff --check
+rg -n "hero|eyebrow|title|site-nav|nav" index.html static/css/site.css | head -120
+sed -n '1,150p' index.html
+sed -n '1,220p' static/css/site.css
+sed -n '1110,1235p' static/css/site.css
+python3 - <<'PY'
+# DOM/CSS assertion, second attempt; failed because the script counted all
+# hash links, including hero actions and footer links, as primary nav links.
+PY
+python3 - <<'PY'
+# DOM/CSS assertion scoped to <nav class="site-nav">.
+PY
+node <<'NODE'
+# First Chrome CDP layout/screenshot script attempt.
+# Failed before Chrome launch because Node 24 rejected require() with
+# top-level await in ambiguous module syntax.
+NODE
+node <<'NODE'
+# Successful Chrome CDP script:
+# - launches headless Chrome with remote debugging;
+# - validates 1440px desktop and 390px mobile viewports;
+# - checks documentElement.scrollWidth <= window.innerWidth;
+# - records bbox data for .site-header, .site-nav, .hero, .hero-content,
+#   .hero .eyebrow, .hero-title, .hero-actions, and nav links;
+# - writes screenshots to /tmp without opening them in chat.
+NODE
+python3 - <<'PY'
+# Old nova JSONL text-only summary attempt; failed on a non-string tool output.
+PY
+python3 - <<'PY'
+# Old nova JSONL text-only summary retry with image payload redaction.
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --stat
+git status --short
+git diff --check
+git status --short
+git diff --stat
+```
+
+Validation results:
+
+- Tool versions:
+  - Node: `v24.14.0`.
+  - Chrome: `Google Chrome 134.0.6998.165`.
+  - Node globals available for CDP script: `fetch function`,
+    `WebSocket function`.
+- `node --check static/js/site.js`: success.
+- Static asset reference check: `checked_refs 27`, `missing_refs []`.
+- `git diff --check`: success before this command-log append.
+- Corrected DOM/CSS assertion: success.
+  - Primary nav links:
+    `#overview`, `#benchmark`, `#sensors`, `#sequences`, `#tasks`,
+    `#citation`.
+  - Hero h1 text:
+    `A Manipulation Interface Localization Dataset for UMI-Style Robot Teaching`.
+  - Confirmed `.hero-title`, `.hero .eyebrow`, `.site-nav`,
+    `@media (max-width: 640px)`, `overflow-wrap: anywhere`, and
+    `letter-spacing: 0` are present in CSS.
+- Headless Chrome CDP browser layout check: success.
+  - Desktop screenshot:
+    `/tmp/mild_rule16_recovery_desktop_1440.png`, PNG `1440x1200`,
+    `1076023` bytes.
+  - Mobile screenshot:
+    `/tmp/mild_rule16_recovery_mobile_390.png`, PNG `390x1200`,
+    `302232` bytes.
+  - Desktop viewport metrics: `window.innerWidth=1440`,
+    `documentElement.clientWidth=1440`, `scrollWidth=1440`, `scrollOk=true`.
+  - Mobile viewport metrics: `window.innerWidth=390`,
+    `documentElement.clientWidth=390`, `scrollWidth=390`, `scrollOk=true`.
+  - Desktop and mobile bbox failures: none. `.site-header`, `.site-nav`,
+    `.hero`, `.hero-content`, `.hero .eyebrow`, `.hero-title`,
+    `.hero-actions`, and every `.site-nav a` stayed within viewport X bounds.
+- Old nova JSONL text-only summary confirmed the inherited stopping point:
+  after hero/title edits and repeated mobile screenshots, old nova reported
+  that the mobile title/top menu still had right-side truncation risk, then
+  changed `index.html` and `static/css/site.css`, rendered
+  `/tmp/mild_hero_title_mobile4.png`, and did not complete the later
+  low-payload scrollWidth/bbox closure before the Rule 16 stall.
+- Public website file private-path scan: no matches.
+- `git diff --stat` before final section-38 append:
+  `COMMAND_LOG_website_update_20260712.md`, `index.html`, and
+  `static/css/site.css` modified; `149 insertions`, `39 deletions`.
+- `git status --short` before final section-38 append:
+  `M COMMAND_LOG_website_update_20260712.md`, `M index.html`,
+  `M static/css/site.css`.
+- Post-append `git diff --check`: success.
+- Post-append `git status --short`:
+  `M COMMAND_LOG_website_update_20260712.md`, `M index.html`,
+  `M static/css/site.css`.
+- Post-append `git diff --stat`:
+  `COMMAND_LOG_website_update_20260712.md`, `index.html`, and
+  `static/css/site.css` modified; `272 insertions`, `39 deletions`.
+
+Safety boundary:
+
+- No `view_image` calls were made.
+- Full screenshots were generated only as files under `/tmp`; they were not
+  opened or loaded into chat context.
+- No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
+  control, data collection, rosbag conversion, UMID data writes, or pipeline
+  edits were run.
+
 ## 17. Remove duplicate collected-summary cards
 
 Timestamp: 2026-07-13T18:48:48+08:00
