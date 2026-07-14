@@ -137,7 +137,7 @@ h1 {
 
 .hero-title {
   max-width: 980px;
-  font-size: 4.4rem;
+  font-size: 4rem;
   font-weight: 860;
   line-height: 1.03;
 }
@@ -672,18 +672,44 @@ h2 {
   font: inherit;
   isolation: isolate;
   text-align: left;
-  transition: filter 160ms ease, transform 160ms ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+  transition: filter 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .task-photo::before {
-  display: none;
+  content: "View scenes";
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  color: var(--white);
+  background: rgba(8, 16, 23, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(8, 16, 23, 0.18);
+  font-size: 0.78rem;
+  font-weight: 820;
+  letter-spacing: 0;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .task-photo:hover,
 .task-photo:focus-visible {
   filter: saturate(1.08) contrast(1.04);
-  outline: 3px solid rgba(15, 118, 110, 0.38);
+  outline: 3px solid rgba(15, 118, 110, 0.75);
   outline-offset: -3px;
+  box-shadow: inset 0 0 0 4px rgba(15, 118, 110, 0.78), 0 14px 34px rgba(15, 118, 110, 0.18);
+}
+
+.task-photo:hover::before,
+.task-photo:focus-visible::before {
+  background: var(--teal-dark);
+  border-color: rgba(255, 255, 255, 0.86);
 }
 
 .task-photo-a {
@@ -722,7 +748,7 @@ h2 {
 .task-photo-f {
   background-color: #fff7ed;
   background-image: url("../images/pic/trajectories/Circular_2_t_trajectory_shape.png");
-  background-size: 82% auto;
+  background-size: 70% auto;
   background-position: center;
 }
 
@@ -1140,7 +1166,7 @@ code {
   }
 
   .hero-title {
-    font-size: 3.6rem;
+    font-size: 3.3rem;
   }
 
   .metric-strip,
@@ -1215,7 +1241,7 @@ code {
 
   .hero-title {
     max-width: 100%;
-    font-size: 1.9rem;
+    font-size: 1.78rem;
   }
 
   .hero-copy {

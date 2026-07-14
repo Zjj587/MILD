@@ -1234,6 +1234,56 @@ Safety boundary:
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
 
+## 40. Tail index for Rule 16 recovery entries and final checks
+
+Timestamp: 2026-07-14T18:03:44+08:00
+
+Purpose:
+
+- Keep the actual tail of this command log pointing to the newest Rule 16
+  recovery work. Detailed entries were inserted earlier in this file:
+  - section 37: nova rollover and low-payload recovery setup;
+  - section 38: low-payload mobile hero/nav/title validation;
+  - section 39: Circular preview, hero title, metric label, and task affordance
+    update.
+
+Final commands:
+
+```bash
+git diff --check
+git status --short
+git diff --stat
+rg -n "20260714-task-affordance|scene settings</span>|View scenes|task-photo-f|font-size: 4rem|font-size: 3.3rem|font-size: 1.78rem|## 39" index.html static/css/site.css COMMAND_LOG_website_update_20260712.md
+```
+
+Final results:
+
+- `git diff --check`: success.
+- `git status --short`:
+  - `M COMMAND_LOG_website_update_20260712.md`
+  - `M index.html`
+  - `M static/css/site.css`
+- `git diff --stat` before this tail-index append:
+  - `COMMAND_LOG_website_update_20260712.md | 139 +++++++++++++++++++++++++++++++++`
+  - `index.html | 6 +-`
+  - `static/css/site.css | 40 ++++++++--`
+  - total: `3 files changed, 175 insertions(+), 10 deletions(-)`.
+- Targeted grep confirmed:
+  - cache bust `v=20260714-task-affordance` in `index.html`;
+  - metric label `scene settings`;
+  - `View scenes` badge CSS;
+  - Circular `.task-photo-f`;
+  - hero title sizes `4rem`, `3.3rem`, and `1.78rem`;
+  - section 39 command-log details.
+
+Safety boundary:
+
+- No `view_image` calls.
+- No full screenshot/image was loaded into chat context.
+- No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
+  control, collection, rosbag conversion, UMID data writes, or pipeline edits
+  were run.
+
 ## 37. Nova Rule 16 rollover and low-payload recovery setup
 
 Timestamp: 2026-07-14T17:42:26+08:00 to 2026-07-14T17:54:00+08:00
@@ -1440,6 +1490,145 @@ Safety boundary:
 - No `view_image` calls were made.
 - Full screenshots were generated only as files under `/tmp`; they were not
   opened or loaded into chat context.
+- No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
+  control, data collection, rosbag conversion, UMID data writes, or pipeline
+  edits were run.
+
+## 39. Retune Circular preview, hero title, metric label, and task affordance
+
+Timestamp: 2026-07-14T18:03:44+08:00
+
+Purpose:
+
+- Respond to user feedback that the Circular preview in `Benchmark task
+  scenarios` was still not fully visible.
+- Make the hero title
+  `A Manipulation Interface Localization Dataset for UMI-Style Robot Teaching`
+  slightly smaller.
+- Change the overview metric label from `scene settings / task` to
+  `scene settings`.
+- Make task-card images more discoverably clickable, beyond hover-only
+  feedback.
+
+Files changed:
+
+- `index.html`
+- `static/css/site.css`
+- `COMMAND_LOG_website_update_20260712.md`
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+git status --short
+rg -n "scene settings|task-photo-f|task-card|task-photo|Benchmark task scenarios|hero-title|title-word|metric-label|openTaskDetail|task-detail" index.html static/css/site.css static/js/site.js
+sed -n '232,315p' index.html && sed -n '640,835p' static/css/site.css
+sed -n '1128,1230p' static/css/site.css
+identify -format '%f %wx%h %[mean] %[standard-deviation]\n' static/images/pic/trajectories/Circular_2_t_trajectory_shape.png static/images/pic/trajectories/Analemma_2_t_trajectory_shape.png static/images/pic/trajectories/Zigzag_2_t_trajectory_shape.png
+python3 - <<'PY'
+# PIL bbox check for trajectory PNG content margins against transparent corner background.
+PY
+nl -ba static/css/site.css | sed -n '130,155p;655,690p;718,728p;1200,1222p'
+```
+
+Edit operations:
+
+```text
+apply_patch:
+- index.html cache-bust string updated to `v=20260714-task-affordance`.
+- index.html metric label changed to `scene settings`.
+- static/css/site.css `.hero-title` font sizes reduced from 4.4rem/3.6rem/1.9rem
+  to 4rem/3.3rem/1.78rem.
+- static/css/site.css `.task-photo-f` background-size reduced from `82% auto`
+  to `70% auto`.
+- static/css/site.css `.task-photo::before` changed from hidden to a persistent
+  `View scenes` badge.
+- static/css/site.css task image hover/focus outline and inset shadow were
+  strengthened to make the clickable state clearer.
+```
+
+Validation commands:
+
+```bash
+node --check static/js/site.js
+python3 - <<'PY'
+# HTML/CSS assertions: metric label, cache-bust string, title font sizes,
+# Circular background-size, View scenes badge, hover/focus border/shadow.
+PY
+python3 - <<'PY'
+# Static asset reference check resolving HTML, CSS, and JS image references.
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+node <<'NODE'
+# Chrome CDP validation and screenshot generation for:
+# /tmp/mild_task_affordance_desktop_tasks.png
+# /tmp/mild_task_affordance_mobile_top.png
+# /tmp/mild_task_affordance_mobile_tasks.png
+# First run failed only because Chrome normalized computed `background-size`
+# from `70% auto` to `70%`; the page state was otherwise valid.
+NODE
+node <<'NODE'
+# Chrome CDP retry accepting normalized `70%` background-size.
+NODE
+node <<'NODE'
+# Chrome CDP focused Circular-card screenshots and bbox validation:
+# /tmp/mild_task_affordance_desktop_circular.png
+# /tmp/mild_task_affordance_mobile_circular.png
+NODE
+date --iso-8601=seconds
+```
+
+Validation results:
+
+- Deep preflight completed; Rule 16 visual-payload audit showed `risk=watch`,
+  `view_image=0`. Recovery remains `NO_VIEW_IMAGE`.
+- Initial git status for this turn showed existing modified website files from
+  the previous recovery: no reset/revert was run.
+- Trajectory image dimensions:
+  - `Circular_2_t_trajectory_shape.png 1116x756`
+  - `Analemma_2_t_trajectory_shape.png 1116x756`
+  - `Zigzag_2_t_trajectory_shape.png 1116x756`
+- PIL content-bbox check for Circular:
+  - content bbox `(210, 83, 906, 673)`
+  - content size `696x590`
+  - transparent-edge margins `(210, 83, 210, 83)`
+- `node --check static/js/site.js`: success.
+- HTML/CSS assertion: success.
+  - metric labels are `benchmark tasks`, `scene settings`, `sensors`,
+    `usable sensor sequences`.
+  - CSS and JS cache strings are `v=20260714-task-affordance`.
+  - `View scenes` badge CSS exists.
+  - Circular CSS uses `background-size: 70% auto`.
+- Static asset reference check: `checked_refs 27`, `missing_refs []`.
+- Public website file private-path scan: no matches.
+- `git diff --check`: success before command-log append.
+- Chrome CDP validation:
+  - Desktop task screenshot:
+    `/tmp/mild_task_affordance_desktop_tasks.png`, `1440x1200`,
+    `386709` bytes, task section in viewport, no horizontal overflow.
+  - Mobile top screenshot:
+    `/tmp/mild_task_affordance_mobile_top.png`, `390x1200`,
+    `300527` bytes, hero title bbox within viewport, no horizontal overflow.
+  - Mobile task-section screenshot:
+    `/tmp/mild_task_affordance_mobile_tasks.png`, `390x1200`,
+    `115850` bytes, task section in viewport, no horizontal overflow.
+  - Focused Circular desktop screenshot:
+    `/tmp/mild_task_affordance_desktop_circular.png`, `1440x900`,
+    `354860` bytes, `.task-photo-f` bbox `379.34x220`, in viewport,
+    within X bounds, computed `background-size: 70%`, badge content
+    `"View scenes"`.
+  - Focused Circular mobile screenshot:
+    `/tmp/mild_task_affordance_mobile_circular.png`, `390x900`,
+    `101025` bytes, `.task-photo-f` bbox `352x220`, in viewport,
+    within X bounds, computed `background-size: 70%`, badge content
+    `"View scenes"`.
+
+Safety boundary:
+
+- No `view_image` calls.
+- Screenshots were generated only as files under `/tmp`; they were not opened
+  or loaded into chat context.
 - No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
   control, data collection, rosbag conversion, UMID data writes, or pipeline
   edits were run.
@@ -3038,3 +3227,58 @@ Safety boundary:
 - Website HTML/CSS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 41. EOF index for current Rule 16 recovery state
+
+Timestamp: 2026-07-14T18:03:44+08:00
+
+Purpose:
+
+- Keep the actual end of this command log pointing to the current recovery
+  state. Detailed entries for this new nova generation are section 37
+  (rollover setup), section 38 (low-payload hero/nav/title validation), and
+  section 39 (Circular preview, hero title, metric label, and task affordance).
+
+Current website changes:
+
+- `index.html`: cache bust updated to `v=20260714-task-affordance`; metric label
+  changed from `scene settings / task` to `scene settings`.
+- `static/css/site.css`: hero title reduced to `4rem` desktop, `3.3rem` tablet,
+  and `1.78rem` mobile.
+- `static/css/site.css`: Circular task card `.task-photo-f` reduced to
+  `background-size: 70% auto`.
+- `static/css/site.css`: task images now show a persistent `View scenes` badge
+  and stronger hover/focus border/shadow.
+
+Latest validation summary:
+
+- `node --check static/js/site.js`: success.
+- HTML/CSS assertions: success.
+- Static asset reference check: `checked_refs 27`, `missing_refs []`.
+- Public website file private-path scan: no matches.
+- Chrome CDP screenshots generated without `view_image`:
+  - `/tmp/mild_task_affordance_desktop_tasks.png`
+  - `/tmp/mild_task_affordance_mobile_top.png`
+  - `/tmp/mild_task_affordance_mobile_tasks.png`
+  - `/tmp/mild_task_affordance_desktop_circular.png`
+  - `/tmp/mild_task_affordance_mobile_circular.png`
+- Focused Circular bbox validation:
+  - desktop `.task-photo-f` bbox `379.34x220`, in viewport, within X bounds,
+    computed `background-size: 70%`;
+  - mobile `.task-photo-f` bbox `352x220`, in viewport, within X bounds,
+    computed `background-size: 70%`;
+  - badge pseudo-content `"View scenes"`.
+- Final post-log checks:
+  - `git diff --check`: success.
+  - `git status --short`: `M COMMAND_LOG_website_update_20260712.md`,
+    `M index.html`, `M static/css/site.css`.
+  - `git diff --stat`: `3 files changed, 225 insertions(+), 10 deletions(-)`
+    before this EOF index append.
+
+Safety boundary:
+
+- No `view_image` calls.
+- No full screenshot/image was loaded into chat context.
+- No `git pull`, `git push`, `git reset`, `git fetch`, Docker replay, robot
+  control, collection, rosbag conversion, UMID data writes, or pipeline edits
+  were run.
