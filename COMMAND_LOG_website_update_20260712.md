@@ -2540,3 +2540,59 @@ Safety boundary:
 - Website HTML/CSS display-only adjustment.
 - Did not run Docker replay, robot control, collection, rosbag conversion, or
   UMID data/pipeline writes.
+
+## 32. Fix scene frame rotation and task-dialog scene scrolling
+
+Timestamp: 2026-07-14T11:22:32+08:00
+
+Purpose:
+
+- Keep the `table` and `tablecloth` preview frames fixed while rotating only
+  the inner image content.
+- Rotate the `Benchmark task scenarios` Box 02 and Grab Place 02 preview images
+  by 90 degrees.
+- Add an internal vertical scrollbar to the task-detail Scene list so expanded
+  tasks such as Analemma can show all scenes.
+
+Files changed:
+
+- `index.html`
+- `static/css/site.css`
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+node --check static/js/site.js
+python3 - <<'PY'
+# DOM check: variant frames, cache-busting query strings, and rotated inner images.
+PY
+rg -n "variant-photo-frame|variant-photo-image|task-photo-e::after|task-photo-h::after|task-photo-l::after|scene-list|dialog-scroll" index.html static/css/site.css static/js/site.js
+python3 - <<'PY'
+# Static asset reference check resolving CSS URLs relative to static/css/site.css.
+PY
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/js/site.js static/css/site.css README.md || true
+git diff --check
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=1440,7600 --screenshot=/tmp/mild_frame_scroll_fix.png file:///media/zjj/Elements/CQU_ZJJ/MILD/index.html
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- DOM check:
+  - `.variant-photo-rotate` count is `0`.
+  - `.variant-photo-frame` count is `2`.
+  - `table.jpg` and `tablecloth.jpg` use `.variant-photo-image-rotate` inside
+    fixed `.variant-photo-frame` wrappers.
+  - CSS and JS cache query strings are `v=20260714-dialog-scroll`.
+- Static asset reference check: `missing_refs 0`.
+- Public files private absolute path scan: success, no output.
+- `git diff --check`: success.
+- Headless Chrome screenshot rendered successfully at
+  `/tmp/mild_frame_scroll_fix.png`.
+
+Safety boundary:
+
+- Website HTML/CSS display-only adjustment.
+- Did not run Docker replay, robot control, collection, rosbag conversion, or
+  UMID data/pipeline writes.
