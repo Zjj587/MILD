@@ -930,7 +930,7 @@ h2 {
 }
 
 .task-detail-dialog {
-  width: min(1080px, calc(100vw - 32px));
+  width: min(1040px, calc(100vw - 40px));
   max-height: calc(100vh - 32px);
   padding: 0;
   overflow-x: hidden;
@@ -1131,6 +1131,62 @@ h2 {
   font-size: 0.9rem;
 }
 
+.sync-video-panel {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.sync-video-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 820;
+}
+
+.sync-video-top span {
+  color: var(--ink);
+}
+
+.sync-video-top a {
+  color: var(--teal-dark);
+  font-size: 0.8rem;
+  font-weight: 840;
+}
+
+.sync-video-top a:hover,
+.sync-video-top a:focus-visible {
+  color: var(--teal);
+  outline: none;
+}
+
+.sync-video-player {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  aspect-ratio: 2 / 1;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #111820;
+}
+
+.sync-video-meta,
+.sync-video-missing {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.sync-video-missing {
+  padding: 10px;
+  border: 1px solid #ebb29f;
+  border-radius: 8px;
+  background: #fff0ea;
+}
+
 pre {
   overflow-x: auto;
   padding: 18px;
@@ -1313,7 +1369,7 @@ code {
   }
 
   .task-detail-dialog {
-    width: calc(100vw - 20px);
+    width: calc(100vw - 24px);
     max-height: calc(100vh - 20px);
   }
 
@@ -1328,6 +1384,15 @@ code {
 
   .task-detail-photo {
     min-height: 240px;
+  }
+
+  .sync-video-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sync-video-player {
+    max-height: 220px;
   }
 
   .sensor-card dl,

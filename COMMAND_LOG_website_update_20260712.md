@@ -1284,6 +1284,116 @@ Safety boundary:
   control, collection, rosbag conversion, UMID data writes, or pipeline edits
   were run.
 
+## 46. Add rosbag-synchronized video playback to task detail dialog
+
+Timestamp: 2026-07-16, Asia/Shanghai
+
+Request:
+
+- Add synchronized trajectory videos to every available task/scene/sensor entry.
+- Use the rosbag-sync video outputs generated under
+  `/media/zjj/Elements/CQU_ZJJ/MILD_video_previews/v0_sync_combined`.
+- Push was requested, but local GitHub push credentials were not available in
+  this shell at validation time.
+
+Scope:
+
+- `index.html`
+- `static/js/site.js`
+- `static/css/site.css`
+- `COMMAND_LOG_website_update_20260712.md`
+
+Edits:
+
+- Added release-asset video URL generation in `static/js/site.js` using the
+  asset name pattern:
+  `mild_v0_sync_<task_slug>__<scene_slug>__<sensor_slug>.mp4`.
+- Added synchronized video players inside each task-detail sensor card:
+  - Insta360 X5: front/back fisheye combined MP4;
+  - Insight9: left/right grayscale combined MP4.
+- Marked the two known non-overlapping synchronized Insight9 entries as
+  unavailable instead of showing an incorrect video:
+  - `box02__table__insight9`;
+  - `box02__aruco_4__insight9`.
+- Updated cache-bust strings to `v=20260716-sync-videos`.
+- Added compact video panel CSS with responsive width/height constraints.
+
+Video source manifest evidence:
+
+```text
+x5_rosbag_sync_manifest.json:
+  sequence_count=67
+  positive_overlap_count=67
+  existing_output_count=67
+  status_counts={'converted': 67}
+
+insight9_rosbag_sync_manifest.json:
+  sequence_count=21
+  positive_overlap_count=19
+  existing_output_count=19
+  status_counts={'converted': 19, 'skipped_no_overlap': 2}
+
+release asset count expected by website: 86
+```
+
+Commands run:
+
+```bash
+git status --short
+node --check static/js/site.js
+python3 -S - <<'PY'
+# Static assertions for cache bust strings, video URL logic, unavailable
+# Insight9 entries, and CSS hooks.
+PY
+git diff --check -- index.html static/js/site.js static/css/site.css COMMAND_LOG_video_previews_20260715.md scripts/build_sequence_videos.py
+python3 -m http.server 8000 --bind 127.0.0.1
+google-chrome --headless=new --disable-gpu --no-sandbox --remote-debugging-port=9222 --user-data-dir=/tmp/mild-chrome-cdp http://127.0.0.1:8000/
+node <<'NODE'
+# Chrome DevTools Protocol DOM-only interaction check:
+# open Analemma task detail, verify 2 video players;
+# open Box02 task detail on mobile, verify X5 player plus Insight9 missing
+# state for table and ArUco 4; check scrollWidth/clientWidth.
+NODE
+ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -T git@github.com
+git credential fill
+```
+
+Validation results:
+
+- `node --check static/js/site.js`: success.
+- Static assertions: success.
+- `git diff --check`: success.
+- Chrome DOM-only check:
+  - Desktop `1365x900`: Analemma dialog opens, `videoCount=2`, first video URL
+    is
+    `https://github.com/Zjj587/MILD/releases/download/v0.1/mild_v0_sync_analemma_2_t__table__insta360_x5.mp4`,
+    no horizontal overflow.
+  - Mobile `390x844`: Box 02 dialog opens; table and ArUco 4 scenes each show
+    one X5 video player and one Insight9 missing-sync notice; no horizontal
+    overflow.
+
+Release/push status:
+
+- `gh` CLI is not installed.
+- `git credential fill` did not return a GitHub credential.
+- SSH agent has a local ED25519 key, but GitHub rejected it:
+  `Permission denied (publickey)`.
+- Local commit was created for this change set.
+- HTTPS push attempt failed:
+  `fatal: could not read Username for 'https://github.com': terminal prompts disabled`.
+- SSH push attempt failed:
+  `git@github.com: Permission denied (publickey)`.
+- Therefore code is ready locally, but release asset upload and `git push`
+  require a valid GitHub token or SSH key in this environment.
+
+Safety boundary:
+
+- No `view_image` calls.
+- No screenshots or video frames were opened or loaded into chat context.
+- Validation used DOM, CSS, path, manifest, and metadata evidence only.
+- No `git pull`, `git reset`, Docker replay, robot control, collection,
+  rosbag conversion, UMID data writes, or pipeline edits were run.
+
 ## 37. Nova Rule 16 rollover and low-payload recovery setup
 
 Timestamp: 2026-07-14T17:42:26+08:00 to 2026-07-14T17:54:00+08:00

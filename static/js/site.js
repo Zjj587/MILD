@@ -4,6 +4,7 @@ const searchInput = document.querySelector("#taskSearch");
 const taskCount = document.querySelector("#taskCount");
 const taskEmpty = document.querySelector("#taskEmpty");
 const releaseBaseUrl = "https://github.com/Zjj587/MILD/releases/download/v0.1/";
+const syncVideoAssetPrefix = "mild_v0_sync";
 
 const taskSlugs = {
   "01": "analemma_2_t",
@@ -165,6 +166,26 @@ const sensorFilterTokens = {
   Insight9: "insight9",
 };
 
+const sensorVideoSlugs = {
+  "Insta360 X5": "insta360_x5",
+  Insight9: "insight9",
+};
+
+const sensorVideoLabels = {
+  "Insta360 X5": "front / back fisheye",
+  Insight9: "left / right grayscale",
+};
+
+const sensorVideoSpecs = {
+  "Insta360 X5": "1920 x 960 H.264 MP4",
+  Insight9: "1088 x 640 H.264 MP4",
+};
+
+const unavailableSyncVideos = new Set([
+  "box02__table__insight9",
+  "box02__aruco_4__insight9",
+]);
+
 function normalize(value) {
   return value.trim().toLowerCase();
 }
@@ -323,6 +344,34 @@ function sceneSlug(value) {
   return sceneKey(value).replace(/\s+/g, "_");
 }
 
+function syncVideoKey(taskSlug, sceneName, sensorName) {
+  const sensorSlug = sensorVideoSlugs[sensorName];
+  if (!taskSlug || !sensorSlug) return "";
+  return `${taskSlug}__${sceneSlug(sceneName)}__${sensorSlug}`;
+}
+
+function syncVideoAssetName(taskSlug, sceneName, sensorName) {
+  const sensorSlug = sensorVideoSlugs[sensorName];
+  return `${syncVideoAssetPrefix}_${taskSlug}__${sceneSlug(sceneName)}__${sensorSlug}.mp4`;
+}
+
+function getSyncVideo(taskSlug, sceneName, sensorName) {
+  const key = syncVideoKey(taskSlug, sceneName, sensorName);
+  if (!key || unavailableSyncVideos.has(key)) {
+    return { available: false, key };
+  }
+
+  const assetName = syncVideoAssetName(taskSlug, sceneName, sensorName);
+  return {
+    available: true,
+    key,
+    assetName,
+    url: `${releaseBaseUrl}${encodeURIComponent(assetName)}`,
+    label: sensorVideoLabels[sensorName],
+    spec: sensorVideoSpecs[sensorName],
+  };
+}
+
 function buildSceneEntries(task) {
   const insightScenes = new Set(expandVariantList(task.insight9Variants).map(sceneKey));
 
@@ -413,6 +462,7 @@ function renderSensorDetail(scene) {
 
   scene.sensors.forEach((sensorName) => {
     const sensor = sensorCatalog[sensorName];
+    const video = getSyncVideo(scene.taskSlug, scene.name, sensorName);
     const card = document.createElement("article");
     card.className = "detail-sensor-card";
 
@@ -422,7 +472,7 @@ function renderSensorDetail(scene) {
     const title = document.createElement("strong");
     title.textContent = sensorName;
 
-    top.append(title, createStatusBadge("usable", "good"));
+    top.append(title, createStatusBadge(video.available ? "video synced" : "no synced video", video.available ? "good" : "warn"));
 
     const role = document.createElement("span");
     role.textContent = sensor.role;
@@ -431,6 +481,48 @@ function renderSensorDetail(scene) {
     signals.textContent = sensor.signals;
 
     card.append(top, role, signals);
+
+    if (video.available) {
+      const videoPanel = document.createElement("div");
+      videoPanel.className = "sync-video-panel";
+
+      const videoTop = document.createElement("div");
+      videoTop.className = "sync-video-top";
+
+      const videoLabel = document.createElement("span");
+      videoLabel.textContent = video.label;
+
+      const videoLink = document.createElement("a");
+      videoLink.href = video.url;
+      videoLink.target = "_blank";
+      videoLink.rel = "noopener";
+      videoLink.textContent = "Open MP4";
+
+      videoTop.append(videoLabel, videoLink);
+
+      const player = document.createElement("video");
+      player.className = "sync-video-player";
+      player.controls = true;
+      player.preload = "metadata";
+      player.playsInline = true;
+      player.muted = true;
+      player.poster = scenePreviewImages[sceneKey(scene.name)] || scenePreviewImages.table;
+      player.src = video.url;
+      player.setAttribute("aria-label", `${sensorName} ${scene.name} synchronized trajectory video`);
+
+      const videoMeta = document.createElement("p");
+      videoMeta.className = "sync-video-meta";
+      videoMeta.textContent = video.spec;
+
+      videoPanel.append(videoTop, player, videoMeta);
+      card.appendChild(videoPanel);
+    } else {
+      const missing = document.createElement("p");
+      missing.className = "sync-video-missing";
+      missing.textContent = "No synchronized image frames overlap this robot trajectory window.";
+      card.appendChild(missing);
+    }
+
     taskDetailRefs.sensorList.appendChild(card);
   });
 
@@ -511,6 +603,7 @@ function openTaskDetail(card) {
   const taskSlug = taskSlugs[taskNumber];
   const scenes = buildSceneEntries(task).map((scene) => ({
     ...scene,
+    taskSlug,
     releaseSlug: taskSlug ? `${taskSlug}_${sceneSlug(scene.name)}` : "",
   }));
 
