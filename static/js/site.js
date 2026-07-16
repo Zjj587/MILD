@@ -70,8 +70,8 @@ const collectedScenes = [
     variantCount: 3,
     variants: "table, ArUco 4, AprilTag Custom48h12 4",
     insta360Usable: 3,
-    insight9Usable: 2,
-    insight9Variants: "table, ArUco 4",
+    insight9Usable: 0,
+    insight9Variants: "none",
   },
   {
     name: "Circular",
@@ -181,7 +181,7 @@ const sensorVideoSpecs = {
   Insight9: "1088 x 640 H.264 MP4",
 };
 
-const unavailableSyncVideos = new Set([
+const invalidDataSequences = new Set([
   "box02__table__insight9",
   "box02__aruco_4__insight9",
 ]);
@@ -357,8 +357,12 @@ function syncVideoAssetName(taskSlug, sceneName, sensorName) {
 
 function getSyncVideo(taskSlug, sceneName, sensorName) {
   const key = syncVideoKey(taskSlug, sceneName, sensorName);
-  if (!key || unavailableSyncVideos.has(key)) {
+  if (!key) {
     return { available: false, key };
+  }
+
+  if (invalidDataSequences.has(key)) {
+    return { available: false, invalid: true, key };
   }
 
   const assetName = syncVideoAssetName(taskSlug, sceneName, sensorName);
@@ -472,7 +476,7 @@ function renderSensorDetail(scene) {
     const title = document.createElement("strong");
     title.textContent = sensorName;
 
-    top.append(title, createStatusBadge(video.available ? "video synced" : "no synced video", video.available ? "good" : "warn"));
+    top.append(title, createStatusBadge(video.invalid ? "invalid data" : video.available ? "video synced" : "no synced video", video.available ? "good" : "warn"));
 
     const role = document.createElement("span");
     role.textContent = sensor.role;
@@ -519,7 +523,9 @@ function renderSensorDetail(scene) {
     } else {
       const missing = document.createElement("p");
       missing.className = "sync-video-missing";
-      missing.textContent = "No synchronized image frames overlap this robot trajectory window.";
+      missing.textContent = video.invalid
+        ? "This sensor sequence is excluded from the usable dataset after rosbag/TUM synchronization found no overlapping frames."
+        : "No synchronized image frames overlap this robot trajectory window.";
       card.appendChild(missing);
     }
 

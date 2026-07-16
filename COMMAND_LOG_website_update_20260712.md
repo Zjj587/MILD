@@ -4162,3 +4162,90 @@ Safety boundary:
 - No files were deleted.
 - No `git pull`, `git reset`, Docker replay, robot control, collection, rosbag
   conversion, UMID data writes, or pipeline edits were run.
+
+## 50. Mark Box 02 Insight9 no-overlap sequences invalid
+
+Date: 2026-07-16T13:41:13+08:00
+
+Operator/session:
+
+- Team member: `nova`
+- Rule 16 visual permission: `NO_VIEW_IMAGE`
+- Context: User confirmed that `box02__table__insight9` and
+  `box02__aruco_4__insight9` should be treated as invalid data, not merely
+  synchronized-video-missing entries.
+
+Scope:
+
+- `index.html`
+- `static/js/site.js`
+- `README.md`
+- `COMMAND_LOG_website_update_20260712.md`
+
+Edits:
+
+- Updated `Box 02` website data from `insight9Usable: 2` and
+  `insight9Variants: "table, ArUco 4"` to `insight9Usable: 0` and
+  `insight9Variants: "none"`.
+- Removed Insight9 from the `Box 02` task-card sensor/search metadata so the
+  Insight9 filter and text search no longer surface `Box 02` as Insight9-valid.
+- Updated the homepage and README usable sequence count from `88` to `86`.
+- Renamed the defensive video exclusion set to `invalidDataSequences` and kept
+  the two invalid sequence keys there:
+  - `box02__table__insight9`;
+  - `box02__aruco_4__insight9`.
+
+Validation:
+
+```text
+node --check static/js/site.js: success
+git diff --check: success
+static_assertions=passed
+dom_assertions=passed
+```
+
+DOM-only Chrome validation at `390x844`:
+
+```text
+usable sensor sequences metric: 86
+Box 02 data-sensors: insta360-x5
+Insight9 visible tasks: Analemma, Bookshelf 01, Bookshelf 02, Box 01,
+  Circular, Grab Place 01, Wiping 02, Zigzag
+Insight9 visible count: 8
+Box 02 visible under Insight9 filter: false
+Box 02 scene sensors: table / ArUco 4 / AprilTag Custom48h12 4 all list only
+  Insta360 X5
+Box 02 active sensor cards: Insta360 X5, status=video synced
+Box 02 detail video count: 1
+no horizontal overflow: true
+```
+
+Commands run:
+
+```bash
+git status --short --branch
+rg -n "box02__table__insight9|box02__aruco_4__insight9|missing-sync|Sync unavailable|unavailable|skipped_no_overlap|insight9" index.html static/js/site.js static/css/site.css COMMAND_LOG_website_update_20260712.md COMMAND_LOG_video_previews_20260715.md
+node --check static/js/site.js
+rg -n "21|19|86|88|usable|Insight9|scene settings|sensor streams|metrics|metric|taskCount" index.html static/js/site.js static/css/site.css README.md
+node - <<'NODE'
+# Static assertions for Box 02 invalid Insight9 data and sequence count.
+NODE
+google-chrome --headless=new --remote-debugging-port=9227 --disable-gpu --no-sandbox --user-data-dir=/tmp/mild-invalid-data-chrome about:blank
+node - <<'NODE'
+# Chrome DevTools Protocol DOM assertions; image/video asset requests blocked.
+NODE
+git diff --check
+git diff --stat
+date --iso-8601=seconds
+```
+
+Safety boundary:
+
+- No `view_image` calls.
+- No screenshots, source images, video frames, or full visual payloads were
+  loaded into chat context.
+- Chrome DOM validation blocked image and MP4 requests and did not capture
+  screenshots.
+- No files were deleted.
+- No `git pull`, `git reset`, Docker replay, robot control, collection, rosbag
+  conversion, UMID data writes, or pipeline edits were run.
