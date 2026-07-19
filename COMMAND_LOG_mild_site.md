@@ -1398,3 +1398,59 @@ PY
   - temporary validation probe:
     `tmp_visual_checks/layout_probe.html`
 - Exit status: success.
+
+### Commands 185-190
+
+- Timestamp: 2026-07-19 22:03-22:05 CST
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Reason: Final static validation, commit, and authorized push of the OneDrive
+  calibration config website update.
+- Safety scope:
+  - Used existing configured GitHub credential.
+  - Did not read, print, or ask for a token.
+  - Did not change remote configuration.
+  - Did not force push.
+  - Did not stage temporary validation artifacts under `tmp_visual_checks/`.
+- Validation before commit:
+  - `node --check static/js/site.js`: success.
+  - `git diff --check`: success.
+  - HTML parser check: 23 OneDrive links, 23 unique links, 4 calibration groups,
+    9 calibration rows, CSS query `20260719-calibration-config`.
+  - Upload manifest cross-check: all 23 manifest URLs present in `index.html`.
+- Commit/push result:
+  - Content commit: `ab6ac13 Add OneDrive calibration config links`
+  - Push result: `11fd9a9..ab6ac13  main -> main`
+  - Post-push status: `HEAD -> main`, `origin/main`, and `origin/HEAD` at
+    `ab6ac13`.
+- Commands:
+
+```bash
+node --check static/js/site.js
+git diff --check
+python3 - <<'PY'
+# Parse index.html and verify OneDrive link count, group count, row count, and CSS query.
+PY
+python3 - <<'PY'
+# Cross-check all 23 upload-manifest URLs are present in index.html.
+PY
+git status --short --branch
+git branch --show-current
+git status --short --branch --untracked-files=no
+git add index.html static/css/site.css COMMAND_LOG_mild_site.md COMMAND_LOG_rosbag_conversion_20260716.md
+git diff --cached --stat
+git commit -m "Add OneDrive calibration config links"
+git push origin main
+git status --short --branch --untracked-files=no
+git log -1 --oneline --decorate
+```
+
+### Tool Operation 191
+
+- Timestamp: 2026-07-19 22:05 CST
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Append Commands 185-190 after the successful authorized push. This
+  entry is delivered by a follow-up log-only commit.
+- Expected affected paths: `COMMAND_LOG_mild_site.md`.
+- Exit status: success.
