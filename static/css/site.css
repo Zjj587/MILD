@@ -435,6 +435,52 @@ h2 {
   align-self: end;
 }
 
+.calibration-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-self: stretch;
+}
+
+.calibration-group {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8faf7;
+}
+
+.calibration-group > span {
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 860;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.calibration-row {
+  display: grid;
+  grid-template-columns: minmax(88px, 0.38fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.calibration-row strong {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 820;
+  line-height: 1.2;
+}
+
+.calibration-row div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
 .sensor-downloads a,
 .download-pill {
   display: inline-flex;
@@ -1353,6 +1399,14 @@ code {
       "copy"
       "meta"
       "downloads";
+  }
+
+  .calibration-links {
+    grid-template-columns: 1fr;
+  }
+
+  .calibration-row {
+    grid-template-columns: 1fr;
   }
 
   .sensor-photo-wide {

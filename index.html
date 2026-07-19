@@ -21,7 +21,7 @@
     >
     <meta property="og:image" content="static/images/pic/scenes/apriltag4.jpg">
     <link rel="preload" href="static/images/pic/scenes/apriltag4.jpg" as="image">
-    <link rel="stylesheet" href="static/css/site.css?v=20260716-sync-videos">
+    <link rel="stylesheet" href="static/css/site.css?v=20260719-calibration-config">
   </head>
   <body>
     <header class="site-header">
@@ -154,10 +154,50 @@
                 <dt>Signals</dt><dd>Dual fisheye video, IMU, timestamps, and exposure metadata.</dd>
                 <dt>Release</dt><dd>Intrinsics, camera-IMU extrinsics, and hand-eye extrinsics.</dd>
               </dl>
-              <div class="sensor-downloads" aria-label="Insta360 X5 calibration downloads">
-                <a href="https://github.com/Zjj587/MILD/releases/download/v0.1/calibration_insta360_x5_intrinsics.zip">Intrinsics</a>
-                <a href="https://github.com/Zjj587/MILD/releases/download/v0.1/calibration_insta360_x5_extrinsics.zip">Extrinsics</a>
-                <a href="https://github.com/Zjj587/MILD/releases/download/v0.1/calibration_insta360_x5_manifest.json">Manifest</a>
+              <div class="sensor-downloads calibration-links" aria-label="Insta360 X5 calibration downloads">
+                <div class="calibration-group">
+                  <span>Intrinsics by model</span>
+                  <div class="calibration-row">
+                    <strong>POLYFISHEYE</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQAhCiZGCshgTri1kJYh9uZmAa2wcoBCO0ws3wV5TDjIZXk">cam001</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQCS5GqmDCNNTZeBJ7qaAonKARcrQ91xG_cp8lxq4ANN7uM">cam002</a>
+                    </div>
+                  </div>
+                  <div class="calibration-row">
+                    <strong>Omni + Radtan</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQAo9Ri3FecfTqoY6oTH-TkMAU0ACaWX1jiJG9-JRuFYdAA">cam001</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQCuiiNOVtqWSpwMUP0Yha3cAVnnz3qnPmtnDQ6GLd3rnq4">cam002</a>
+                    </div>
+                  </div>
+                  <div class="calibration-row">
+                    <strong>OpenCV / KB8</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQCaEUSn-g7NQaCfnxHnWILtAW7iVZQe96-dQti6KEkS0Ys">cam001</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQDK0zkF3waNQJCogGyVQxvpAT1tj8VUdP1ymN5j_CP6eGI">cam002</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="calibration-group">
+                  <span>Extrinsics</span>
+                  <div class="calibration-row">
+                    <strong>Camera-IMU</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQAN830U2r0eSpX5Ff2sGvVyAeetV-wA399OP4k2T79lHac">cam001</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQChx2poXp6uQow4iZ9i6toNAWlU6ox6OWM1Um5nAPrFUPA">cam002</a>
+                    </div>
+                  </div>
+                  <div class="calibration-row">
+                    <strong>Hand-eye</strong>
+                    <div>
+                      <a href="https://1drv.ms/x/c/7625f90385490ff5/IQDAsK0TG3PyQoz7YtZ-4g2AAS7XIUY7ev2hYd6DWL_shGo">T_EE_Cam001</a>
+                      <a href="https://1drv.ms/x/c/7625f90385490ff5/IQCSaT3arQ_4SYPWGF8UYGX1AUlUDq5M_MiDzQiho34SVZ8">T_EE_Cam002</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQDpZn8dozXYQ6zpPiSRh608AX0IcbKX765oSMkq2E2Qp9M">consistency</a>
+                      <a href="https://1drv.ms/t/c/7625f90385490ff5/IQDI5UEj71BAQoiS4z6rClF_AaU_Fvj5O6Qp3yclX19t8kU">report</a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </article>
 
@@ -173,16 +213,50 @@
                 <dt>Signals</dt><dd>Left/right grayscale images, IMU, image timestamps, and optional RGB or depth records.</dd>
                 <dt>Release</dt><dd>Camera intrinsics, static transforms, IMU parameters, and audited capture metadata.</dd>
               </dl>
-              <div class="sensor-downloads" aria-label="Insight9 calibration downloads">
-                <a href="https://github.com/Zjj587/MILD/releases/download/v0.1/calibration_insight9_intrinsics.zip">Intrinsics</a>
-                <a href="https://github.com/Zjj587/MILD/releases/download/v0.1/calibration_insight9_extrinsics.zip">Extrinsics</a>
-                <a href="https://github.com/Zjj587/MILD/releases/download/v0.1/calibration_insight9_manifest.json">Manifest</a>
+              <div class="sensor-downloads calibration-links" aria-label="Insight9 calibration downloads">
+                <div class="calibration-group">
+                  <span>Intrinsics</span>
+                  <div class="calibration-row">
+                    <strong>Pinhole CameraInfo</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQC0oM3T7YgsRLSv14OKo0A5AUPLvn3CTPc8qZvEKn-Td0o">left gray</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQDb5SVkGIsCSZyYgGGsgylBAaOxcqg4OeRbns731Bjzk-E">right gray</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQCv1da7m1K-Qq-nBLNH4R4hARpEjAqmBWekBWkxGV9lPWw">RGB</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQBkGNgy9WHoSran6LtwS9CuASzOScQTj-5evTU3FGPlOfM">depth</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="calibration-group">
+                  <span>Extrinsics</span>
+                  <div class="calibration-row">
+                    <strong>Static transforms</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQDVsnzvO6gMRZP7rWlbY0GqAXA1XUyVNU0Khv3U52TcK3Y">calibration</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQAeGpCBBFiVQ645TgwJmunHAexsM5YwOXWar9rIoebsR8c">tf_static</a>
+                    </div>
+                  </div>
+                  <div class="calibration-row">
+                    <strong>IMU parameters</strong>
+                    <div>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQCjd3KeFRV-T6JaVcmsUKieAQB1Vq5tPITWz5Nwn3tcyqw">imu</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQC7R39nxtnxR56JvqbG83syARdfD23Te63w0qEzUzYQHq0">kalibr</a>
+                    </div>
+                  </div>
+                  <div class="calibration-row">
+                    <strong>Hand-eye</strong>
+                    <div>
+                      <a href="https://1drv.ms/x/c/7625f90385490ff5/IQA3A7748ZOwSrioTDqO-PhyAS_bzOwbp4sAFMHrTJDk9Qc">T_EE_Cam</a>
+                      <a href="https://1drv.ms/u/c/7625f90385490ff5/IQBhfnheE2pWRoCj9c6weXHNAT-jvZKRdDEGIYKDX3_3yFI">summary</a>
+                      <a href="https://1drv.ms/t/c/7625f90385490ff5/IQBLwAXIsyezTaGyWJ3CAKcyAWEWA4DdP9oa6TlB5dpCErw">report</a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </article>
           </div>
           <p class="download-note">
-            Calibration links use the planned public release filenames. The files should be uploaded
-            as GitHub Release assets after the final calibration owner review.
+            Calibration files are hosted in the OneDrive MILD/config folder. Hand-eye results are
+            candidate owner-reviewed artifacts; use the report links for frame and timing caveats.
           </p>
         </div>
       </section>

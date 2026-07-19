@@ -1262,3 +1262,139 @@ git diff --stat
 - Reason: Append commands 142 through 144 to this command log.
 - Expected affected paths: `COMMAND_LOG_mild_site.md`.
 - Exit status: success.
+
+### Commands 146-181
+
+- Timestamp: 2026-07-19 21:26-22:02 CST
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Reason: Upload Insta360 X5 and Insight9 calibration/config files to OneDrive
+  `MILD/config`, then replace planned calibration download placeholders in the
+  website with model/grouped OneDrive links.
+- Safety scope:
+  - Rule 16 visual permission remained `NO_VIEW_IMAGE`.
+  - No full screenshots/images were loaded into chat.
+  - No robot, Docker, rosbag conversion, UMID data, or capture pipeline files
+    were modified.
+  - The existing OneDrive rosbag uploader service was not stopped or restarted.
+- Current-session evidence used:
+  - `sessions/current.md` showed current was asked to summarize X5/Insight9
+    intrinsics/extrinsics/hand-eye ownership for nova.
+  - current's final summary identified X5 hand-eye solve as `india`, Insight9
+    publisher support as `oak`, and Insight9 left-gray hand-eye solve as
+    `india`.
+  - Shared-memory evidence was cross-checked in `SHARED_FACTS.md` around the
+    X5 hand-eye and Insight9 left-gray hand-eye entries.
+- Local evidence used:
+  - X5 hand-eye report:
+    `/media/zjj/Elements/CQU_ZJJ/UMID/hand_eye_calibration/run_records/india_handeye_calibration_run_20260701/HAND_EYE_CALIBRATION_RESULT.md`
+  - Insight9 hand-eye report:
+    `/media/zjj/Elements/CQU_ZJJ/insight9/handeye_runs/india_left_gray_20260710/HAND_EYE_RESULT.md`
+  - X5 intrinsics:
+    `/media/zjj/Elements/CQU_ZJJ/UMID/config/instan360_cam*.yaml`
+  - X5 camera-IMU extrinsics:
+    `/media/zjj/Elements/CQU_ZJJ/instan360_UMI/x5_data/cam0*_imu_monitor/*-camchain-imucam.yaml`
+  - Insight9 CameraInfo/static-transform/IMU YAML:
+    `/media/zjj/Elements/CQU_ZJJ/insight9/yaml/`
+- Upload result:
+  - Link manifest generated at:
+    `/media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_config_upload_links_20260719.json`
+  - OneDrive remote root: `onedrive:MILD/config`
+  - Remote file count after upload: 23
+  - 4 existing X5 intrinsics files were skipped because remote size matched.
+  - 19 files were uploaded; remote size matched local size for every uploaded
+    file.
+- Website changes:
+  - `index.html`: replaced old planned GitHub Release calibration placeholders
+    with OneDrive config links.
+  - `index.html`: X5 Intrinsics are grouped by `POLYFISHEYE`,
+    `Omni + Radtan`, and `OpenCV / KB8`; X5 Extrinsics are grouped by
+    `Camera-IMU` and `Hand-eye`.
+  - `index.html`: Insight9 Intrinsics are grouped as `Pinhole CameraInfo`;
+    Insight9 Extrinsics are grouped as `Static transforms`, `IMU parameters`,
+    and `Hand-eye`.
+  - `index.html`: CSS cache-buster updated to
+    `20260719-calibration-config`.
+  - `static/css/site.css`: added compact calibration group/row styles and
+    mobile single-column behavior.
+- Validation:
+  - `node --check static/js/site.js`: success.
+  - `git diff --check`: success.
+  - HTML parser check: 23 OneDrive links, 23 unique, 4 calibration groups, 9
+    calibration rows, 0 duplicates.
+  - Upload/link manifest cross-check: all 23 manifest URLs are present in
+    `index.html`.
+  - `rclone lsjson onedrive:MILD/config --recursive`: success; 23 files listed.
+  - Local HTTP server smoke check: `curl -sI http://127.0.0.1:8765/index.html`
+    returned `HTTP/1.0 200 OK`.
+  - Headless Chrome screenshot files generated without opening them:
+    `/media/zjj/Elements/CQU_ZJJ/MILD/tmp_visual_checks/calibration_links_desktop_1440x1100.png`
+    and
+    `/media/zjj/Elements/CQU_ZJJ/MILD/tmp_visual_checks/calibration_links_mobile_390x1200.png`.
+  - Screenshot dimensions checked with `file`: desktop `1440 x 1100`, mobile
+    `390 x 1200`.
+  - Same-origin headless DOM probe reported:
+    - desktop: `scrollWidth=1410`, `innerWidth=1425`, `scrollOk=true`,
+      `overflow=[]`
+    - mobile probe: `scrollOk=true`, `overflow=[]`
+    - both probes saw 23 OneDrive links, 4 calibration groups, and 9
+      calibration rows.
+  - The local HTTP server was stopped after validation.
+- Incidental rosbag uploader evidence:
+  - During this work, the existing OneDrive rosbag uploader advanced from
+    18/86 ok to 19/86 ok.
+  - Latest spot check: progress JSON mtime `2026-07-19 21:28:45 CST`,
+    summary `records_ok=19`, `records_error=0`, `records_remaining=67`,
+    running record `circular_2_t__aruco_2__insta360_x5`.
+- Commands:
+
+```bash
+rg -n "intrinsics|extrinsics|insta360|instan360|insight9|config|calib|calibration|onedrive|MILD" /home/zjj/.cache/agibot/live_shared_memory/sessions/current.md /home/zjj/.cache/agibot/live_shared_memory/member_generations/current.md -S
+sed -n '4717,4720p' /home/zjj/.codex/sessions/2026/07/05/rollout-2026-07-05T20-33-02-019f3244-91db-72c0-b0eb-fd725d897542.jsonl 2>/dev/null
+nl -ba /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md | sed -n '2530,2675p;2860,2905p'
+find /media/zjj/Elements/CQU_ZJJ/instan360_UMI /media/zjj/Elements/CQU_ZJJ/UMID /media/zjj/Elements/CQU_ZJJ/insight9 /media/zjj/Elements/CQU_ZJJ/fisheye_calibration -maxdepth 7 -type f \( -iname '*camchain*.yaml' -o -iname '*imucam*.yaml' -o -iname '*camera_info*.yaml' -o -iname '*intrinsic*.yaml' -o -iname '*extrinsic*.yaml' -o -iname '*calib*.yaml' -o -iname '*camera*.yaml' -o -iname '*yaml' \) 2>/dev/null
+rclone lsjson onedrive:MILD/config --recursive
+python3 - <<'PY'
+# Upload 23 selected calibration/config files with rclone copyto,
+# generate share links with rclone link, and write
+# /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_config_upload_links_20260719.json.
+PY
+python3 - <<'PY'
+# Print upload/link manifest records.
+PY
+python3 - <<'PY'
+# Count remote files under onedrive:MILD/config using rclone lsjson.
+PY
+node --check static/js/site.js
+git diff --check
+python3 - <<'PY'
+# Parse index.html and count OneDrive links, calibration groups, rows, duplicates.
+PY
+python3 - <<'PY'
+# Cross-check that all 23 manifest URLs are present in index.html.
+PY
+python3 -m http.server 8765 --bind 127.0.0.1
+curl -sI http://127.0.0.1:8765/index.html
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=1440,1100 --screenshot=/media/zjj/Elements/CQU_ZJJ/MILD/tmp_visual_checks/calibration_links_desktop_1440x1100.png http://127.0.0.1:8765/index.html#sensors
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=390,1200 --screenshot=/media/zjj/Elements/CQU_ZJJ/MILD/tmp_visual_checks/calibration_links_mobile_390x1200.png http://127.0.0.1:8765/index.html#sensors
+file /media/zjj/Elements/CQU_ZJJ/MILD/tmp_visual_checks/calibration_links_desktop_1440x1100.png /media/zjj/Elements/CQU_ZJJ/MILD/tmp_visual_checks/calibration_links_mobile_390x1200.png
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=1440,1100 --virtual-time-budget=5000 --dump-dom http://127.0.0.1:8765/tmp_visual_checks/layout_probe.html
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=390,1200 --virtual-time-budget=5000 --dump-dom http://127.0.0.1:8765/tmp_visual_checks/layout_probe.html
+python3 - <<'PY'
+# Parse headless DOM probe JSON and fail on scroll/overflow errors.
+PY
+```
+
+### Tool Operations 182-184
+
+- Timestamp: 2026-07-19 21:55-22:02 CST
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Edit the website and append this command-log entry.
+- Expected affected paths:
+  - `index.html`
+  - `static/css/site.css`
+  - `COMMAND_LOG_mild_site.md`
+  - temporary validation probe:
+    `tmp_visual_checks/layout_probe.html`
+- Exit status: success.
