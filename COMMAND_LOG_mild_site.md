@@ -1454,3 +1454,138 @@ git log -1 --oneline --decorate
   entry is delivered by a follow-up log-only commit.
 - Expected affected paths: `COMMAND_LOG_mild_site.md`.
 - Exit status: success.
+
+### Commands 192-229
+
+- Timestamp: 2026-07-20 10:22-10:41 CST
+- Alias: nova
+- CWD: `/media/zjj/Elements/CQU_ZJJ/MILD`
+- Reason: Re-audit OneDrive calibration config links after the user noticed
+  that Insta360 X5 intrinsics exposed only three camera models and missed the
+  CubemapSLAM/OCam model discussed with `current`.
+- Safety scope:
+  - Rule 16 visual permission remained `NO_VIEW_IMAGE`.
+  - No screenshots or image/video frames were loaded into chat.
+  - The active OneDrive rosbag uploader service was not stopped or restarted.
+  - Existing GitHub and OneDrive credentials were used without reading or
+    printing secrets.
+- Shared-memory/current evidence:
+  - `LIVE_STATUS.md` lines around 2026-07-19 21:08-21:11 CST show `current`
+    traced the CubemapSLAM/OCam model to `hello`.
+  - `sessions/hello.md` lines 110-121 record `hello` running
+    `convert_pyocam_json_to_cubemapslam.py`, writing both final YAMLs, and
+    validating OpenCV `FileStorage` parsing.
+  - `current`'s recent raw session also confirmed X5/Insight9 hand-eye solve
+    ownership as `india`, with Insight9 capture support by `oak`.
+- Local evidence:
+  - CubemapSLAM YAMLs:
+    - `/media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/cubemapslam_ocam_20260616_verified/x5_cam001_hp40_cubemapslam_ocam.yaml`
+    - `/media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/cubemapslam_ocam_20260616_verified/x5_cam002_hp40_cubemapslam_ocam.yaml`
+  - Validation txt/json files exist in the same verified directory.
+  - Source py-OCamCalib JSONs and summaries exist under:
+    - `/media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/pyocam_hp40_20260616_cam001/`
+    - `/media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/pyocam_hp40_20260616_cam002/`
+  - YAML headers state they were generated from py-OCamCalib JSON and that the
+    mapping was verified against CubemapSLAM `CamModelGeneral`.
+  - Validation summaries reported selected roundtrip max errors:
+    - cam001: `0.0005321462856027832 px`
+    - cam002: `0.0010481843976069387 px`
+- Upload result:
+  - 10 OCam-related files uploaded to `onedrive:MILD/config`.
+  - Updated config link manifest:
+    `/media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_config_upload_links_20260719.json`
+  - Delta manifest:
+    `/media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_config_upload_links_20260720_ocam_delta.json`
+  - Manifest records increased from 23 to 33.
+  - Remote `MILD/config` now reports 33 files; the 10 new OCam files have
+    matching remote sizes.
+- Website changes:
+  - `index.html`: added three X5 intrinsics rows:
+    - `CubemapSLAM / OCam` with cam001/cam002 YAML links.
+    - `OCam validation` with txt/json validation links.
+    - `py-OCam source` with source JSON and summary links.
+- Validation:
+  - `node --check static/js/site.js`: success.
+  - `git diff --check`: success.
+  - HTML parser check: 33 OneDrive links, 33 unique links, 4 calibration
+    groups, 12 calibration rows, 0 duplicate links.
+  - Upload manifest cross-check: all 33 manifest URLs are present in
+    `index.html`.
+  - `rclone lsjson onedrive:MILD/config --recursive`: success; 51 total remote
+    items, 33 files.
+  - Local HTTP server smoke check: `curl -sI http://127.0.0.1:8765/index.html`
+    returned `HTTP/1.0 200 OK`.
+  - Headless Chrome screenshot files generated without opening them:
+    - `tmp_visual_checks/calibration_ocam_desktop_1440x1100.png`
+    - `tmp_visual_checks/calibration_ocam_mobile_390x1200.png`
+  - Screenshot pixel stats were nonblank:
+    - desktop sample unique colors: 5253; extrema RGB included ranges
+      `(2..255, 3..255, 4..255)`.
+    - mobile sample unique colors: 2056; extrema RGB included ranges
+      `(6..255, 13..255, 11..255)`.
+  - Same-origin headless DOM probe:
+    - desktop: `innerWidth=1425`, `scrollWidth=1410`, `scrollOk=true`,
+      `overflow=[]`, `oneDriveLinks=33`, `calibrationRows=12`.
+    - mobile probe: `scrollOk=true`, `overflow=[]`, `oneDriveLinks=33`,
+      `calibrationRows=12`.
+  - The local HTTP server was stopped after validation.
+- Incidental rosbag uploader evidence:
+  - Latest config-task spot check: progress JSON mtime
+    `2026-07-20 09:48:49 CST`, summary `records_ok=32`,
+    `records_error=0`, `records_remaining=54`, running record
+    `grab_place03_t__aruco_4__insta360_x5`.
+
+Commands run:
+
+```bash
+find /home/zjj/.cache/agibot/live_shared_memory -maxdepth 4 -type f ...
+rg -n "cubemap|Cubemap|OCam|ocam|pyocam|..." /home/zjj/.cache/agibot/live_shared_memory -S
+rg -n "cubemap|Cubemap|OCam|ocam|pyocam|..." . -S
+rg -n "CubemapSLAM|cubemap|OCam|..." \
+  /home/zjj/.cache/agibot/live_shared_memory/sessions/current.md \
+  /home/zjj/.cache/agibot/live_shared_memory/member_generations/current.md \
+  /home/zjj/.cache/agibot/live_shared_memory/LIVE_STATUS.md \
+  /home/zjj/.cache/agibot/live_shared_memory/SHARED_FACTS.md -S
+nl -ba /home/zjj/.cache/agibot/live_shared_memory/LIVE_STATUS.md | sed -n '1138,1188p'
+nl -ba /home/zjj/.cache/agibot/live_shared_memory/sessions/current.md | sed -n '1,220p'
+nl -ba /home/zjj/.cache/agibot/live_shared_memory/sessions/hello.md | sed -n '106,126p'
+find /media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/cubemapslam_ocam_20260616_verified ...
+nl -ba /media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/cubemapslam_ocam_20260616_verified/x5_cam001_hp40_cubemapslam_ocam.yaml
+nl -ba /media/zjj/Elements/CQU_ZJJ/fisheye_calibration/calibration_runs/cubemapslam_ocam_20260616_verified/x5_cam002_hp40_cubemapslam_ocam.yaml
+python3 - <<'PY'
+# Read current raw JSONL around recent final summaries.
+PY
+rclone lsjson onedrive:MILD/config --recursive --log-level ERROR
+python3 - <<'PY'
+# Upload 10 CubemapSLAM/OCam and py-OCamCalib source/validation files,
+# generate share links, update the full manifest, and write a delta manifest.
+PY
+node --check static/js/site.js
+git diff --check
+python3 - <<'PY'
+# Parse index.html and cross-check all 33 manifest URLs are present.
+PY
+python3 - <<'PY'
+# Count remote OneDrive config files and print new OCam paths/sizes.
+PY
+python3 -m http.server 8765 --bind 127.0.0.1
+google-chrome --headless=new --no-sandbox --disable-gpu --run-all-compositor-stages-before-draw --virtual-time-budget=5000 --window-size=1440,1100 --screenshot=tmp_visual_checks/calibration_ocam_desktop_1440x1100.png http://127.0.0.1:8765/index.html#sensors
+google-chrome --headless=new --no-sandbox --disable-gpu --run-all-compositor-stages-before-draw --virtual-time-budget=5000 --window-size=390,1200 --screenshot=tmp_visual_checks/calibration_ocam_mobile_390x1200.png http://127.0.0.1:8765/index.html#sensors
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=390,1200 --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8765/tmp_visual_checks/layout_probe.html
+google-chrome --headless=new --no-sandbox --disable-gpu --window-size=1440,1100 --virtual-time-budget=2500 --dump-dom http://127.0.0.1:8765/tmp_visual_checks/layout_probe.html
+python3 - <<'PY'
+# Compute screenshot pixel stats without opening images.
+PY
+```
+
+### Tool Operation 230
+
+- Timestamp: 2026-07-20 10:41 CST
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Add the OCam config links to `index.html` and append this command-log
+  entry.
+- Expected affected paths:
+  - `index.html`
+  - `COMMAND_LOG_mild_site.md`
+- Exit status: success.
