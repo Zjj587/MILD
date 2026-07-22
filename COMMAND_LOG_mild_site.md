@@ -1878,3 +1878,76 @@ git diff --check
 git diff -- index.html | sed -n '1,180p'
 date '+%Y-%m-%d %H:%M %Z'
 ```
+
+### Tool Operation 236
+
+- Timestamp: 2026-07-22 15:10 CST
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Replace the visible Insight9 depth CameraInfo link, which pointed to
+  an uploaded warning placeholder, with the left-gray CameraInfo link because
+  depth is aligned/projected to the left-gray frame.
+- Expected affected paths:
+  - `index.html`
+  - `COMMAND_LOG_mild_site.md`
+- Exit status: success.
+
+Evidence:
+
+```text
+Invalid depth CameraInfo local file:
+  /media/zjj/Elements/CQU_ZJJ/insight9/yaml/camera_camera_depth_camera_info.yaml
+  size: 86 bytes
+  content: WARNING: topic [/camera/camera/depth/camera_info] does not appear to be published yet
+
+Valid left-gray CameraInfo local file:
+  /media/zjj/Elements/CQU_ZJJ/insight9/yaml/camera_camera_infra1_camera_info.yaml
+  size: 575 bytes
+  frame_id: camera_camera_left
+  resolution: 544 x 640
+```
+
+Website change:
+
+```text
+Insight9 intrinsics visible links:
+  left gray -> left-gray CameraInfo URL
+  right gray -> right-gray CameraInfo URL
+  RGB -> RGB CameraInfo URL
+  depth (left gray) -> left-gray CameraInfo URL
+
+Removed from index.html:
+  old depth warning-placeholder OneDrive URL
+```
+
+Validation:
+
+```text
+HTML parser/text check:
+  old_depth_warning_link_present=False
+  depth (left gray) href == left gray href
+
+node --check static/js/site.js: pass
+git diff --check: pass
+```
+
+Commands run:
+
+```bash
+git status --short --branch
+rg -n "Depth and geometry support|depth|Insight9|left gray|gray_left|camera_info|intrinsics|extrinsics|config" index.html static/js/site.js COMMAND_LOG_mild_site.md -S
+jq -r '.records[] | select(.sensor=="Insight9" and .kind=="Intrinsics") | [.label,.source,.size,.url] | @tsv' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_config_upload_links_20260719.json
+wc -c /media/zjj/Elements/CQU_ZJJ/insight9/yaml/camera_camera_depth_camera_info.yaml /media/zjj/Elements/CQU_ZJJ/insight9/yaml/camera_camera_infra1_camera_info.yaml
+sed -n '1,20p' /media/zjj/Elements/CQU_ZJJ/insight9/yaml/camera_camera_depth_camera_info.yaml
+sed -n '1,80p' /media/zjj/Elements/CQU_ZJJ/insight9/yaml/camera_camera_infra1_camera_info.yaml
+nl -ba index.html | sed -n '219,258p'
+rg -n "depth \\(left gray\\)|IQBkGNgy9WHoSran6LtwS9Cu|IQC0oM3T7YgsRLSv14OKo0A5AUPLvn3CTPc8qZvEKn-Td0o|Depth is aligned" index.html -S
+python3 - <<'PY'
+# Parse index.html and verify depth (left gray) uses the left-gray href while
+# the old warning-placeholder depth URL is absent.
+PY
+node --check static/js/site.js
+git diff --check
+git diff -- index.html | sed -n '1,120p'
+date '+%Y-%m-%d %H:%M %Z'
+```
