@@ -446,6 +446,10 @@ h2 {
   background: #f2f4f7;
 }
 
+.handeye-viewer-frame-compact {
+  height: clamp(300px, 35vh, 420px);
+}
+
 .handeye-caption {
   grid-area: auto;
   margin: 7px 0 0;
@@ -1506,6 +1510,10 @@ code {
 
   .handeye-viewer-frame {
     height: 620px;
+  }
+
+  .handeye-viewer-frame-compact {
+    height: 320px;
   }
 
   .task-card dl {

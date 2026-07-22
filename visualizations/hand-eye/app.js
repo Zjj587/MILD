@@ -22,6 +22,13 @@ const LABEL_AXIS_DIRECTIONS = [
   [0, 1, 0],
   [0, 0, 1],
 ];
+const EMBED_FORCED_MODES = {
+  "mild-x5": "x5-cam002-kalibr",
+};
+const MINIMAL_EMBEDS = new Set(["mild-x5"]);
+const params = new URLSearchParams(window.location.search);
+const embedMode = params.get("embed") || "full";
+const forcedEmbedMode = EMBED_FORCED_MODES[embedMode] || null;
 
 const canvas = document.querySelector("#scene");
 const viewport = document.querySelector("#viewport");
@@ -35,6 +42,8 @@ const selectedSwatch = document.querySelector("#selected-swatch");
 const selectedDistance = document.querySelector("#selected-distance");
 const selectedTranslation = document.querySelector("#selected-translation");
 const selectedSource = document.querySelector("#selected-source");
+
+document.body.dataset.embed = embedMode;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf2f4f7);
@@ -399,6 +408,11 @@ function pickSensor(event) {
 }
 
 function updateTooltip(event) {
+  if (MINIMAL_EMBEDS.has(embedMode)) {
+    tooltip.hidden = true;
+    canvas.style.cursor = "grab";
+    return;
+  }
   const sensorId = pickSensor(event);
   const record = sensorObjects.get(sensorId);
   if (!record) {
@@ -522,7 +536,6 @@ function auditSceneLabels() {
 }
 
 function runSelfTest() {
-  const params = new URLSearchParams(window.location.search);
   if (params.get("selftest") !== "1") return;
   resize();
   controls.update();
@@ -618,7 +631,7 @@ function runSelfTest() {
 
 function bindUi() {
   document.querySelectorAll("[data-mode]").forEach((button) => {
-    button.addEventListener("click", () => setMode(button.dataset.mode));
+    button.addEventListener("click", () => setMode(forcedEmbedMode || button.dataset.mode));
   });
   document.querySelectorAll("[data-view]").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.view));
@@ -663,8 +676,7 @@ async function initialize() {
     state.data = await response.json();
     state.data.devices.forEach(buildDevice);
     bindUi();
-    const params = new URLSearchParams(window.location.search);
-    const requestedMode = params.get("view");
+    const requestedMode = forcedEmbedMode || params.get("view");
     setMode(DEVICE_OFFSETS[requestedMode] ? requestedMode : "compare");
     selectSensor(activeDevices()[0].sensors[0].id);
     viewerState.textContent = "Ready";
@@ -686,6 +698,7 @@ window.__HAND_EYE_VIEWER__ = {
     mode: state.mode,
     selectedSensorId: state.selectedSensorId,
     ready: document.body.dataset.ready,
+    embedMode,
   }),
   setMode,
   setView,

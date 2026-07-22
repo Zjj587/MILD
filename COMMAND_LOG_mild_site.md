@@ -2381,3 +2381,123 @@ node --check static/js/site.js: pass
 node --check visualizations/hand-eye/app.js: pass
 git diff --check: pass
 ```
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+git status --short --branch
+nl -ba visualizations/hand-eye/index.html | sed -n '1,180p'
+nl -ba visualizations/hand-eye/app.js | sed -n '1,260p'
+nl -ba visualizations/hand-eye/styles.css | sed -n '1,260p'
+rg -n "embed|mild-x5|x5-cam002|compare|mode|tab|title|Sensor poses|X5 Cam002" visualizations/hand-eye index.html static/css/site.css
+nl -ba visualizations/hand-eye/app.js | sed -n '260,740p'
+nl -ba visualizations/hand-eye/styles.css | sed -n '260,470p'
+nl -ba static/css/site.css | sed -n '405,455p'
+sed -n '200,320p' visualizations/hand-eye/data/handeye_devices.json
+nl -ba index.html | sed -n '132,166p'
+rg -n "handeye-viewer|handeye-embed|handeye-caption" static/css/site.css visualizations/hand-eye/styles.css visualizations/hand-eye/app.js
+nl -ba static/css/site.css | sed -n '448,466p'
+nl -ba static/css/site.css | sed -n '1498,1514p'
+node --check static/js/site.js
+node --check visualizations/hand-eye/app.js
+git diff --check
+node - <<'NODE'
+# Static assertion for compact class, forced embed mode, hidden chrome CSS, and
+# removal of visible "audit" wording from the X5 homepage embed.
+NODE
+python3 -m http.server 8793 --bind 127.0.0.1
+timeout 35s google-chrome --headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --virtual-time-budget=9000 --window-size=390,900 --dump-dom 'http://127.0.0.1:8793/visualizations/hand-eye/?view=x5-cam002-kalibr&embed=mild-x5' >/tmp/mild_x5_embed_dumpdom.html
+node - <<'NODE'
+# CDP layout assertions at 390px for homepage overflow, compact iframe height,
+# iframe ready/embed/mode state, hidden chrome, canvas dimensions, and visible
+# audit text count.
+NODE
+date '+%Y-%m-%d %H:%M %Z'
+```
+
+### Tool Operation 242 - Compact X5 hand-eye embed
+
+- Timestamp: 2026-07-22 22:32 CST
+- Alias: nova
+- Tool: `apply_patch`, `node`, headless Chrome CDP DOM/layout checks
+- Reason: Make the MILD homepage "Broad manipulation view" hand-eye viewer
+  behave as a compact X5 Cam002 pose-chain window instead of exposing india's
+  full standalone hand-eye viewer shell.
+- Expected affected paths:
+  - `index.html`
+  - `static/css/site.css`
+  - `visualizations/hand-eye/index.html`
+  - `visualizations/hand-eye/app.js`
+  - `visualizations/hand-eye/styles.css`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - No `view_image` or screenshot/image inspection.
+  - The background OneDrive rosbag uploader service was not stopped, restarted,
+    or modified.
+  - Viewer data files were not deleted or modified.
+  - Unrelated dirty files were left untouched.
+- Exit status: success.
+
+Evidence:
+
+```text
+Website change:
+  X5 homepage iframe now uses class:
+    handeye-viewer-frame handeye-viewer-frame-compact
+  X5 iframe height:
+    desktop: clamp(300px, 35vh, 420px)
+    mobile <=640px: 320px
+  Visible X5 caption:
+    T_EE_Sensor axes for the X5 Cam002 pose chain.
+
+Embedded viewer behavior:
+  embed=mild-x5 forces mode:
+    x5-cam002-kalibr
+  embed=mild-x5 hides:
+    topbar
+    title-block
+    toolbar
+    segmented mode tabs
+    view buttons
+    inspector
+    coordinate note
+    tooltip
+```
+
+Validation:
+
+```text
+Static checks:
+  x5_iframe_src_locked=True
+  compact_class_present=True
+  visible_audit_word_removed=True
+  viewer_css_versioned=True
+  viewer_js_versioned=True
+  forced_mode_map=True
+  mild_insight9_not_forced=True
+  embed_dataset_written=True
+  minimal_embed_hides_chrome=True
+  compact_height_css=True
+
+Headless Chrome CDP at 390px:
+  pageWidth=390
+  scrollWidth=390
+  overflow=False
+  compactFrameHeight=320
+  compactFrameRight=353
+  iframeReady=True
+  iframeEmbed=mild-x5
+  iframeMode=x5-cam002-kalibr
+  topbarDisplay=none
+  toolbarDisplay=none
+  inspectorDisplay=none
+  coordinateNoteDisplay=none
+  canvasWidth=314
+  canvasHeight=318
+  visibleAuditCount=0
+
+node --check static/js/site.js: pass
+node --check visualizations/hand-eye/app.js: pass
+git diff --check: pass
+```
