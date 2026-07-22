@@ -513,6 +513,59 @@ h2 {
   min-width: 0;
 }
 
+.calibration-model {
+  min-width: 0;
+  border-top: 1px solid #dfe7e3;
+}
+
+.calibration-model:first-of-type {
+  border-top: 0;
+}
+
+.calibration-model summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 840;
+  line-height: 1.2;
+  list-style: none;
+}
+
+.calibration-model summary::-webkit-details-marker {
+  display: none;
+}
+
+.calibration-model summary::after {
+  content: "+";
+  flex: 0 0 auto;
+  color: var(--teal-dark);
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.calibration-model[open] summary::after {
+  content: "-";
+}
+
+.calibration-model summary:focus-visible {
+  color: var(--teal-dark);
+  outline: 2px solid rgba(35, 130, 116, 0.28);
+  outline-offset: 3px;
+}
+
+.calibration-model-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 0 4px;
+}
+
 .sensor-downloads a,
 .download-pill {
   display: inline-flex;

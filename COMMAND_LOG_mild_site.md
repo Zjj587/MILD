@@ -1696,6 +1696,11 @@ Validation:
 rg target metadata copy in index.html/static: no matches
 node --check static/js/site.js: pass
 git diff --check: pass
+headless Chrome --dump-dom at 390px:
+  hasWideView=True
+  hasDetails=4
+  hasSummaryPolyfisheye=True
+  hasSummaryOcam=True
 ```
 
 Commands run:
@@ -2253,4 +2258,78 @@ PY
 node --check static/js/site.js && git diff --check
 git diff -- index.html | sed -n '1,120p'
 git status --short --branch
+```
+
+### Tool Operation 240 - Collapse X5 intrinsic model links
+
+- Timestamp: 2026-07-22 21:51 CST
+- Alias: nova
+- Tool: `apply_patch`, `node`, HTML/static checks
+- Reason: Make the "Wide-view motion with stereo depth support" X5
+  "Intrinsics by model" area show only model names first; cam001/cam002 download
+  links are revealed after clicking each model.
+- Expected affected paths:
+  - `index.html`
+  - `static/css/site.css`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - No `view_image` or screenshot/image inspection.
+  - The background OneDrive rosbag uploader service was not stopped, restarted,
+    or modified.
+  - Unrelated dirty files were left untouched.
+- Exit status: success.
+
+Evidence:
+
+```text
+Website change:
+  Replaced the X5 "Intrinsics by model" inline rows with native <details>
+  groups for:
+    - POLYFISHEYE
+    - CubemapSLAM / OCam
+    - Omni + Radtan
+    - OpenCV / KB8
+
+Behavior:
+  Each model title is initially visible as a compact clickable row.
+  Opening a row reveals the corresponding cam001/cam002 OneDrive links.
+```
+
+Validation:
+
+```text
+HTML parser/text check:
+  calibration_model_details=4
+  model_summaries_present=True
+  summaries=[
+    "POLYFISHEYE",
+    "CubemapSLAM / OCam",
+    "Omni + Radtan",
+    "OpenCV / KB8"
+  ]
+
+node --check static/js/site.js: pass
+git diff --check: pass
+```
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova >/tmp/nova_preflight_x5_intrinsics_collapse_20260722_rerun.log && tail -n 30 /tmp/nova_preflight_x5_intrinsics_collapse_20260722_rerun.log
+git status --short --branch
+tail -n 80 COMMAND_LOG_mild_site.md
+git diff -- index.html static/css/site.css
+date '+%Y-%m-%d %H:%M %Z'
+node --check static/js/site.js
+git diff --check
+node - <<'NODE'
+# Static X5 section assertion for four native <details> model rows and
+# cam001/cam002 link pairs.
+NODE
+rg -n "Wide-view|Intrinsics by model|Depth and geometry" index.html
+nl -ba index.html | sed -n '145,215p'
+timeout 15s google-chrome --headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --window-size=390,900 --dump-dom "file://$(pwd)/index.html" >/tmp/mild_x5_intrinsics_dumpdom_390.html && node - <<'NODE'
+# Verify dumped DOM contains the Wide-view section and four calibration-model
+# details groups.
+NODE
 ```
