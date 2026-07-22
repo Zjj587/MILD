@@ -2248,3 +2248,693 @@ python3 - <<'PY'
 # process read volume vs local bag size.
 PY
 ```
+
+### 2026-07-20 15:33 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Answer the user's upload-progress question without interrupting the active
+  uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 15:33:19 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 54990
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 13:42:31 CST
+  summary: records_total=86, records_ok=34, records_error=0, records_remaining=52
+  records array length: 35
+  status counts: ok=34, running=1
+
+running record:
+  index: 35
+  key: grab_place03_t__tablecloth__insta360_x5
+  TUM status: ok
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/tablecloth/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+local bag size: 2952846607 bytes
+
+/proc/54990/io sample:
+  sample_start: 2026-07-20 15:32:41 CST
+  sample_end: 2026-07-20 15:33:19 CST
+  rchar_before=2884383160
+  rchar_after=2901181176
+  wchar_before=2873257223
+  wchar_after=2890863038
+  delta_rchar=16798016 bytes
+  delta_wchar=17605815 bytes
+approx by rchar/local_size: 98.25%
+approx ETA by rchar delta: 117 seconds
+```
+
+Log tail evidence:
+
+```text
+record 34 grab_place03_t__table__insta360_x5 completed at 2026-07-20 13:41:33
+record 35 TUM completed at 2026-07-20 13:42:06
+record 35 TUM link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQDOf4JUjEH8RoiqLpMyfYNHAaISnDIJzXp3vICkYxzCQZw
+record 35 bag upload started after 2026-07-20 13:42:44 lsjson miss
+no new [OK] record after record 34 at this check time
+```
+
+Commands run:
+
+```bash
+git status --short --branch
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager --lines=25
+jq '.summary' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+jq '{records_total:(.records|length), records_ok:([.records[]|select(.status=="ok")]|length), records_error:([.records[]|select(.status=="error")]|length), records_running:([.records[]|select(.status=="running")]|length), records_remaining:([.records[]|select(.status!="ok" and .status!="error")]|length), running:[.records[]|select(.status=="running")], ok_tail:([.records[]|select(.status=="ok")][-5:])}' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+stat -c '%y %s %n' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+tail -n 120 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+pgrep -af 'rclone copyto .*MILD/.*\.bag'
+date '+%F %T %Z'
+ps -p 54990 -o pid,etime,stat,pcpu,pmem,cmd
+stat -c '%s %n' /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/tablecloth/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+cat /proc/54990/io
+sleep 20
+cat /proc/54990/io
+```
+
+### 2026-07-20 15:37 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Record that record 35 completed and the uploader advanced to record 36.
+
+Evidence:
+
+```text
+check time: 2026-07-20 15:37:12 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 15:36:35 CST
+  summary: records_total=86, records_ok=35, records_error=0, records_remaining=51
+  records array length: 36
+
+newly completed record:
+  index: 35
+  key: grab_place03_t__tablecloth__insta360_x5
+  TUM status: ok
+  TUM remote size: 66627 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQDOf4JUjEH8RoiqLpMyfYNHAaISnDIJzXp3vICkYxzCQZw
+  bag status: ok
+  bag remote size: 2952846607 bytes
+  bag link: https://1drv.ms/u/c/7625f90385490ff5/IQBBGjJN6DSeQ4u7ZCiUVyz9Ae74tluLm4M1M3kBNJYZUEk
+  finished_at_unix: 1784532995.7923484
+
+running record:
+  index: 36
+  key: bookshelf01_2__apriltag_4__insta360_x5
+  remote_dir: onedrive:MILD/Bookshelf01/apriltag_4/insta360_x5
+  started_at_unix: 1784532995.7966185
+  active rclone PID: 69979
+  active operation: copyto Bookshelf01_robot_gt_camera_aligned.tum
+```
+
+Log tail evidence:
+
+```text
+2026-07-20 15:36:03: Grab_Place03_x5_camera_imu_tum_aligned.bag Copied (new)
+record 35 remote bag size: 2952846607 bytes
+record 35 bag link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQBBGjJN6DSeQ4u7ZCiUVyz9Ae74tluLm4M1M3kBNJYZUEk
+[OK] grab_place03_t__tablecloth__insta360_x5
+[36/86] bookshelf01_2__apriltag_4__insta360_x5
+record 36 TUM upload started after 2026-07-20 15:36:43 lsjson miss
+```
+
+Commands run:
+
+```bash
+date '+%F %T %Z'
+jq '.summary' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+jq '{records_len:(.records|length), running:[.records[]|select(.status=="running")], ok_tail:([.records[]|select(.status=="ok")][-3:])}' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+stat -c '%y %s %n' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+tail -n 120 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+pgrep -af 'rclone (copyto|link) .*MILD'
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager --lines=25
+```
+
+### 2026-07-20 15:38 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Record the current state after record 36 advanced from TUM upload to bag
+  upload.
+
+Evidence:
+
+```text
+check time: 2026-07-20 15:42:24 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 70175
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  summary: records_total=86, records_ok=35, records_error=0, records_remaining=51
+
+running record:
+  index: 36
+  key: bookshelf01_2__apriltag_4__insta360_x5
+  TUM status: ok
+  TUM remote size: 81405 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQDYdTbz0kM6S5_Nq8DKN7r0ATkuW85_XtPUSoC-VI-YNXY
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Bookshelf01_2/apriltag/custom48h12/4/instan360x5/Bookshelf01_x5_camera_imu_tum_aligned.bag
+local bag size: 3181010534 bytes
+
+/proc/70175/io:
+  rchar=20667465
+  wchar=3792261
+approx by rchar/local_size: 0.65%
+```
+
+Log tail evidence:
+
+```text
+record 36 TUM completed at 2026-07-20 15:37:14
+record 36 TUM link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQDYdTbz0kM6S5_Nq8DKN7r0ATkuW85_XtPUSoC-VI-YNXY
+record 36 bag upload started after 2026-07-20 15:38:00 lsjson miss
+```
+
+Commands run:
+
+```bash
+date '+%F %T %Z'
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager --lines=30
+pgrep -af 'rclone (copyto|link) .*MILD'
+tail -n 80 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+jq '.summary' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+stat -c '%s %n' /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Bookshelf01_2/apriltag/custom48h12/4/instan360x5/Bookshelf01_x5_camera_imu_tum_aligned.bag
+cat /proc/70175/io
+```
+
+### 2026-07-20 11:58 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Answer the user's upload-progress question without interrupting the active
+  uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 11:58:13 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 47538
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 11:49:23 CST
+  summary: records_total=86, records_ok=33, records_error=0, records_remaining=53
+  status counts: ok=33, running=1
+
+running record:
+  index: 34
+  key: grab_place03_t__table__insta360_x5
+  TUM status: ok
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/orin/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+local bag size: 2484299175 bytes
+
+/proc/47538/io 20-second sample:
+  rchar_before=168674537
+  rchar_after=170773684
+  wchar_before=151742992
+  wchar_after=154328149
+  delta_rchar=2099147 bytes
+  delta_wchar=2585157 bytes
+approx by rchar/local_size: 6.87%
+approx ETA by rchar delta: 22042.5 seconds
+```
+
+Log tail evidence:
+
+```text
+record 33 grab_place03_t__aruco_4__insta360_x5 completed at 2026-07-20 11:45:22
+record 33 remote bag size: 2466485368 bytes
+record 33 bag link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQD0_6dsbPbVSZRvVR2xyuFIAT516KHLmS76DJEbsmrmvO0
+record 34 TUM completed at 2026-07-20 11:46:03
+record 34 TUM link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQCfuvu9ZvysRIC3T2WzdjP6AXzZso7yJNp8mAa9LCgru-U
+record 34 bag upload started after 2026-07-20 11:49:36 lsjson miss
+```
+
+Commands run:
+
+```bash
+python3 - <<'PY'
+# Print progress JSON metadata, status counts, running record, ok tail, and
+# active rclone command.
+PY
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager -l
+tail -n 140 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+git status --short --branch
+python3 - <<'PY'
+# Sample /proc/47538/io before/after 20 seconds and estimate progress from
+# process read volume vs local bag size.
+PY
+```
+
+### 2026-07-20 13:44 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Answer the user's upload-progress question without interrupting the active
+  uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 13:43:46 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 54990
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 13:42:31 CST
+  summary: records_total=86, records_ok=34, records_error=0, records_remaining=52
+  status counts: ok=34, running=1
+
+running record:
+  index: 35
+  key: grab_place03_t__tablecloth__insta360_x5
+  TUM status: ok
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/tablecloth/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+local bag size: 2952846607 bytes
+
+/proc/54990/io 20-second sample:
+  rchar_before=29063670
+  rchar_after=38511226
+  wchar_before=11781316
+  wchar_after=21058437
+  delta_rchar=9447556 bytes
+  delta_wchar=9277121 bytes
+approx by rchar/local_size: 1.30%
+approx ETA by rchar delta: 6169.5 seconds
+```
+
+Log tail evidence:
+
+```text
+record 34 grab_place03_t__table__insta360_x5 completed at 2026-07-20 13:41:33
+record 34 remote bag size: 2484299175 bytes
+record 34 bag link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQBybxaM-qdFR5hR2hyUHtYQAd3g0Mar6MvYVsfxNGaG6u4
+record 35 TUM completed at 2026-07-20 13:42:06
+record 35 TUM link:
+  https://1drv.ms/u/c/7625f90385490ff5/IQDOf4JUjEH8RoiqLpMyfYNHAaISnDIJzXp3vICkYxzCQZw
+record 35 bag upload started after 2026-07-20 13:42:44 lsjson miss
+```
+
+Commands run:
+
+```bash
+python3 - <<'PY'
+# Print progress JSON metadata, status counts, running record, ok tail, and
+# active rclone command.
+PY
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager -l
+tail -n 160 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+git status --short --branch
+python3 - <<'PY'
+# Sample /proc/54990/io before/after 20 seconds and estimate progress from
+# process read volume vs local bag size.
+PY
+```
+
+### 2026-07-20 15:28 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Answer the user's upload-progress question without interrupting the active
+  uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 15:28:30 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 54990
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 13:42:31 CST
+  summary: records_total=86, records_ok=34, records_error=0, records_remaining=52
+  status counts: ok=34, running=1
+
+running record:
+  index: 35
+  key: grab_place03_t__tablecloth__insta360_x5
+  TUM status: ok
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/tablecloth/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+local bag size: 2952846607 bytes
+
+/proc/54990/io 20-second sample:
+  rchar_before=2763662884
+  rchar_after=2773111767
+  wchar_before=2752535191
+  wchar_after=2761755518
+  delta_rchar=9448883 bytes
+  delta_wchar=9220327 bytes
+approx by rchar/local_size: 93.91%
+approx ETA by rchar delta: 380.4 seconds
+```
+
+Log tail evidence:
+
+```text
+record 34 grab_place03_t__table__insta360_x5 completed at 2026-07-20 13:41:33
+record 35 TUM completed at 2026-07-20 13:42:06
+record 35 bag upload started after 2026-07-20 13:42:44 lsjson miss
+no new [OK] record after record 34 at this check time
+```
+
+Commands run:
+
+```bash
+python3 - <<'PY'
+# Print progress JSON metadata, status counts, running record, ok tail, and
+# active rclone command.
+PY
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager -l
+tail -n 200 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+git status --short --branch
+python3 - <<'PY'
+# Sample /proc/54990/io before/after 20 seconds and estimate progress from
+# process read volume vs local bag size.
+PY
+```
+
+### 2026-07-20 15:14 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Answer the user's upload-progress question without interrupting the active
+  uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 15:14:07 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 54990
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 13:42:31 CST
+  summary: records_total=86, records_ok=34, records_error=0, records_remaining=52
+  status counts: ok=34, running=1
+
+running record:
+  index: 35
+  key: grab_place03_t__tablecloth__insta360_x5
+  TUM status: ok
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/tablecloth/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+local bag size: 2952846607 bytes
+
+/proc/54990/io 20-second sample:
+  rchar_before=2376307987
+  rchar_after=2385754674
+  wchar_before=2364196401
+  wchar_after=2373416719
+  delta_rchar=9446687 bytes
+  delta_wchar=9220318 bytes
+approx by rchar/local_size: 80.80%
+approx ETA by rchar delta: 1200.6 seconds
+```
+
+Log tail evidence:
+
+```text
+record 34 grab_place03_t__table__insta360_x5 completed at 2026-07-20 13:41:33
+record 35 TUM completed at 2026-07-20 13:42:06
+record 35 bag upload started after 2026-07-20 13:42:44 lsjson miss
+no new [OK] record after record 34 at this check time
+```
+
+Commands run:
+
+```bash
+python3 - <<'PY'
+# Print progress JSON metadata, status counts, running record, ok tail, and
+# active rclone command.
+PY
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager -l
+tail -n 180 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+git status --short --branch
+python3 - <<'PY'
+# Sample /proc/54990/io before/after 20 seconds and estimate progress from
+# process read volume vs local bag size.
+PY
+```
+
+### 2026-07-20 11:32 CST - OneDrive uploader progress spot check
+
+Purpose:
+
+- Answer the user's upload-progress question without interrupting the active
+  uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 11:32:35 CST
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+active rclone PID: 40168
+
+progress JSON:
+  path: /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+  mtime: 2026-07-20 09:48:49 CST
+  summary: records_total=86, records_ok=32, records_error=0, records_remaining=54
+  status counts: ok=32, running=1
+
+running record:
+  index: 33
+  key: grab_place03_t__aruco_4__insta360_x5
+  TUM status: ok
+  bag status: running/not yet marked ok
+
+current local bag:
+  /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Grab_Place03_t/aruco/4/instan360x5/Grab_Place03_x5_camera_imu_tum_aligned.bag
+local bag size: 2466485368 bytes
+
+/proc/40168/io 20-second sample:
+  rchar_before=2195781190
+  rchar_after=2203129809
+  wchar_before=2183738724
+  wchar_after=2190988192
+  delta_rchar=7348619 bytes
+  delta_wchar=7249468 bytes
+approx by rchar/local_size: 89.32%
+approx ETA by rchar delta: 716.7 seconds
+```
+
+Log tail evidence:
+
+```text
+record 32 grab_place03_t__apriltag_4__insta360_x5 completed at 2026-07-20 09:47:49
+record 33 TUM completed at 2026-07-20 09:48:22
+record 33 bag upload started after 2026-07-20 09:48:57 lsjson miss
+no new [OK] record after record 32 at this check time
+```
+
+Commands run:
+
+```bash
+python3 - <<'PY'
+# Print progress JSON metadata, status counts, running record, ok tail, and
+# active rclone command.
+PY
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager -l
+tail -n 120 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+git status --short --branch
+python3 - <<'PY'
+# Sample /proc/40168/io before/after 20 seconds and estimate progress from
+# process read volume vs local bag size.
+PY
+```
+
+### 2026-07-20 17:21 CST - Current OneDrive upload state at EOF
+
+Purpose:
+
+- Keep the latest upload state visible at the end of the durable command log.
+
+Evidence:
+
+```text
+check time: 2026-07-20 17:21:15 CST
+progress summary: records_total=86, records_ok=35, records_error=0, records_remaining=51
+
+latest completed record:
+  index: 35
+  key: grab_place03_t__tablecloth__insta360_x5
+  bag remote size: 2952846607 bytes
+  bag link: https://1drv.ms/u/c/7625f90385490ff5/IQBBGjJN6DSeQ4u7ZCiUVyz9Ae74tluLm4M1M3kBNJYZUEk
+
+current running record:
+  index: 36
+  key: bookshelf01_2__apriltag_4__insta360_x5
+  TUM status: ok
+  TUM remote size: 81405 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQDYdTbz0kM6S5_Nq8DKN7r0ATkuW85_XtPUSoC-VI-YNXY
+  bag status: running/not yet marked ok
+  active rclone PID: 70175
+  active bag local size: 3181010534 bytes
+  /proc/70175/io rchar: 2831920598 bytes
+  approx by rchar/local_size: 89.03%
+  15-second rchar delta: 7348317 bytes
+  approx rate: 489887.8 bytes/s
+  approx ETA: 712.6 seconds
+```
+
+Validation:
+
+```text
+git diff --check: pass
+git status --short --branch:
+  ## main...origin/main
+   M COMMAND_LOG_rosbag_conversion_20260716.md
+  ?? tmp_visual_checks/
+```
+
+### 2026-07-20 18:51 CST - Current OneDrive upload state at EOF
+
+Purpose:
+
+- Record the latest OneDrive rosbag upload state without interrupting the
+  active uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-20 18:51:06 CST
+progress JSON mtime: 2026-07-20 17:36:05 CST
+progress summary: records_total=86, records_ok=36, records_error=0, records_remaining=50
+
+latest completed record:
+  index: 36
+  key: bookshelf01_2__apriltag_4__insta360_x5
+  TUM remote size: 81405 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQDYdTbz0kM6S5_Nq8DKN7r0ATkuW85_XtPUSoC-VI-YNXY
+  bag remote size: 3181010534 bytes
+  bag link: https://1drv.ms/u/c/7625f90385490ff5/IQBIA7BctLc9S46_L4E4Y7KsATmsKMG_Z6W8vpJLqVIRdGA
+
+current running record:
+  index: 37
+  key: bookshelf01_2__aruco_2__insta360_x5
+  TUM status: ok
+  TUM remote size: 81406 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQBUA-xVOUm5R6t7o7wSbJQXAX7ycYZ2OhYfM2CJwpmE_to
+  bag status: running/not yet marked ok
+  active rclone PID: 83505
+  active bag local size: 3222958879 bytes
+  /proc/83505/io rchar: 2085542966 bytes
+  approx by rchar/local_size: 64.71%
+  15-second rchar delta: 7347907 bytes
+  approx rate: 489860.5 bytes/s
+  approx ETA: 2321.9 seconds
+```
+
+Commands run:
+
+```bash
+date '+%F %T %Z'
+jq '.summary' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+jq '{records_len:(.records|length), running:[.records[]|select(.status=="running")], ok_tail:([.records[]|select(.status=="ok")][-3:])}' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+stat -c '%y %s %n' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager --lines=30
+pgrep -af 'rclone (copyto|link) .*MILD'
+tail -n 120 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+stat -c '%s %n' /media/zjj/Elements/CQU_ZJJ/UMID/data/v0/Bookshelf01_2/aruco/2/instan360x5/Bookshelf01_x5_camera_imu_tum_aligned.bag
+cat /proc/83505/io
+ps -p 83505 -o pid,etime,stat,pcpu,pmem,rss,vsz,cmd
+```
+
+### 2026-07-22 09:21 CST - Current OneDrive upload state at EOF
+
+Purpose:
+
+- Record the latest OneDrive rosbag upload state without interrupting the
+  active uploader.
+
+Evidence:
+
+```text
+check time: 2026-07-22 09:21:06 CST
+progress JSON mtime: 2026-07-22 07:15:06 CST
+progress summary: records_total=86, records_ok=53, records_error=0, records_remaining=33
+service state: active (running), started 2026-07-19 19:48:55 CST
+active python PID: 23505
+
+latest completed record:
+  index: 53
+  key: zigzag_2_t__table__insta360_x5
+  TUM remote size: 261261 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQAbU0UBl0lRTZXIlaxcbVbsAchqWOTZedEIkjeTD7rZJrw
+  bag remote size: 3775689099 bytes
+  bag link: https://1drv.ms/u/c/7625f90385490ff5/IQBQN1DiWIulS5Mu-qoCC3-pAd0m1lKTijfzgacSSVfWdp0
+
+current running record:
+  index: 54
+  key: zigzag_2_t__aruco_2__insta360_x5
+  TUM status: ok
+  TUM remote size: 261513 bytes
+  TUM link: https://1drv.ms/u/c/7625f90385490ff5/IQB4DxnIVSYdQ7e5oogaUxrpARwOktxdZw-XMHsdAbyHUSo
+  bag status: running/not yet marked ok
+  active rclone PID: 115605
+  active bag local size: 3777115672 bytes
+  /proc/115605/io rchar: 3515295230 bytes
+  approx by rchar/local_size: 93.07%
+  15-second rchar delta: 7346409 bytes
+  approx rate: 489760.6 bytes/s
+  approx ETA: 534.6 seconds
+```
+
+Commands run:
+
+```bash
+date '+%F %T %Z'
+jq '.summary' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+jq '{records_len:(.records|length), running:[.records[]|select(.status=="running")], ok_tail:([.records[]|select(.status=="ok")][-5:]), errors:[.records[]|select(.status=="error")]}' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+stat -c '%y %s %n' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+systemctl --user status mild-onedrive-rosbag-upload-20260719.service --no-pager --lines=40
+pgrep -af 'rclone (copyto|link) .*MILD|onedrive_upload_rosbags_20260719.py'
+tail -n 140 /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_20260719.log
+stat -c '%s %n' /media/zjj/新加卷/UMID/data/v0/Zigzag_2_t/aruco/2/instan360x5/Zigzag_x5_camera_imu_tum_aligned.bag
+cat /proc/115605/io
+ps -p 115605 -o pid,etime,stat,pcpu,pmem,rss,vsz,cmd
+```

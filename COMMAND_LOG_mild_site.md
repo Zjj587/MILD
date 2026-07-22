@@ -1589,3 +1589,123 @@ PY
   - `index.html`
   - `COMMAND_LOG_mild_site.md`
 - Exit status: success.
+
+### Tool Operation 231
+
+- Timestamp: 2026-07-22 09:46 CST
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Connect existing validated OneDrive rosbag and TUM links to the
+  benchmark task scene dialog.
+- Expected affected paths:
+  - `static/js/site.js`
+  - `index.html`
+  - `tmp_visual_checks/data_links_probe.html`
+  - `COMMAND_LOG_mild_site.md`
+- Exit status: success.
+
+Evidence:
+
+```text
+Rule 16 visual mode: NO_VIEW_IMAGE
+No screenshot/image/video frame was loaded into chat context.
+
+OneDrive progress snapshot used for site links:
+  progress summary: records_total=86, records_ok=54, records_error=0, records_remaining=32
+  included website dataset records: 54
+  included OneDrive links: 108
+  included link types per complete sequence: rosbag + TUM
+  partial/running records included: no
+
+Representative DOM probe:
+  Circular / tablecloth:
+    Rosbag OneDrive links: 2
+    TUM OneDrive links: 2
+  Zigzag / ArUco 2:
+    Rosbag OneDrive links: 2
+    TUM OneDrive links: 2
+  Bookshelf 01 / ArUco 2:
+    Rosbag OneDrive links: 1
+    TUM OneDrive links: 1
+```
+
+Validation:
+
+```text
+node --check static/js/site.js: pass
+git diff --check: pass
+dataset link cross-check:
+  progressOk: 54
+  siteRecords: 54
+  missingInSite: []
+  extraInSite: []
+  mismatches: []
+  unmappedSiteKeys: []
+  oneDriveLinksInSite: 108
+Chrome CDP DOM probe: ok=true
+```
+
+Commands run:
+
+```bash
+git status --short --branch
+rg -n "rosbag|tum|Data links|data links|onedrive|OneDrive|insight|insta|intrinsics|extrinsics" index.html static -S
+jq '.summary, (.records | length), ([.records[] | select(.status=="ok")] | length)' /media/zjj/Elements/CQU_ZJJ/MILD_rosbags/onedrive_rosbag_upload_progress_20260719.json
+python3 - <<'PY'
+# Read upload progress JSON and generate compact JS datasetDownloadRecords.
+PY
+node --check static/js/site.js
+git diff --check
+node <<'NODE'
+// Cross-check static/js/site.js datasetDownloadRecords against upload progress
+// JSON and site task/scene/sensor keys.
+NODE
+python3 -m http.server 8765 --bind 127.0.0.1
+google-chrome --headless=new --no-sandbox --disable-gpu --remote-debugging-port=9222 --user-data-dir=/tmp/mild-chrome-cdp-profile.* http://127.0.0.1:8765/index.html
+node <<'NODE'
+// Use Chrome DevTools Protocol to click representative task/scene dialogs and
+// count Rosbag/TUM OneDrive links in the rendered DOM.
+NODE
+```
+
+### Tool Operation 232
+
+- Timestamp: 2026-07-22 09:50 CST
+- Alias: nova
+- Tool: `apply_patch`
+- Reason: Remove the `UMI-Oriented Metadata` benchmark feature card after the
+  dataset contribution framing was narrowed away from metadata as a primary
+  contribution.
+- Expected affected paths:
+  - `index.html`
+  - `COMMAND_LOG_mild_site.md`
+- Exit status: success.
+
+Evidence:
+
+```text
+Removed from index.html:
+  UMI-Oriented Metadata
+  Task category, scene description, marker type, marker count, material
+  variant, difficulty labels, and dataset URL per task.
+```
+
+Validation:
+
+```text
+rg target metadata copy in index.html/static: no matches
+node --check static/js/site.js: pass
+git diff --check: pass
+```
+
+Commands run:
+
+```bash
+rg -n "UMI-Oriented Metadata|Metadata|metadata|Task category|difficulty labels|dataset URL" index.html static/css/site.css static/js/site.js -S
+nl -ba index.html | sed -n '96,136p'
+rg -n "UMI-Oriented Metadata|Task category, scene description|difficulty labels|dataset URL per task" index.html static -S || true
+node --check static/js/site.js
+git diff --check
+git diff -- index.html
+git status --short --branch
+```
