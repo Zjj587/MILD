@@ -2006,3 +2006,168 @@ git diff --check
 git diff -- index.html | sed -n '1,100p'
 date '+%Y-%m-%d %H:%M %Z'
 ```
+
+### Tool Operation 238
+
+- Timestamp: 2026-07-22 17:17 CST
+- Alias: nova
+- Tool: `cp`, `apply_patch`, headless Chrome, Node/Python static checks
+- Reason: Embed india's interactive hand-eye calibration viewer into the MILD
+  calibration section and reduce visible hand-eye links to the extrinsics used
+  by the embedded visualization.
+- Expected affected paths:
+  - `index.html`
+  - `static/css/site.css`
+  - `visualizations/hand-eye/`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - Rule 16 route: no `view_image`, no full screenshots, no image payloads.
+  - The approved OneDrive rosbag upload service was not stopped, restarted, or
+    killed.
+  - `visualizations/hand-eye/verification/` was intentionally not copied into
+    the website tree.
+- Exit status: success after validation; two CDP validation attempts failed and
+  one smoke command was interrupted as recorded below.
+
+Website change:
+
+```text
+X5 section:
+  embedded iframe:
+    visualizations/hand-eye/?view=x5-cam002-kalibr&embed=mild-x5
+  visible hand-eye links:
+    T_EE_Cam001
+    visualizations/hand-eye/data/handeye_devices.json
+
+Insight9 section:
+  embedded iframe:
+    visualizations/hand-eye/?view=insight9&embed=mild-insight9
+  visible hand-eye links:
+    T_EE_left
+    visualizations/hand-eye/data/handeye_devices.json
+```
+
+Validation:
+
+```text
+Static checks:
+  node --check static/js/site.js: pass
+  node --check visualizations/hand-eye/app.js: pass
+  git diff --check: pass
+
+HTML/link assertions:
+  iframe_count=2
+  x5 route present=True
+  insight9 route present=True
+  required viewer files present=True
+  visualizations/hand-eye/verification absent=True
+  old unused X5 hand-eye links absent=True
+  old unused Insight9 summary/report links absent=True
+
+Main-page bbox check from existing CDP session:
+  mobile innerWidth=390, scrollWidth=390, overflowOk=True
+  mobile iframe widths: 316, 316; embed widths: 316, 316
+  desktop innerWidth=1440, scrollWidth=1425, overflowOk=True
+  desktop iframe widths: 1142, 1142; embed widths: 1142, 1142
+
+Direct viewer selftest via headless Chrome dump-dom:
+  x5-cam002-kalibr:
+    ready=true, selfTest=pass, canvas/layout/marker/label/candidate_tab/
+    ee_frame/label_anchor/scene_labels all pass
+  insight9:
+    ready=true, selfTest=pass, canvas/layout/marker/label/candidate_tab/
+    ee_frame/label_anchor/scene_labels all pass
+
+Staged diff check:
+  first staged git diff --cached --check failed on one vendored Three.js
+  indentation line: visualizations/hand-eye/vendor/three.core.js:49146.
+  The line was mechanically changed from space+tab indentation to tab-only
+  indentation; no runtime logic changed. Re-run git diff --cached --check: pass.
+
+Absolute-path scan:
+  no delivered /home/zjj, /media/zjj, /mnt, or 新加卷 paths found;
+  matches were Three.js internal variable names containing "Elements" only.
+```
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+git status --short --branch
+pgrep -af 'python3 -m http.server|google-chrome --headless=new|mild-handeye-chrome' || true
+
+node --check static/js/site.js && node --check visualizations/hand-eye/app.js && git diff --check
+
+python3 - <<'PY'
+# Parse index.html with HTMLParser and verify hand-eye iframe routes, visible
+# link reductions, required viewer files, and absence of the verification dir.
+PY
+
+rg -n "/home/zjj|/media/zjj|/mnt/|Elements|新加卷" index.html static/css/site.css visualizations/hand-eye || true
+find visualizations/hand-eye -maxdepth 4 -type f | sort
+sed -n '500,710p' visualizations/hand-eye/app.js
+python3 - <<'PY'
+# Parse visualizations/hand-eye/data/handeye_devices.json and list device ids
+# plus sensor ids used by the embedded routes.
+PY
+
+# Failed before execution by command-safety rejection because the cleanup trap
+# contained rm -rf for a temporary Chrome profile. No files were changed.
+# Re-run without deletion cleanup:
+set -euo pipefail
+mkdir -p tmp_visual_checks
+# start python3 -m http.server on a random localhost port
+# start google-chrome headless with remote debugging
+# run inline Node CDP checks for x5-cam002-kalibr and insight9
+# result: failed, CDP tab not ready
+
+# Interrupted own smoke command after it hung without output:
+set -euo pipefail
+# start google-chrome headless CDP smoke and poll /json/version
+# result: interrupted with Ctrl-C, exit 130
+
+# Successful CDP smoke with curl timeouts:
+set -euo pipefail
+# start google-chrome --headless=new --no-sandbox with a fresh temporary profile
+# poll http://127.0.0.1:<debug_port>/json/version
+# result: success, Chrome/134.0.6998.165
+
+# Final direct viewer selftest command:
+set -euo pipefail
+mkdir -p tmp_visual_checks
+port=$(python3 - <<'PY'
+import socket
+s=socket.socket(); s.bind(('127.0.0.1',0)); print(s.getsockname()[1]); s.close()
+PY
+)
+server_log="tmp_visual_checks/handeye_dumpdom_http_${port}.log"
+python3 -m http.server "$port" --bind 127.0.0.1 >"$server_log" 2>&1 &
+server_pid=$!
+trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+for route in x5-cam002-kalibr insight9; do
+  out="tmp_visual_checks/handeye_${route}_dumpdom.html"
+  timeout 180s /usr/bin/google-chrome --headless=new --no-sandbox --disable-gpu --run-all-compositor-stages-before-draw --virtual-time-budget=12000 --dump-dom "http://127.0.0.1:${port}/visualizations/hand-eye/?view=${route}&selftest=1" >"$out" 2>"tmp_visual_checks/handeye_${route}_dumpdom.err"
+  python3 - "$route" "$out" <<'PY'
+import re, sys
+route, path=sys.argv[1:]
+text=open(path, encoding='utf-8', errors='replace').read()
+body=re.search(r'<body\b([^>]*)>', text)
+attrs=body.group(1) if body else ''
+keys=['data-ready','data-self-test','data-canvas-signal','data-layout-signal','data-marker-signal','data-label-signal','data-candidate-tab-signal','data-ee-frame-signal','data-label-anchor-signal','data-scene-label-signal']
+print(route, {k: (re.search(k+r'="([^"]*)"', attrs).group(1) if re.search(k+r'="([^"]*)"', attrs) else None) for k in keys})
+PY
+done
+
+pgrep -af 'handeye_dumpdom|handeye_selftest|mild-handeye-chrome|mild-handeye-cdp-smoke|google-chrome --headless=new.*visualizations/hand-eye|python3 -m http.server .*tmp_visual_checks' || true
+git diff --stat
+git diff -- index.html static/css/site.css | sed -n '1,260p'
+git status --short --branch
+git add index.html static/css/site.css COMMAND_LOG_mild_site.md visualizations/hand-eye
+git diff --cached --name-only
+git diff --cached --check
+nl -ba visualizations/hand-eye/vendor/three.core.js | sed -n '49140,49152p'
+# apply_patch: fix the single space-before-tab indentation in three.core.js line 49146.
+git add visualizations/hand-eye/vendor/three.core.js
+node --check static/js/site.js && node --check visualizations/hand-eye/app.js && git diff --cached --check && git diff --cached --name-only
+date '+%Y-%m-%d %H:%M %Z'
+```

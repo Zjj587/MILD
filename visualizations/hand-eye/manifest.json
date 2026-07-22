@@ -1,0 +1,116 @@
+{
+  "schema_version": 2,
+  "entrypoint": "index.html",
+  "data": "data/handeye_devices.json",
+  "geometry_audit": "../metadata/x5_imu_midpoint_audit.json",
+  "cam002_kalibr_audit": "../metadata/x5_cam002_kalibr_imu_candidate.json",
+  "title": "X5 and Insight9 hand-eye spatial viewer",
+  "coordinate_convention": "T_EE_Sensor maps sensor coordinates into robot end-effector coordinates",
+  "position_units": "mm",
+  "sensor_marker": {
+    "style": "axes-only",
+    "camera_geometry": "none",
+    "imu_geometry": "none",
+    "visible_sensor_body": false,
+    "axes_geometry": "cylinder shafts with cone arrowheads",
+    "axes_length_mm": 26.0,
+    "axes_shaft_radius_mm": 0.8,
+    "axes_head_radius_mm": 1.6,
+    "axes_head_length_mm": 5.0,
+    "ee_geometry": "axes only",
+    "ee_visible_body": false,
+    "ee_axes_length_mm": 58.0,
+    "label_font_px": 11,
+    "label_anchor": "selected local-axis endpoint",
+    "label_axis_gap_mm": 6.0,
+    "scene_label_policy": "X5 uses cam01/cam02/imu; every end-effector uses End Effector",
+    "pointer_hit_radius_mm": 9.0
+  },
+  "views": [
+    "compare",
+    "x5",
+    "x5-cam002-kalibr",
+    "insight9"
+  ],
+  "controls": [
+    "pointer orbit",
+    "wheel or pinch zoom",
+    "front view",
+    "side view",
+    "top view",
+    "reset view",
+    "per-sensor visibility",
+    "labels",
+    "translation links",
+    "coordinate axes",
+    "auto-rotation"
+  ],
+  "devices": {
+    "Insta360 X5": [
+      "Cam001",
+      "Cam002",
+      "physical IMU"
+    ],
+    "Insta360 X5 / Cam002-Kalibr audit": [
+      "Cam001",
+      "Cam002",
+      "audit-only physical IMU"
+    ],
+    "Insight9": [
+      "left gray",
+      "right gray",
+      "RGB",
+      "physical IMU"
+    ]
+  },
+  "x5_anchor_policy": {
+    "anchor": "Cam001",
+    "anchor_source": "direct p015326 hand-eye",
+    "derived_sensors": [
+      "Cam002",
+      "physical IMU"
+    ],
+    "cam002_source": "MC-Calib T_Cam002_Cam001",
+    "imu_source": "Kalibr T_Cam001_Imu",
+    "audit_only": "independent Kalibr T_Cam002_Imu"
+  },
+  "x5_cam002_kalibr_audit_policy": {
+    "publication_role": "internal geometry audit; excluded from compare and X5 public views",
+    "cam001_source": "direct p015326 hand-eye",
+    "cam002_source": "MC-Calib T_Cam002_Cam001",
+    "imu_source": "independent Kalibr T_Cam002_Imu",
+    "transform_chain": "T_EE_Cam002_MC-Calib * T_Cam002_Imu_Kalibr"
+  },
+  "runtime": {
+    "library": "Three.js r184",
+    "source_commit": "d3b629c0c2097cec664ad16369bb6eae3b10e335",
+    "license": "MIT",
+    "vendored": true,
+    "network_required": false
+  },
+  "validation": {
+    "status": "pass",
+    "summary": "verification/verification_summary.json",
+    "candidate_tab_click_required": true,
+    "ee_axes_only_required": true,
+    "label_endpoint_anchor_required": true,
+    "scene_label_gate_required": true,
+    "desktop_viewport_px": [
+      1440,
+      900
+    ],
+    "mobile_viewport_px": [
+      390,
+      844
+    ],
+    "browser_driver": "direct headless Chrome",
+    "playwright_available_in_local_environment": false
+  },
+  "caveats": [
+    "X5 Cam001 is the direct p015326 hand-eye anchor; Cam002 uses MC-Calib camera-camera geometry and physical IMU uses Cam001 Kalibr.",
+    "The separate X5 Cam002 audit view uses the independent Cam002-Kalibr IMU chain for geometry comparison only and is excluded from the public Compare and X5 modes.",
+    "Only Insight9 left gray is directly solved by hand-eye; right gray, RGB, and physical IMU are factory-extrinsic chains.",
+    "Interactive sensors and robot EE use axes only: no visible camera, IMU, flange, or center body is drawn. Larger labels are anchored just beyond selected local-axis endpoints.",
+    "X5 scene labels are shortened to cam01, cam02, and imu; every end-effector scene label is End Effector. Full sensor names and source chains remain in the inspector."
+  ]
+}

@@ -335,7 +335,8 @@ h2 {
     "photo title"
     "photo copy"
     "photo meta"
-    "photo downloads";
+    "viewer viewer"
+    "downloads downloads";
   gap: 10px 20px;
   align-content: start;
   align-items: start;
@@ -425,6 +426,37 @@ h2 {
 
 .sensor-card dd {
   margin: 0;
+}
+
+.handeye-embed {
+  grid-area: viewer;
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  margin: 4px 0 2px;
+}
+
+.handeye-viewer-frame {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: clamp(500px, 58vh, 660px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f2f4f7;
+}
+
+.handeye-caption {
+  grid-area: auto;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.handeye-caption code {
+  color: var(--ink);
+  font-size: 0.78rem;
 }
 
 .sensor-downloads {
@@ -1398,6 +1430,7 @@ code {
       "title"
       "copy"
       "meta"
+      "viewer"
       "downloads";
   }
 
@@ -1416,6 +1449,10 @@ code {
   .sensor-photo-portrait {
     width: min(100%, 220px);
     max-height: 292px;
+  }
+
+  .handeye-viewer-frame {
+    height: 620px;
   }
 
   .task-card dl {
