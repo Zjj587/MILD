@@ -2333,3 +2333,51 @@ timeout 15s google-chrome --headless=new --disable-gpu --no-sandbox --disable-de
 # details groups.
 NODE
 ```
+
+### Tool Operation 241 - Remove redundant X5 viewer poses download link
+
+- Timestamp: 2026-07-22 22:18 CST
+- Alias: nova
+- Tool: `apply_patch`, `node`, static checks
+- Reason: Remove the public `viewer poses` download link from the X5
+  "Hand-eye" row because the user-facing hand-eye parameter entry is
+  `T_EE_Cam001`; the viewer JSON remains an internal resource for the embedded
+  interactive calibration viewer.
+- Expected affected paths:
+  - `index.html`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - No `view_image` or screenshot/image inspection.
+  - The background OneDrive rosbag uploader service was not stopped, restarted,
+    or modified.
+  - `visualizations/hand-eye/data/handeye_devices.json` was not deleted or
+    modified.
+  - Unrelated dirty files were left untouched.
+- Exit status: success.
+
+Evidence:
+
+```text
+Website change:
+  X5 Extrinsics / Hand-eye row now exposes only:
+    - T_EE_Cam001
+
+Internal viewer dependency:
+  The embedded X5 hand-eye iframe still loads:
+    visualizations/hand-eye/?view=x5-cam002-kalibr&embed=mild-x5
+  The local viewer data file remains available to the visualization code.
+```
+
+Validation:
+
+```text
+HTML parser/text check:
+  x5_handeye_links=["T_EE_Cam001"]
+  x5_viewer_poses_visible=False
+  x5_iframe_present=True
+  handeye_devices_json_exists=True
+
+node --check static/js/site.js: pass
+node --check visualizations/hand-eye/app.js: pass
+git diff --check: pass
+```
