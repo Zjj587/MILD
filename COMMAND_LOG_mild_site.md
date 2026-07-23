@@ -2936,3 +2936,96 @@ node --check static/js/site.js: pass
 node --check visualizations/hand-eye/app.js: pass
 git diff --check: pass
 ```
+
+### Tool Operation 243 - Clarify Insight9 extrinsics naming
+
+- Timestamp: 2026-07-23 12:38 CST
+- Alias: nova
+- Tool: `apply_patch`, `node`, headless Chrome CDP DOM/layout checks
+- Reason: Replace the vague Insight9 homepage label `Static transforms /
+  calibration` with `Camera-IMU / rig extrinsics`, matching the Insta360 X5
+  Extrinsics naming and layout while keeping the existing OneDrive artifact
+  link unchanged.
+- Expected affected paths:
+  - `index.html`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - No `view_image` call and no screenshot/image inspection.
+  - No rosbag/video/TUM/config data was modified.
+  - The OneDrive rosbag upload service was only checked for active status; it
+    was not stopped, restarted, or modified.
+  - Unrelated dirty files were left unstaged and untouched.
+- Exit status: success.
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+git status --short --branch
+systemctl --user is-active mild-onedrive-rosbag-upload-20260719.service
+tail -n 120 COMMAND_LOG_mild_site.md
+git diff -- index.html
+date '+%Y-%m-%d %H:%M %Z'
+node --check static/js/site.js
+node --check visualizations/hand-eye/app.js
+git diff --check
+node - <<'NODE'
+# First static assertion attempt; failed because the section regex stopped at
+# the first nested </section>, not because of a page regression.
+NODE
+nl -ba index.html | sed -n '120,290p'
+rg -n "Depth and geometry support|Broad manipulation view|Extrinsics|Camera-IMU|rig extrinsics|Static transforms|T_EE_left|viewer poses|Viewer poses" index.html
+node - <<'NODE'
+# Corrected static assertion using heading-to-article slices.
+NODE
+python3 -m http.server 8794 --bind 127.0.0.1
+node - <<'NODE'
+# Headless Chrome CDP check with no screenshots: desktop 1366px and mobile
+# 390px viewport scrollWidth/clientWidth, calibration link fit, and Insight9
+# Extrinsics labels.
+NODE
+```
+
+Evidence:
+
+```text
+Applied website diff:
+  Insight9 / Extrinsics:
+    Static transforms -> Camera-IMU
+    calibration -> rig extrinsics
+  Existing OneDrive URL unchanged:
+    https://1drv.ms/u/c/7625f90385490ff5/IQDVsnzvO6gMRZP7rWlbY0GqAXA1XUyVNU0Khv3U52TcK3Y
+
+Corrected static assertion:
+  insight_section_found=True
+  x5_section_found=True
+  insight_extrinsics_has_camera_imu=True
+  insight_extrinsics_has_rig_extrinsics=True
+  insight_extrinsics_has_hand_eye=True
+  insight_old_static_transforms_absent=True
+  x5_extrinsics_still_camera_imu=True
+  viewer_poses_absent=True
+
+Headless Chrome CDP:
+  desktop 1366px:
+    scrollWidth=1351
+    overflow=False
+    linksFit=True
+    Insight9 Extrinsics rows:
+      Camera-IMU -> rig extrinsics
+      Hand-eye -> T_EE_left
+    Insight9 hasStaticTransforms=False
+  mobile 390px:
+    scrollWidth=390
+    overflow=False
+    linksFit=True
+    Insight9 Extrinsics rows:
+      Camera-IMU -> rig extrinsics
+      Hand-eye -> T_EE_left
+    Insight9 hasStaticTransforms=False
+
+Validation:
+  node --check static/js/site.js: pass
+  node --check visualizations/hand-eye/app.js: pass
+  git diff --check: pass
+```
