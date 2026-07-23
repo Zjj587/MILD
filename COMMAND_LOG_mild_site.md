@@ -1824,6 +1824,125 @@ git status --short --branch
 date '+%Y-%m-%d %H:%M %Z'
 ```
 
+### Tool Operation 246 - Compact Insight9 calibration link groups
+
+- Timestamp: 2026-07-23 11:34 CST
+- Alias: nova
+- Tool: `apply_patch`, `node`, headless Chrome CDP DOM/layout checks
+- Reason: Reorganize the "Depth and geometry support" calibration downloads so
+  Insight9 matches the compact X5 link layout, with IMU parameters separated
+  from extrinsics and the internal `viewer poses` JSON link removed from the
+  public row.
+- Expected affected paths:
+  - `index.html`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - No `view_image` or screenshot/image inspection.
+  - The background OneDrive rosbag uploader service was not stopped, restarted,
+    or modified.
+  - Viewer data files, OneDrive links, and transform data were not changed.
+  - Unrelated dirty files were left untouched.
+- Exit status: success.
+
+Evidence:
+
+```text
+Insight9 downloads now use:
+  class="sensor-downloads calibration-links calibration-links-compact"
+
+Insight9 group order:
+  1. Intrinsics
+  2. IMU parameters
+  3. Extrinsics
+
+Visible Insight9 links:
+  Intrinsics:
+    left gray
+    right gray
+    RGB
+    depth (left gray)
+  IMU parameters:
+    imu
+    kalibr
+  Extrinsics:
+    calibration
+    T_EE_left
+
+Removed from visible Insight9 downloads:
+  viewer poses
+```
+
+Validation:
+
+```text
+Static checks:
+  insight_compact_class=True
+  group_labels=["Intrinsics","IMU parameters","Extrinsics"]
+  group_order_ok=True
+  viewer_poses_absent=True
+  imu_links_present=True
+  imu_before_extrinsics=True
+  extrinsics_has_static_and_handeye=True
+  extrinsics_not_contains_imu_parameters=True
+
+Headless Chrome CDP at 1366px:
+  width=1366
+  scrollWidth=1351
+  overflow=False
+  className="sensor-downloads calibration-links calibration-links-compact"
+  groupCount=3
+  groups:
+    Intrinsics:     left=105, top=1748, width=635, height=73
+    IMU parameters: left=748, top=1748, width=499, height=73
+    Extrinsics:     left=748, top=1829, width=499, height=111
+  linksFit=True
+  linkTexts=["left gray","right gray","RGB","depth (left gray)","imu","kalibr","calibration","T_EE_left"]
+  computedColumns="635.031px 498.953px"
+
+Headless Chrome CDP at 390px:
+  width=390
+  scrollWidth=390
+  overflow=False
+  className="sensor-downloads calibration-links calibration-links-compact"
+  groupCount=3
+  groups:
+    Intrinsics:     left=37, top=2855, width=316, height=146
+    IMU parameters: left=37, top=3008, width=316, height=73
+    Extrinsics:     left=37, top=3090, width=316, height=111
+  linksFit=True
+  linkTexts=["left gray","right gray","RGB","depth (left gray)","imu","kalibr","calibration","T_EE_left"]
+  computedColumns="316px"
+
+node --check static/js/site.js: pass
+node --check visualizations/hand-eye/app.js: pass
+git diff --check: pass
+```
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova >/tmp/nova_preflight_insight9_link_layout_20260723.log && tail -n 25 /tmp/nova_preflight_insight9_link_layout_20260723.log
+git status --short --branch
+systemctl --user is-active mild-onedrive-rosbag-upload-20260719.service
+nl -ba index.html | sed -n '240,282p'
+nl -ba static/css/site.css | sed -n '474,565p'
+node --check static/js/site.js
+node --check visualizations/hand-eye/app.js
+git diff --check
+node - <<'NODE'
+# Static Insight9 downloads assertion for compact class, group order, IMU
+# separation, extrinsics contents, and viewer poses removal.
+NODE
+nl -ba index.html | sed -n '242,284p'
+rg -n "viewer poses|IMU parameters|calibration-links-compact|Insight9 calibration" index.html
+node - <<'NODE'
+# Headless Chrome CDP assertions for desktop/mobile Insight9 calibration
+# downloads: group bboxes, right-column stacking, mobile single column,
+# link fit, no viewer poses, and no horizontal overflow.
+NODE
+date '+%Y-%m-%d %H:%M %Z'
+```
+
 ### Tool Operation 245 - Neutral sensor-frame viewer labels
 
 - Timestamp: 2026-07-23 11:10 CST
