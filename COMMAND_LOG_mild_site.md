@@ -3151,3 +3151,132 @@ Validation:
   node --check visualizations/hand-eye/app.js: pass
   git diff --check: pass
 ```
+
+### Tool Operation 247 - Add task-scene-sensor overview matrix
+
+- Timestamp: 2026-07-23 14:30 CST
+- Alias: nova
+- Tool: `apply_patch`, `node`, headless Chrome CDP DOM/layout checks
+- Reason: Add a compact sequence availability table between the high-level
+  sequence expansion section and the benchmark task scenario explorer, so
+  visitors can quickly see which Task / Scene / Sensor combinations exist
+  before opening individual benchmark task details.
+- Expected affected paths:
+  - `index.html`
+  - `static/css/site.css`
+  - `static/js/site.js`
+  - `COMMAND_LOG_mild_site.md`
+- Safety notes:
+  - No `view_image` call and no full screenshot/image inspection.
+  - No rosbag/video/TUM/config data or OneDrive links were modified.
+  - The OneDrive rosbag upload service was checked for active status only; it
+    was not stopped, restarted, or modified.
+  - Unrelated dirty files were left unstaged and untouched.
+  - A first log append matched an earlier code fence; it was corrected and this
+    operation record was moved to the end of the file.
+- Exit status: success.
+
+Commands run:
+
+```bash
+/home/zjj/.cache/agibot/live_shared_memory/team_deep_preflight.sh nova
+git status --short --branch
+systemctl --user is-active mild-onedrive-rosbag-upload-20260719.service
+date '+%Y-%m-%d %H:%M %Z'
+tail -n 120 COMMAND_LOG_mild_site.md
+git diff -- index.html static/css/site.css static/js/site.js
+wc -l COMMAND_LOG_mild_site.md index.html static/css/site.css static/js/site.js
+python3 -m http.server 8797 --bind 127.0.0.1
+node - <<'NODE'
+# Static assertion for section placement, cache keys, overview DOM roots,
+# render function dependencies, task-button rendering, and internal scrolling.
+NODE
+node - <<'NODE'
+# Corrected static assertion after the first attempt matched the
+# `function updateTasks()` declaration instead of the final call order.
+NODE
+node - <<'NODE'
+# No-screenshot CDP measurement at desktop 1366px, tablet 820px, and
+# mobile 390px for page overflow, table counts, internal scroll, and text fit.
+NODE
+nl -ba COMMAND_LOG_mild_site.md | sed -n '1,170p'
+nl -ba COMMAND_LOG_mild_site.md | sed -n '3018,3185p'
+nl -ba COMMAND_LOG_mild_site.md | tail -n 80
+rg -n "^### Tool Operation 24[0-9]" COMMAND_LOG_mild_site.md
+```
+
+Evidence:
+
+```text
+Applied website diff:
+  index.html:
+    CSS cache key:
+      20260723-insight9-downloads-compact -> 20260723-sequence-overview
+    Inserted `#sequence-overview` section between `#sequences` and `#tasks`.
+    Added summary text and `#sequenceOverviewTable` mount point.
+    JS cache key:
+      20260722-onedrive-links -> 20260723-sequence-overview
+  static/js/site.js:
+    Added overview DOM references.
+    Added 8 scene columns and 2 sensor columns per scene.
+    `renderSequenceOverview()` uses existing collectedScenes/buildSceneEntries
+    availability logic plus invalidDataSequences filtering.
+    Task labels in the table open the existing task detail dialog.
+  static/css/site.css:
+    Added compact bordered overview panel, sticky task/header columns, internal
+    horizontal scrolling, and mobile table sizing.
+
+Static assertion:
+  section_inserted_between_sequences_and_tasks=true
+  concise_heading=true
+  css_cache_bumped=true
+  js_cache_bumped=true
+  overview_root_present=true
+  bottom_call_order_correct=true
+  render_uses_collected_scenes=true
+  render_uses_build_scene_entries=true
+  renders_task_buttons=true
+  css_internal_scroll_present=true
+  css_sticky_task_column_present=true
+
+No-screenshot headless Chrome CDP:
+  desktop 1366px:
+    page scrollWidth=1351
+    pageOverflow=false
+    summary="86 usable sequence streams across 15 tasks"
+    bodyRows=15
+    topHeaderCells=9
+    sensorHeaderCells=16
+    firstBodyCells=17
+    availableCells=86
+    taskButtonCount=15
+    rootScrollWidth=1148
+    rootClientWidth=1148
+    internalScroll=false
+    cellTextOverflow=false
+  tablet 820px:
+    page scrollWidth=805
+    pageOverflow=false
+    bodyRows=15
+    sensorHeaderCells=16
+    availableCells=86
+    rootScrollWidth=1120
+    rootClientWidth=707
+    internalScroll=true
+    cellTextOverflow=false
+  mobile 390px:
+    page scrollWidth=390
+    pageOverflow=false
+    bodyRows=15
+    sensorHeaderCells=16
+    availableCells=86
+    rootScrollWidth=1040
+    rootClientWidth=330
+    internalScroll=true
+    cellTextOverflow=false
+
+Validation:
+  node --check static/js/site.js: pass
+  node --check visualizations/hand-eye/app.js: pass
+  git diff --check: pass
+```

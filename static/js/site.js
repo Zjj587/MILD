@@ -3,6 +3,8 @@ const cards = Array.from(document.querySelectorAll(".task-card"));
 const searchInput = document.querySelector("#taskSearch");
 const taskCount = document.querySelector("#taskCount");
 const taskEmpty = document.querySelector("#taskEmpty");
+const sequenceOverviewTable = document.querySelector("#sequenceOverviewTable");
+const sequenceOverviewCount = document.querySelector("#sequenceOverviewCount");
 const releaseBaseUrl = "https://github.com/Zjj587/MILD/releases/download/v0.1/";
 const syncVideoAssetPrefix = "mild_v0_sync";
 
@@ -180,6 +182,22 @@ const sensorVideoSpecs = {
   "Insta360 X5": "1920 x 960 H.264 MP4",
   Insight9: "1088 x 640 H.264 MP4",
 };
+
+const sequenceOverviewScenes = [
+  "table",
+  "tablecloth",
+  "ArUco 1",
+  "ArUco 2",
+  "ArUco 4",
+  "AprilTag 1",
+  "AprilTag 2",
+  "AprilTag 4",
+];
+
+const sequenceOverviewSensors = [
+  { name: "Insta360 X5", shortName: "X5" },
+  { name: "Insight9", shortName: "I9" },
+];
 
 const invalidDataSequences = new Set([
   "box02__table__insight9",
@@ -475,6 +493,109 @@ function buildSceneEntries(task) {
   });
 }
 
+function renderSequenceOverview() {
+  if (!sequenceOverviewTable) return;
+
+  sequenceOverviewTable.replaceChildren();
+
+  const table = document.createElement("table");
+  table.className = "sequence-overview-table";
+
+  const thead = document.createElement("thead");
+  const sceneRow = document.createElement("tr");
+  const sensorRow = document.createElement("tr");
+  const taskHeader = document.createElement("th");
+  taskHeader.scope = "col";
+  taskHeader.rowSpan = 2;
+  taskHeader.textContent = "Task";
+  sceneRow.appendChild(taskHeader);
+
+  sequenceOverviewScenes.forEach((sceneName) => {
+    const sceneHeader = document.createElement("th");
+    sceneHeader.scope = "colgroup";
+    sceneHeader.colSpan = sequenceOverviewSensors.length;
+    sceneHeader.textContent = sceneName;
+    sceneRow.appendChild(sceneHeader);
+
+    sequenceOverviewSensors.forEach((sensor) => {
+      const sensorHeader = document.createElement("th");
+      sensorHeader.scope = "col";
+      const abbr = document.createElement("abbr");
+      abbr.title = sensor.name;
+      abbr.textContent = sensor.shortName;
+      sensorHeader.appendChild(abbr);
+      sensorRow.appendChild(sensorHeader);
+    });
+  });
+
+  thead.append(sceneRow, sensorRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  let availableCount = 0;
+
+  collectedScenes.forEach((task, taskIndex) => {
+    const taskSlug = taskSlugs[String(taskIndex + 1).padStart(2, "0")];
+    const sceneEntries = buildSceneEntries(task).map((scene) => ({
+      ...scene,
+      key: sceneKey(scene.name),
+    }));
+    const available = new Set();
+    sceneEntries.forEach((scene) => {
+      scene.sensors.forEach((sensorName) => {
+        const key = syncVideoKey(taskSlug, scene.name, sensorName);
+        if (!invalidDataSequences.has(key)) {
+          available.add(`${scene.key}__${sensorName}`);
+        }
+      });
+    });
+
+    const row = document.createElement("tr");
+    const taskCell = document.createElement("th");
+    taskCell.scope = "row";
+
+    const taskButton = document.createElement("button");
+    taskButton.className = "sequence-task-button";
+    taskButton.type = "button";
+    taskButton.textContent = task.name;
+    taskButton.setAttribute("aria-label", `Open ${task.name} task details`);
+    taskButton.addEventListener("click", () => {
+      const card = cards[taskIndex];
+      if (card) openTaskDetail(card);
+    });
+
+    taskCell.appendChild(taskButton);
+    row.appendChild(taskCell);
+
+    sequenceOverviewScenes.forEach((sceneName) => {
+      const normalizedScene = sceneKey(sceneName);
+      sequenceOverviewSensors.forEach((sensor) => {
+        const cell = document.createElement("td");
+        const hasSequence = available.has(`${normalizedScene}__${sensor.name}`);
+        cell.className = `sequence-cell${hasSequence ? " is-available" : ""}`;
+        cell.title = hasSequence
+          ? `${task.name}: ${sceneName} / ${sensor.name} available`
+          : `${task.name}: ${sceneName} / ${sensor.name} not available`;
+        cell.setAttribute("aria-label", cell.title);
+        if (hasSequence) {
+          cell.textContent = "✓";
+          availableCount += 1;
+        }
+        row.appendChild(cell);
+      });
+    });
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  sequenceOverviewTable.appendChild(table);
+
+  if (sequenceOverviewCount) {
+    sequenceOverviewCount.textContent = `${availableCount} usable sequence streams across ${collectedScenes.length} tasks`;
+  }
+}
+
 function renderScenePreview(scene) {
   if (!taskDetailRefs.photo) return;
   const key = sceneKey(scene.name);
@@ -731,4 +852,5 @@ cards.forEach((card) => {
   card.querySelector(".task-photo")?.addEventListener("click", () => openTaskDetail(card));
 });
 
+renderSequenceOverview();
 updateTasks();

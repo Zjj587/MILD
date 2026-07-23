@@ -21,7 +21,7 @@
     >
     <meta property="og:image" content="static/images/pic/scenes/apriltag4.jpg">
     <link rel="preload" href="static/images/pic/scenes/apriltag4.jpg" as="image">
-    <link rel="stylesheet" href="static/css/site.css?v=20260723-insight9-downloads-compact">
+    <link rel="stylesheet" href="static/css/site.css?v=20260723-sequence-overview">
   </head>
   <body>
     <header class="site-header">
@@ -345,6 +345,35 @@
         </div>
       </section>
 
+      <section class="section sequence-overview-section" id="sequence-overview">
+        <div class="section-inner">
+          <div class="split sequence-overview-heading">
+            <div>
+              <p class="section-kicker">Availability Matrix</p>
+              <h2>Task-scene-sensor coverage at a glance.</h2>
+            </div>
+            <div class="body-copy">
+              <p>
+                Each mark indicates a usable synchronized sequence for a benchmark task,
+                scene condition, and sensor stream.
+              </p>
+            </div>
+          </div>
+
+          <div class="sequence-overview-panel">
+            <div class="sequence-overview-summary">
+              <strong id="sequenceOverviewCount">Loading sequence coverage</strong>
+              <span>X5 and I9 columns separate sensor availability.</span>
+            </div>
+            <div
+              class="sequence-overview-scroll"
+              id="sequenceOverviewTable"
+              aria-label="Task scene sensor availability matrix"
+            ></div>
+          </div>
+        </div>
+      </section>
+
       <section class="section tasks-section" id="tasks">
         <div class="section-inner">
           <div class="tasks-toolbar">
@@ -545,6 +574,6 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script src="static/js/site.js?v=20260722-onedrive-links"></script>
+    <script src="static/js/site.js?v=20260723-sequence-overview"></script>
   </body>
 </html>
